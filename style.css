@@ -13,7 +13,6 @@
   --icon-size: 60px; /* Tamaño de los iconos */
 }
 
-
 * {
   margin: 0;
   padding: 0;
@@ -72,27 +71,25 @@ body {
   position: absolute;
   top: 100%;
   left: 0;
+  right: 0;
   width: 100%;
-  background: var(--light-bg);
+  background: white;
   padding: 1rem;
   border-radius: 0 0 15px 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transform: translateY(-10px);
-  opacity: 0;
-  transition: all 0.3s ease;
+  z-index: 100;
 }
 
 .nav__menu.active {
   display: block;
-  transform: translateY(0);
-  opacity: 1;
 }
 
 .nav__item {
   list-style: none;
   margin: 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
   padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: center;
 }
 
 .nav__item:last-child {
@@ -102,11 +99,9 @@ body {
 .nav__link {
   text-decoration: none;
   color: var(--text-color);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   font-weight: 500;
   transition: color 0.3s ease;
+  display: block;
 }
 
 .nav__link:hover {
@@ -266,8 +261,6 @@ body {
   line-height: 1.6; 
 }
 
-
-
 /* Desktop styles */
 @media (min-width: 1024px) {
   .nav {
@@ -294,17 +287,21 @@ body {
     gap: 2rem;
     transform: none;
     opacity: 1;
-    background: none;
+    background: transparent;
+    justify-content: center; /* Center items horizontally */
   }
 
   .nav__item {
     margin: 0;
     border: none;
     padding: 0;
+    text-align: left;
   }
 
   .nav__link {
     color: white;
+    display: inline-block;
+    padding: 0.5rem 1rem;
   }
 
   .nav__link:hover {
@@ -412,6 +409,4 @@ body {
     flex: 1; /* Cada paso ocupa el mismo espacio */
     max-width: 300px; /* Ancho máximo de cada recuadro */
   }
-  
 }
-
