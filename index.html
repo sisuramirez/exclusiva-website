@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RentalX - Car Rental Service</title>
+    <title>Exclusiva Renta Autos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="nav">
-        <div class="nav__logo">RentalX.</div>
+        <div class="nav__logo"><img src="./ alt=""></div>
         
          <button class="nav__hamburger" id="hamburger">
             <span class="nav__hamburger-line"></span>
@@ -19,10 +19,10 @@
 
 
         <ul class="nav__menu" id="nav-menu">
-            <li class="nav__item"><a href="#" class="nav__link">Rent</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Share</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Ride</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Service</a></li>
+            <li class="nav__item"><a href="#" class="nav__link">Rentar</a></li>
+            <li class="nav__item"><a href="#" class="nav__link">Autos disponibles</a></li>
+            <li class="nav__item"><a href="#" class="nav__link">Acerca de Nosotros</a></li>
+            <li class="nav__item"><a href="#" class="nav__link">Contáctanos</a></li>
         </ul>
         <div class="nav__auth">
             <button class="nav__button nav__button--signup">Sign up</button>
@@ -35,33 +35,70 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero__content">
-            <h1 class="hero__title">Looking to save more on your rental car?</h1>
-            <p class="hero__description">Discover RentalX car rental options in USA with Rent a Car. Select from a range of car options and local specials</p>
-            
-            <div class="hero__store">
-                <a href="#" class="hero__store-link">
-                    <img src="#" alt="App Store" class="hero__store-button">
-                </a>
-                <a href="#" class="hero__store-link">
-                    <img src="#" alt="Google Play" class="hero__store-button">
-                </a>
+            <h1 class="hero__title">¿Buscas ahorro y la mejor calidad?</h1>
+            <p class="hero__description">Exclusiva Renta Autos te brinda la mejor asesoría y las mejores opciones que se ajustan a tu bolsillo</p>
+            <div class="form-container">
+                <form class="search">
+                    <div class="search__field">
+                        <input type="text" class="search__input" placeholder="Choose a location">
+                    </div>
+                    <div class="search__field">
+                        <input type="text" class="search__input" placeholder="Pick-up date">
+                    </div>
+                    <div class="search__field">
+                        <input type="text" class="search__input" placeholder="Return date">
+                    </div>
+                    <button class="search__button">Search</button>
+                </form>
             </div>
-
-            <form class="search">
-                <div class="search__field">
-                    <input type="text" class="search__input" placeholder="Choose a location">
-                </div>
-                <div class="search__field">
-                    <input type="text" class="search__input" placeholder="Pick-up date">
-                </div>
-                <div class="search__field">
-                    <input type="text" class="search__input" placeholder="Return date">
-                </div>
-                <button class="search__button">Search</button>
-            </form>
         </div>
         <div class="hero__image-container">
             <!-- This div will be styled with CSS to create the orange background -->
+            <img src="./img/kisspng-2018-mercedes-benz-gla-class-sport-utility-vehicle-5b1ed89fe81da4.7042362715287481919508.png" alt="">
+        </div>
+    </section>
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="how-it-works__container">
+            <h2 class="how-it-works__title">¿Cómo funciona?</h2>
+            <h3 class="how-it-works__title">Tan sencillo como:</h3>
+            <div class="how-it-works__steps">
+                <!-- Step 1 -->
+                <div class="how-it-works__step">
+                    <div class="how-it-works__icon">
+                        <!-- Aquí puedes agregar un icono PNG -->
+                        <img src="./img/icon-location.png" alt="Escoge una ubicación">
+                    </div>
+                    <h3 class="how-it-works__step-title">[IMAGEN]</h3>
+                    <p class="how-it-works__step-description">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="how-it-works__step">
+                    <div class="how-it-works__icon">
+                        <!-- Aquí puedes agregar un icono PNG -->
+                        <img src="./img/icon-calendar.png" alt="Pick-up date">
+                    </div>
+                    <h3 class="how-it-works__step-title">Pick-Up Date</h3>
+                    <p class="how-it-works__step-description">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="how-it-works__step">
+                    <div class="how-it-works__icon">
+                        <!-- Aquí puedes agregar un icono PNG -->
+                        <img src="./img/icon-car.png" alt="Book your car">
+                    </div>
+                    <h3 class="how-it-works__step-title">Book Your Car</h3>
+                    <p class="how-it-works__step-description">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 </body>
