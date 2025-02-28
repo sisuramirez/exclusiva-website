@@ -249,6 +249,13 @@ body {
   margin-bottom: 1rem; /* Espaciado inferior */
 }
 
+.how-it-works__step:nth-child(3) .how-it-works__icon img {
+  width: 130px; /* Un poco más grande que los otros */
+  height: 70px;
+  padding: 0;
+  object-fit: contain;
+}
+
 .how-it-works__step-title {
   font-size: 1.5rem; /* Tamaño del título del paso */
   color: var(--step-title-color); /* Color del título */
@@ -358,6 +365,108 @@ body {
   margin-top: 50px;
 }
 
+.footer {
+  background: var(--nav-bg);
+  color: white;
+  padding: 3rem 1.5rem 1.5rem;
+}
+
+.footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footer__column {
+  margin-bottom: 1.5rem;
+  text-align: center; /* Centrado para mobile */
+}
+
+.footer__logo {
+  display: flex;
+  justify-content: center; /* Centra el logo */
+}
+
+.footer__logo img {
+  max-width: 200px;
+  height: 50px;
+  filter: brightness(0) invert(1);
+  margin-bottom: 1rem;
+}
+
+.footer__description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.footer__title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.footer__links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer__item {
+  margin-bottom: 0.5rem;
+}
+
+.footer__link {
+  color: white;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer__link:hover {
+  opacity: 1;
+}
+
+.footer__social {
+  display: flex;
+  gap: 1rem;
+  justify-content: center; /* Centra íconos sociales */
+}
+
+.footer__social-link {
+  display: block;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer__social-link:hover {
+  opacity: 1;
+}
+
+.footer__social-icon {
+  width: 24px;
+  height: 24px;
+}
+
+
+
+.footer__payment-icon {
+  width: 40px;
+  height: auto;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.footer__copyright {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
 /* Desktop styles */
 
 @media (min-width: 1024px) {
@@ -499,7 +608,11 @@ body {
   }
 
   .how-it-works {
-    padding: 20rem 1.5rem; 
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 1.5rem;
   }
 
   .how-it-works__steps {
@@ -545,4 +658,30 @@ body {
     width: 55%;
     max-width: 600px;
   }
+
+  .footer__container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .footer__column {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .footer__payment {
+    flex: 0 0 100px;
+  }
+  
+  .footer__payment-methods {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem
+  }
+  
+  .footer__payment-icon {
+    width: 50px;
+  }
+
 }

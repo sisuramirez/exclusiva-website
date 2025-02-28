@@ -1,17 +1,13 @@
-// Get DOM elements
+// DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 
-// Toggle menu function
+// Toggle mobile menu function
 function toggleMenu() {
-    // Toggle active class on the menu
     navMenu.classList.toggle('active');
     
-    // Toggle hamburger animation (optional - you can add CSS for this)
+    // Toggle hamburger icon animation
     const hamburgerLines = hamburger.querySelectorAll('.nav__hamburger-line');
-    
-    // Optional: Add animation to the hamburger icon lines
-    // This would require additional CSS styling for the transformed state
     if (navMenu.classList.contains('active')) {
         hamburgerLines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
         hamburgerLines[1].style.opacity = '0';
@@ -26,17 +22,17 @@ function toggleMenu() {
 // Event listeners
 hamburger.addEventListener('click', toggleMenu);
 
-// Close menu when clicking outside (optional)
+// Close menu when clicking outside
 document.addEventListener('click', function(event) {
-    // If the click is outside the menu and the hamburger button
-    if (!navMenu.contains(event.target) && !hamburger.contains(event.target) && navMenu.classList.contains('active')) {
+    if (!navMenu.contains(event.target) && 
+        !hamburger.contains(event.target) && 
+        navMenu.classList.contains('active')) {
         toggleMenu();
     }
 });
 
-// Close menu when clicking a navigation link (optional improvement)
-const navLinks = document.querySelectorAll('.nav__link');
-navLinks.forEach(link => {
+// Close menu when clicking navigation links
+document.querySelectorAll('.nav__link').forEach(link => {
     link.addEventListener('click', () => {
         if (navMenu.classList.contains('active')) {
             toggleMenu();
