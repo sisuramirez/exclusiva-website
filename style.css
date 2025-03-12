@@ -735,6 +735,8 @@ header {
 .footer__bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   margin-top: 1rem;
   text-align: center;
 }
@@ -886,6 +888,7 @@ header {
     height: auto;
     max-width: none;
     z-index: 3;
+    transition: opacity 0.5s ease-in-out;
   }
 
 

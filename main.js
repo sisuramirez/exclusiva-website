@@ -132,3 +132,39 @@ contactLinks.forEach(link => {
         link.addEventListener('click', toggleContactCard);
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Array de imágenes de vehículos para rotar
+    const vehicleImages = [
+        './img/transition1-hilux.png',
+        './img/transition2-fortuner.png',
+        './img/transition3-outlander.png', 
+        './img/transition4-h1.png', 
+        './img/transition5-kicks.png', 
+    ];
+    
+    // Seleccionar la imagen del hero
+    const heroImage = document.querySelector('.hero__image-container img');
+    let currentIndex = 0;
+    
+    // Función para cambiar la imagen con una transición suave
+    function changeImage() {
+        // Aplicar fade out
+        heroImage.style.opacity = 0;
+        
+        // Cambiar la imagen después de que se complete el fade out
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % vehicleImages.length;
+            heroImage.src = vehicleImages[currentIndex];
+            
+            // Aplicar fade in
+            heroImage.style.opacity = 1;
+        }, 500);
+    }
+    
+    // Agregar estilo de transición a la imagen
+    heroImage.style.transition = 'opacity 0.5s ease-in-out';
+    
+    // Cambiar la imagen cada 5 segundos
+    setInterval(changeImage, 5000);
+});
