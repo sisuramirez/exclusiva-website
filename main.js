@@ -147,19 +147,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
     
+    // Precarga de imágenes para evitar flickering
+    const preloadImages = () => {
+        vehicleImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    };
+    
+    // Precargar las imágenes al inicio
+    preloadImages();
+    
     // Función para cambiar la imagen con una transición suave
     function changeImage() {
         // Aplicar fade out
         heroImage.style.opacity = 0;
         
-        // Cambiar la imagen después de que se complete el fade out
+        // Cambiar la imagen después de que se complete el fade out completamente
         setTimeout(() => {
+            // Actualizar el índice y cambiar la fuente de la imagen
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             heroImage.src = vehicleImages[currentIndex];
             
-            // Aplicar fade in
-            heroImage.style.opacity = 1;
-        }, 500);
+            // Esperar a que la nueva imagen esté cargada antes de hacer fade in
+            heroImage.onload = function() {
+                // Aplicar fade in
+                heroImage.style.opacity = 1;
+            };
+            
+            // Respaldo en caso de que la imagen ya esté en caché y onload no se dispare
+            setTimeout(() => {
+                heroImage.style.opacity = 1;
+            }, 50);
+        }, 500); // Este tiempo debe coincidir con la duración de tu transición CSS
     }
     
     // Agregar estilo de transición a la imagen
