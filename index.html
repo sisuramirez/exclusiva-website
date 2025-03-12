@@ -8,28 +8,26 @@
     <script src="./main.js" defer></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav__logo"><img src="./ "  alt=""></div>
-        
-         <button class="nav__hamburger" id="hamburger">
-            <span class="nav__hamburger-line"></span>
-            <span class="nav__hamburger-line"></span>
-            <span class="nav__hamburger-line"></span>
-        </button>
-
-
-        <ul class="nav__menu" id="nav-menu">
-            <li class="nav__item"><a href="#" class="nav__link">Rentar</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Autos disponibles</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Acerca de Nosotros</a></li>
-            <li class="nav__item"><a href="#" class="nav__link">Contáctanos</a></li>
-        </ul>
-        <div class="nav__auth">
-            <button class="nav__button nav__button--signup">Sign up</button>
-            <button class="nav__button nav__button--login">Sign in</button>
+    <header>
+        <div class="container">
+            <nav class="nav">
+                <div class="nav__logo"><img src="./img/exclusiva.png" alt=""></div>
+                
+                <button class="nav__hamburger" id="hamburger">
+                    <span class="nav__hamburger-line"></span>
+                    <span class="nav__hamburger-line"></span>
+                    <span class="nav__hamburger-line"></span>
+                </button>
+    
+                <ul class="nav__menu" id="nav-menu">
+                    <li class="nav__item"><a href="#" class="nav__link">Cotizar</a></li>
+                    <li class="nav__item"><a href="#" class="nav__link">Autos disponibles</a></li>
+                    <li class="nav__item"><a href="#" class="nav__link">Sobre Nosotros</a></li>
+                    <li class="nav__item"><a href="#" class="nav__link">Contáctanos</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
 
 
@@ -38,79 +36,105 @@
         <div class="hero__content">
             <h1 class="hero__title">¿Buscas ahorro y la mejor calidad?</h1>
             <p class="hero__description">Exclusiva Renta Autos te brinda la mejor asesoría y las mejores opciones que se ajustan a tu bolsillo</p>
-            <div class="form-container">
-                <form class="search">
-                    <div class="search__field">
-                        <input type="text" class="search__input" placeholder="Choose a location">
-                    </div>
-                    <div class="search__field">
-                        <input type="text" class="search__input" placeholder="Pick-up date">
-                    </div>
-                    <div class="search__field">
-                        <input type="text" class="search__input" placeholder="Return date">
-                    </div>
-                    <button class="search__button">Search</button>
-                </form>
-            </div>
         </div>
         <div class="hero__image-container">
             <!-- This div will be styled with CSS to create the orange background -->
-            <img src="./img/kisspng-2018-mercedes-benz-gla-class-sport-utility-vehicle-5b1ed89fe81da4.7042362715287481919508.png" alt="">
+            <img src="./img/toyota-hilux-1.png" alt="">
         </div>
     </section>
     <!-- How It Works Section -->
     <section class="how-it-works">
-        <div class="how-it-works__container">
-            <h2 class="how-it-works__title">¿Cómo funciona?</h2>
-            <h3 class="how-it-works__title">Tan sencillo como:</h3>
-            <div class="how-it-works__steps">
-                <div class="how-it-works__step">
+        <div class="container wrap">
+            <div class="how-it-works__header">
+                <h2 class="how-it-works__title">¿Cómo funciona?</h2>
+                <h3 class="how-it-works__subtitle">Tan sencillo como:</h3>
+            </div>
+            <div class="how-it-works__steps row">
+                <div class="how-it-works__step col">
                     <div class="how-it-works__icon">
-                        <img src="./img/location-icon.png" alt="Escoge una ubicación">
+                        <img src="./img/location-icon.png" alt="Ubicación">
                     </div>
-                    <h3 class="how-it-works__step-title">Escoger una ubicación</h3>
-                    <p class="how-it-works__step-description">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-                    </p>
+                    <div class="step-content">
+                        <h3 class="how-it-works__step-title">Encuéntranos fácilmente</h3>
+                        <p class="how-it-works__step-description">
+                            Visítanos en 
+                        </p>
+                        <p class="location-address">
+                            15 Calle D 7-77 Colonia Aurora 1, Zona 13 Guatemala, Ciudad de Guatemala, Guatemala
+                        </p>
+                        <div class="map-buttons">
+                            <a href="https://maps.app.goo.gl/UrbfU3EAuDzaVMKDA" class="map-button google-maps-button" target="_blank">
+                                <img src="./img/visit-google-maps.png" alt="Google Maps Logo" class="map-button-logo">
+                                <span class="map-button-text">Google Maps</span>
+                            </a>
+                            <a href="https://ul.waze.com/ul?venue_id=176619666.1766000050.37916693&overview=yes&utm_campaign=default&utm_source=waze_website&utm_medium=lm_share_location" class="map-button waze-button" target="_blank">
+                                <img src="./img/visit-waze.png" alt="Waze Logo" class="map-button-logo">
+                                <span class="map-button-text">Waze</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="how-it-works__step">
+                <div class="how-it-works__step col">
                     <div class="how-it-works__icon">
-                        <img src="./img/calendar-icon.png" alt="Pick-up date">
+                        <img src="./img/requirement-icon.png" alt="Requisitos">
                     </div>
-                    <h3 class="how-it-works__step-title">Elegir fecha de inicio y entrega</h3>
-                    <p class="how-it-works__step-description">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-                    </p>
+                    <div class="step-content">
+                        <h3 class="how-it-works__step-title">Requisitos para rentar:</h3>
+                        <ul class="requisitos-list">
+                            <li>DPI o Pasaporte</li>
+                            <li>Licencia de conducir (Nacional o Internacional)</li>
+                            <li>Ser  mayor de 25 años</li>
+                            <li>Tarjeta de Crédito</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="how-it-works__step">
+                <div class="how-it-works__step col">
                     <div class="how-it-works__icon" id="how-it-works__icon-car">
-                        <img src="./img/car-icon.png" alt="Book your car">
+                        <img src="./img/car-icon.png" alt="Vehículos">
                     </div>
-                    <h3 class="how-it-works__step-title">Agenda tu carro</h3>
-                    <p class="how-it-works__step-description">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-                    </p>
+                    <div class="step-content">
+                        <h3 class="how-it-works__step-title">Elige el vehículo perfecto para ti</h3>
+                        <p class="how-it-works__step-description">
+                            Disponemos de una amplia flota de:
+                        </p>
+                        <div class="vehicle-types">
+                            <span class="vehicle-type">Microbuses</span>
+                            <span class="vehicle-type">Pick-ups</span>
+                            <span class="vehicle-type">SUVs</span>
+                            <span class="vehicle-type">Sedanes</span>
+                            <span class="vehicle-type">Crossovers</span>
+                        </div>
+                        <a href="#catalogo" class="catalog-link">Ver catálogo de vehículos</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    
     <section class="are-you-ready">
-        <div class="are-you-ready__container">
-            <div class="are-you-ready__content">
-                <h2 class="are-you-ready__title">¿ESTÁS LISTO PARA DISFRUTAR DE UN SERVICIO DE CALIDAD POR UN PRECIO JUSTO?</h2>
-                <p class="are-you-ready__description">O, incluso, si aun tienes dudas contáctanos, un asesor te está esperando</p>
-                <a href="https://wa.me/tunumero" class="are-you-ready__button">Contáctanos por WhatsApp</a>
-            </div>
-            <div class="are-you-ready__image-container">
-                <img src="./img/suv-back.png" alt="Red SUV" class="red-suv-image">
+        <div class="container">
+            <div class="col">
+                <section class="are-you-ready">
+                    <div class="are-you-ready__container">
+                        <div class="are-you-ready__content">
+                            <h2 class="are-you-ready__title">¿ESTÁS LISTO PARA DISFRUTAR DE UN SERVICIO DE CALIDAD POR UN PRECIO JUSTO?</h2>
+                            <p class="are-you-ready__description">O, incluso, si aun tienes dudas contáctanos, un asesor te está esperando</p>
+                            <a href="https://wa.me/tunumero" class="are-you-ready__button">Contáctanos por WhatsApp</a>
+                        </div>
+                        <div class="are-you-ready__image-container">
+                            <img src="./img/suv-back.png" alt="Red SUV" class="red-suv-image">
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </section>
     <footer class="footer">
-        <div class="footer__container">
+        <div class="footer__container container">
             <div class="footer__column">
                 <div class="footer__logo">
-                    <img src="./" alt="Exclusiva Renta Autos">
+                    <img src="./img/exclusiva.png" alt="Exclusiva Renta Autos">
                 </div>
             </div>
             <div class="footer__column">

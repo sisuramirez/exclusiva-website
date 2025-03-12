@@ -1,6 +1,8 @@
 // DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
+const contactLink = document.querySelector('.nav__link[href="#"]'); // Selecciona el enlace "Contáctanos"
+let contactCard = null;
 
 // Toggle mobile menu function
 function toggleMenu() {
@@ -16,6 +18,89 @@ function toggleMenu() {
         hamburgerLines[0].style.transform = 'none';
         hamburgerLines[1].style.opacity = '1';
         hamburgerLines[2].style.transform = 'none';
+    }
+}
+
+// Create contact card function
+function createContactCard() {
+    // Create card container
+    contactCard = document.createElement('div');
+    contactCard.className = 'contact-card';
+    
+    // Create card content
+    const cardContent = `
+        <div class="contact-card__content">
+            <button class="contact-card__close">&times;</button>
+            <div class="contact-card__info">
+                <div class="contact-card__contact">
+                    <span class="contact-card__phone">Teléfono: +123 456 7890</span>
+                    <span class="contact-card__email">Email: info@exclusivarentaautos.com</span>
+                </div>
+                <div class="contact-card__social">
+                    <a href="#" class="contact-card__social-link">
+                        <img src="./img/social-media-facebook.png" alt="Facebook" class="contact-card__social-icon">
+                    </a>
+                    <a href="#" class="contact-card__social-link">
+                        <img src="./img/social-media-instagram.png" alt="Instagram" class="contact-card__social-icon">
+                    </a>
+                    <a href="#" class="contact-card__social-link">
+                        <img src="./img/social-media-whatsapp.png" alt="WhatsApp" class="contact-card__social-icon">
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    contactCard.innerHTML = cardContent;
+    
+    // Add card to the DOM
+    document.body.appendChild(contactCard);
+    
+    // Add event listener to close button
+    const closeButton = contactCard.querySelector('.contact-card__close');
+    closeButton.addEventListener('click', hideContactCard);
+    
+    // Show the card with animation
+    setTimeout(() => {
+        contactCard.classList.add('active');
+    }, 10);
+    
+}
+
+// Hide contact card function
+function hideContactCard() {
+    if (contactCard) {
+        contactCard.classList.remove('active');
+        
+        // Wait for transition to finish before removing from DOM
+        setTimeout(() => {
+            if (contactCard && contactCard.parentNode) {
+                document.body.removeChild(contactCard);
+                contactCard = null;
+            }
+        }, 300); // Match transition duration
+        
+        // Remove outside click listener
+        document.removeEventListener('click', closeCardOutside);
+    }
+}
+
+// Close card when clicking outside
+function closeCardOutside(event) {
+    if (contactCard && !contactCard.querySelector('.contact-card__content').contains(event.target) && 
+        event.target !== contactLink) {
+        hideContactCard();
+    }
+}
+
+// Toggle contact card function
+function toggleContactCard(event) {
+    event.preventDefault();
+    
+    if (contactCard) {
+        hideContactCard();
+    } else {
+        createContactCard();
     }
 }
 
@@ -38,4 +123,12 @@ document.querySelectorAll('.nav__link').forEach(link => {
             toggleMenu();
         }
     });
+});
+
+// Add event listener to contact link
+const contactLinks = document.querySelectorAll('.nav__link');
+contactLinks.forEach(link => {
+    if (link.textContent.trim() === 'Contáctanos') {
+        link.addEventListener('click', toggleContactCard);
+    }
 });
