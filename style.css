@@ -547,10 +547,10 @@ header {
 
 /* Are You Ready Section - Fixed Position Car */
 .are-you-ready {
-  padding: 8rem 1.5rem;
   background-color: #edf2f7; /* Fondo más claro y neutro */
   position: relative;
   overflow: hidden;
+  padding: 7rem 0;
 }
 
 .are-you-ready__container {
@@ -560,6 +560,7 @@ header {
   flex-direction: column;
   gap: 2rem;
   position: relative;
+
 }
 
 .are-you-ready__content {
