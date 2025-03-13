@@ -1,7 +1,7 @@
 // DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
-const contactLink = document.querySelector('.nav__link[href="#"]'); // Selecciona el enlace "Contáctanos"
+const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
 let contactCard = null;
 
 // Toggle mobile menu function
@@ -33,8 +33,8 @@ function createContactCard() {
             <button class="contact-card__close">&times;</button>
             <div class="contact-card__info">
                 <div class="contact-card__contact">
-                    <span class="contact-card__phone">Teléfono: +123 456 7890</span>
-                    <span class="contact-card__email">Email: info@exclusivarentaautos.com</span>
+                    <span class="contact-card__phone">Phone: +123 456 7890</span>
+                    <span class="contact-card__email">Email: info@exclusivecarrental.com</span>
                 </div>
                 <div class="contact-card__social">
                     <a href="#" class="contact-card__social-link">
@@ -134,7 +134,7 @@ contactLinks.forEach(link => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Array de imágenes de vehículos para rotar
+    // Array of vehicle images to rotate
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
@@ -143,11 +143,12 @@ document.addEventListener('DOMContentLoaded', function() {
         './img/transition5-kicks.png', 
     ];
     
-    // Seleccionar la imagen del hero
+    // Select the hero image
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
+    let isTransitioning = false;
     
-    // Precarga de imágenes para evitar flickering
+    // Preload images to avoid flickering
     const preloadImages = () => {
         vehicleImages.forEach(src => {
             const img = new Image();
@@ -155,36 +156,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
     
-    // Precargar las imágenes al inicio
+    // Preload images at startup
     preloadImages();
     
-    // Función para cambiar la imagen con una transición suave
+    // Function to change image with a smooth transition
     function changeImage() {
-        // Aplicar fade out
+        // Prevent multiple transitions at once
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        // Apply fade out
         heroImage.style.opacity = 0;
         
-        // Cambiar la imagen después de que se complete el fade out completamente
+        // Change the image after the fade out is complete
         setTimeout(() => {
-            // Actualizar el índice y cambiar la fuente de la imagen
+            // Update index and change the image source
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             heroImage.src = vehicleImages[currentIndex];
             
-            // Esperar a que la nueva imagen esté cargada antes de hacer fade in
+            // Wait for the new image to load before fading in
             heroImage.onload = function() {
-                // Aplicar fade in
+                // Apply fade in
                 heroImage.style.opacity = 1;
+                
+                // Reset transition flag after fade in is complete
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 500);
             };
             
-            // Respaldo en caso de que la imagen ya esté en caché y onload no se dispare
+            // Backup in case the image is already cached and onload doesn't fire
             setTimeout(() => {
                 heroImage.style.opacity = 1;
-            }, 50);
-        }, 500); // Este tiempo debe coincidir con la duración de tu transición CSS
+                isTransitioning = false;
+            }, 100);
+        }, 500); // This time should match your CSS transition duration
     }
     
-    // Agregar estilo de transición a la imagen
+    // Add transition style to the image
     heroImage.style.transition = 'opacity 0.5s ease-in-out';
     
-    // Cambiar la imagen cada 5 segundos
+    // Change the image every 5 seconds
     setInterval(changeImage, 5000);
 });
