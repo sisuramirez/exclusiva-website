@@ -15,9 +15,9 @@ const cars = [
   },
   {
     id: 2,
-    name: "Nissan Urban",
+    name: "Nissan Urvan",
     category: "Microbuses",
-    imageUrl: "./img/urban.jpg",
+    imageUrl: "./img/urvan.png",
     price: 115,
     specs: {
       airConditioner: "Sí",
@@ -29,7 +29,7 @@ const cars = [
     id: 3,
     name: "Hyundai H1",
     category: "Microbuses",
-    imageUrl: "./img/h1.jpg",
+    imageUrl: "./img/h1.png",
     price: 125,
     specs: {
       airConditioner: "Sí",
@@ -41,7 +41,7 @@ const cars = [
     id: 4,
     name: "Hyundai Staria",
     category: "Microbuses",
-    imageUrl: "./img/staria.jpg",
+    imageUrl: "./img/staria.png",
     price: 130,
     specs: {
       airConditioner: "Sí",
@@ -55,7 +55,7 @@ const cars = [
     id: 5,
     name: "Toyota Fortuner",
     category: "SUVs",
-    imageUrl: "./img/fortuner.jpg",
+    imageUrl: "./img/fortuner.png",
     price: 110,
     specs: {
       airConditioner: "Sí",
@@ -67,7 +67,7 @@ const cars = [
     id: 6,
     name: "Mitsubishi Montero",
     category: "SUVs",
-    imageUrl: "./img/montero.jpg",
+    imageUrl: "./img/montero.png",
     price: 115,
     specs: {
       airConditioner: "Sí",
@@ -79,7 +79,7 @@ const cars = [
     id: 7,
     name: "Hyundai Santa Fe",
     category: "SUVs",
-    imageUrl: "./img/santafe.jpg",
+    imageUrl: "./img/santafe.png",
     price: 105,
     specs: {
       airConditioner: "Sí",
@@ -91,7 +91,7 @@ const cars = [
     id: 8,
     name: "Mitsubishi Outlander",
     category: "SUVs",
-    imageUrl: "./img/outlander.jpg",
+    imageUrl: "./img/outlander.png",
     price: 100,
     specs: {
       airConditioner: "Sí",
@@ -105,7 +105,7 @@ const cars = [
     id: 9,
     name: "Toyota Hilux",
     category: "Pick-ups",
-    imageUrl: "./img/hilux.jpg",
+    imageUrl: "./img/hilux.png",
     price: 100,
     specs: {
       airConditioner: "Sí",
@@ -117,7 +117,7 @@ const cars = [
     id: 10,
     name: "Mitsubishi L200",
     category: "Pick-ups",
-    imageUrl: "./img/l200.jpg",
+    imageUrl: "./img/l200.png",
     price: 95,
     specs: {
       airConditioner: "Sí",
@@ -129,7 +129,7 @@ const cars = [
     id: 11,
     name: "Nissan Frontier",
     category: "Pick-ups",
-    imageUrl: "./img/frontier.jpg",
+    imageUrl: "./img/frontier.png",
     price: 98,
     specs: {
       airConditioner: "Sí",
@@ -155,7 +155,7 @@ const cars = [
     id: 13,
     name: "Kia Sonet",
     category: "Crossovers",
-    imageUrl: "./img/sonet.jpg",
+    imageUrl: "./img/sonet.png",
     price: 80,
     specs: {
       airConditioner: "Sí",
@@ -167,7 +167,7 @@ const cars = [
     id: 14,
     name: "Mitsubishi Xpander",
     category: "Crossovers",
-    imageUrl: "./img/xpander.jpg",
+    imageUrl: "./img/xpander.png",
     price: 90,
     specs: {
       airConditioner: "Sí",
@@ -198,9 +198,9 @@ let selectedCar = null;
 
 // Función para formatear precio a formato de moneda
 function formatCurrency(amount) {
-  return new Intl.NumberFormat('es-MX', {
+  return new Intl.NumberFormat('es-GT', {
       style: 'currency',
-      currency: 'MXN'
+      currency: 'GTQ'
   }).format(amount);
 }
 
@@ -336,9 +336,9 @@ function sendToWhatsApp() {
   const formattedEndDate = new Date(endDate).toLocaleDateString('es-MX');
   
   // Crear mensaje para WhatsApp
-  const message = `*¡Buenas tardes!*
+  const message = `*¡Mucho gusto!*
 
-Me interesa alquilar el siguiente vehículo:
+Me interesa rentar el siguiente vehículo:
 ▪️ *Modelo:* ${selectedCar.name}
 ▪️ *Categoría:* ${selectedCar.category}
 
@@ -346,8 +346,7 @@ Me interesa alquilar el siguiente vehículo:
 📅 *Fecha de inicio:* ${formattedStartDate}
 ⏰ *Hora de recogida:* ${startTime}
 📅 *Fecha de entrega:* ${formattedEndDate}
-⏰ *Hora de entrega:* ${endTime}
-!`;
+⏰ *Hora de entrega:* ${endTime}`;
   
   // URL de WhatsApp con el mensaje - usar el número correcto sin el signo +
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
