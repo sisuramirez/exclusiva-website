@@ -1,7 +1,9 @@
 // DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
-const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
+const contactLink = document.querySelector('.nav__link[href="#"]'); 
+const whatsappButton = document.querySelector('.are-you-ready__button');
+const footerWhatsappButton = document.querySelector('.footer__social-link img[alt="WhatsApp"]').parentElement;
 let contactCard = null;
 
 // Toggle mobile menu function
@@ -30,25 +32,25 @@ function createContactCard() {
     // Create card content
     const cardContent = `
         <div class="contact-card__content">
-            <button class="contact-card__close">&times;</button>
-            <div class="contact-card__info">
-                <div class="contact-card__contact">
-                    <span class="contact-card__phone">Phone: +123 456 7890</span>
-                    <span class="contact-card__email">Email: info@exclusivecarrental.com</span>
-                </div>
-                <div class="contact-card__social">
-                    <a href="#" class="contact-card__social-link">
-                        <img src="./img/social-media-facebook.png" alt="Facebook" class="contact-card__social-icon">
-                    </a>
-                    <a href="#" class="contact-card__social-link">
-                        <img src="./img/social-media-instagram.png" alt="Instagram" class="contact-card__social-icon">
-                    </a>
-                    <a href="#" class="contact-card__social-link">
-                        <img src="./img/social-media-whatsapp.png" alt="WhatsApp" class="contact-card__social-icon">
-                    </a>
-                </div>
-            </div>
-        </div>
+          <button class="contact-card__close">&times;</button>
+          <div class="contact-card__info">
+              <div class="contact-card__contact">
+                  <span class="contact-card__phone">Phone: +123 456 7890</span>
+                  <span class="contact-card__email">Email: info@exclusivecarrental.com</span>
+              </div>
+              <div class="contact-card__social">
+                  <a href="https://www.facebook.com/profile.php?id=100077124247045" class="contact-card__social-link" target="_blank">
+                      <img src="./img/social-media-facebook.png" alt="Facebook" class="contact-card__social-icon">
+                  </a>
+                  <a href="https://www.instagram.com/exclusivarentaautos?igsh=MTN1dWVrOTF1N3A0dQ==" class="contact-card__social-link" target="_blank">
+                      <img src="./img/social-media-instagram.png" alt="Instagram" class="contact-card__social-icon">
+                  </a>
+                  <a href="#" class="contact-card__social-link whatsapp-link">
+                      <img src="./img/social-media-whatsapp.png" alt="WhatsApp" class="contact-card__social-icon">
+                  </a>
+              </div>
+          </div>
+      </div>
     `;
     
     contactCard.innerHTML = cardContent;
@@ -60,11 +62,22 @@ function createContactCard() {
     const closeButton = contactCard.querySelector('.contact-card__close');
     closeButton.addEventListener('click', hideContactCard);
     
+    // Add event listener to WhatsApp link
+    const cardWhatsAppLink = contactCard.querySelector('.whatsapp-link');
+    if (cardWhatsAppLink) {
+        cardWhatsAppLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            const phoneNumber = '50244771088';
+            const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+    
     // Show the card with animation
     setTimeout(() => {
         contactCard.classList.add('active');
     }, 10);
-    
 }
 
 // Hide contact card function
@@ -133,12 +146,21 @@ contactLinks.forEach(link => {
     }
 });
 
+if (whatsappButton) {
+    whatsappButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        const phoneNumber = '50244771088';
+        const message = "Hola, estoy interesado en sus servicios.";
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Array of vehicle images to rotate
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
-        './img/transition3-outlander.png', 
         './img/transition4-h1.png', 
         './img/transition5-kicks.png', 
     ];
@@ -197,5 +219,16 @@ document.addEventListener('DOMContentLoaded', function() {
     heroImage.style.transition = 'opacity 0.5s ease-in-out';
     
     // Change the image every 5 seconds
-    setInterval(changeImage, 5000);
+    setInterval(changeImage, 2500);
 });
+
+
+if (footerWhatsappButton) {
+    footerWhatsappButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        const phoneNumber = '50244771088';
+        const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+}

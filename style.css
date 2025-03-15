@@ -160,7 +160,6 @@ header {
   width: 100%;
   max-width: 200px;
   height: 50px;
-  filter: brightness(0) invert(1);
 }
 
 .nav__hamburger {
@@ -668,7 +667,6 @@ header {
 .footer__logo img {
   max-width: 200px;
   height: 50px;
-  filter: brightness(0) invert(1);
   margin-bottom: 1rem;
 }
 
@@ -758,8 +756,7 @@ header {
   }
 
   .nav__logo img {
-    filter: brightness(0) invert(1);
-    height: 40px;
+    height: 50px;
   }
 
   .nav__hamburger {
@@ -958,6 +955,7 @@ header {
 
   .footer__logo {
     justify-content: left;
+    height: 50px;
   }
   
   .footer__payment {

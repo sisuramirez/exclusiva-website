@@ -1,3 +1,123 @@
+const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
+let contactCard = null;
+const footerWhatsappButton = document.querySelector('.footer__social-link img[alt="WhatsApp"]').parentElement;
+
+
+function createContactCard(clickEvent) {
+  // Prevent the event from propagating
+  if (clickEvent) {
+    clickEvent.stopPropagation();
+  }
+  
+  // Create card container
+  contactCard = document.createElement('div');
+  contactCard.className = 'contact-card';
+  
+  // Create card content
+  const cardContent = `
+      <div class="contact-card__content">
+          <button class="contact-card__close">&times;</button>
+          <div class="contact-card__info">
+              <div class="contact-card__contact">
+                  <span class="contact-card__phone">Phone: +123 456 7890</span>
+                  <span class="contact-card__email">Email: info@exclusivecarrental.com</span>
+              </div>
+              <div class="contact-card__social">
+                  <a href="https://www.facebook.com/profile.php?id=100077124247045" class="contact-card__social-link" target="_blank">
+                      <img src="./img/social-media-facebook.png" alt="Facebook" class="contact-card__social-icon">
+                  </a>
+                  <a href="https://www.instagram.com/exclusivarentaautos?igsh=MTN1dWVrOTF1N3A0dQ==" class="contact-card__social-link" target="_blank">
+                      <img src="./img/social-media-instagram.png" alt="Instagram" class="contact-card__social-icon">
+                  </a>
+                  <a href="#" class="contact-card__social-link whatsapp-link">
+                      <img src="./img/social-media-whatsapp.png" alt="WhatsApp" class="contact-card__social-icon">
+                  </a>
+              </div>
+          </div>
+      </div>
+  `;
+  
+  contactCard.innerHTML = cardContent;
+  
+  // Add card to the DOM
+  document.body.appendChild(contactCard);
+  
+  // Add event listener to close button
+  const closeButton = contactCard.querySelector('.contact-card__close');
+  closeButton.addEventListener('click', hideContactCard);
+  
+  // Add event listener to WhatsApp link
+  const whatsappLink = contactCard.querySelector('.whatsapp-link');
+  if (whatsappLink) {
+    whatsappLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      const phoneNumber = '50244771088';
+      const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    });
+  }
+  
+  // Show the card with animation
+  setTimeout(() => {
+      contactCard.classList.add('active');
+  }, 10);
+  
+  // Add outside click listener - but with a delay to prevent immediate triggering
+  setTimeout(() => {
+    document.addEventListener('click', closeCardOutside);
+  }, 100);
+}
+
+// Hide contact card function
+function hideContactCard() {
+  if (contactCard) {
+      contactCard.classList.remove('active');
+      
+      // Wait for transition to finish before removing from DOM
+      setTimeout(() => {
+          if (contactCard && contactCard.parentNode) {
+              document.body.removeChild(contactCard);
+              contactCard = null;
+          }
+      }, 300); // Match transition duration
+      
+      // Remove outside click listener
+      document.removeEventListener('click', closeCardOutside);
+  }
+}
+
+// Close card when clicking outside
+function closeCardOutside(event) {
+  if (contactCard && 
+      !contactCard.contains(event.target) && 
+      !event.target.classList.contains('nav__link')) {
+      hideContactCard();
+  }
+}
+
+// Toggle contact card function
+function toggleContactCard(event) {
+  event.preventDefault();
+  event.stopPropagation(); // Stop the event from bubbling up
+  
+  if (contactCard) {
+      hideContactCard();
+  } else {
+      createContactCard(event);
+  }
+}
+
+// Add event listener to contact link
+document.addEventListener('DOMContentLoaded', function() {
+  const contactLinks = document.querySelectorAll('.nav__link');
+  contactLinks.forEach(link => {
+      if (link.textContent.trim() === 'Contáctanos') {
+          link.addEventListener('click', toggleContactCard);
+      }
+  });
+});
+
 // Array de vehículos disponibles
 const cars = [
   // MICROBUSES
@@ -168,6 +288,18 @@ const cars = [
     name: "Mitsubishi Xpander",
     category: "Crossovers",
     imageUrl: "./img/xpander.png",
+    price: 90,
+    specs: {
+      airConditioner: "Sí",
+      fuel: "Gasolina",
+      transmission: "Automático"
+    }
+  },
+  {
+    id: 15,
+    name: "Kia Rio",
+    category: "Sedanes",
+    imageUrl: "./img/rio.png",
     price: 90,
     specs: {
       airConditioner: "Sí",
@@ -404,3 +536,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 });
+
+if (footerWhatsappButton) {
+  footerWhatsappButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      const phoneNumber = '50244771088';
+      const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+  });
+}
