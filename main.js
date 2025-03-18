@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
-        './img/transition4-h1.png', 
         './img/transition5-kicks.png', 
     ];
     
