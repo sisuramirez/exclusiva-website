@@ -157,9 +157,10 @@ header {
 }
 
 .nav__logo img {
-  width: 100%;
   max-width: 200px;
-  height: 50px;
+  height: 50px; 
+  width: auto;
+  filter: none;
 }
 
 .nav__hamburger {

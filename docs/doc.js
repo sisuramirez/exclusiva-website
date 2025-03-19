@@ -2,8 +2,6 @@
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 const contactLink = document.querySelector('.nav__link[href="#"]'); 
-const whatsappButton = document.querySelector('.are-you-ready__button');
-const footerWhatsappButton = document.querySelector('.footer__social-link img[alt="WhatsApp"]').parentElement;
 let contactCard = null;
 
 // Toggle mobile menu function
@@ -117,118 +115,57 @@ function toggleContactCard(event) {
     }
 }
 
-// Event listeners
-hamburger.addEventListener('click', toggleMenu);
+// Set up WhatsApp links in footer
+function setupWhatsAppLinks() {
+    const whatsappLinks = document.querySelectorAll('.footer__social-link img[alt="WhatsApp"]');
+    
+    whatsappLinks.forEach(img => {
+        const link = img.closest('a');
+        if (link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const phoneNumber = '50244771088';
+                const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            });
+        }
+    });
+}
 
-// Close menu when clicking outside
-document.addEventListener('click', function(event) {
-    if (!navMenu.contains(event.target) && 
-        !hamburger.contains(event.target) && 
-        navMenu.classList.contains('active')) {
-        toggleMenu();
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Event listeners for hamburger menu
+    if (hamburger) {
+        hamburger.addEventListener('click', toggleMenu);
     }
-});
 
-// Close menu when clicking navigation links
-document.querySelectorAll('.nav__link').forEach(link => {
-    link.addEventListener('click', () => {
-        if (navMenu.classList.contains('active')) {
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (navMenu && hamburger && !navMenu.contains(event.target) && 
+            !hamburger.contains(event.target) && 
+            navMenu.classList.contains('active')) {
             toggleMenu();
         }
     });
-});
 
-// Add event listener to contact link
-const contactLinks = document.querySelectorAll('.nav__link');
-contactLinks.forEach(link => {
-    if (link.textContent.trim() === 'Contáctanos') {
-        link.addEventListener('click', toggleContactCard);
-    }
-});
-
-if (whatsappButton) {
-    whatsappButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const phoneNumber = '50244771088';
-        const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Array of vehicle images to rotate
-    const vehicleImages = [
-        './img/transition1-hilux.png',
-        './img/transition2-fortuner.png',
-        './img/transition4-stavia.png', 
-        './img/transition5-kicks.png'
-    ];
-    
-    // Select the hero image
-    const heroImage = document.querySelector('.hero__image-container img');
-    let currentIndex = 0;
-    let isTransitioning = false;
-    
-    // Preload images to avoid flickering
-    const preloadImages = () => {
-        vehicleImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
+    // Close menu when clicking navigation links
+    document.querySelectorAll('.nav__link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navMenu && navMenu.classList.contains('active')) {
+                toggleMenu();
+            }
         });
-    };
-    
-    // Preload images at startup
-    preloadImages();
-    
-    // Function to change image with a smooth transition
-    function changeImage() {
-        // Prevent multiple transitions at once
-        if (isTransitioning) return;
-        isTransitioning = true;
-        
-        // Apply fade out
-        heroImage.style.opacity = 0;
-        
-        // Change the image after the fade out is complete
-        setTimeout(() => {
-            // Update index and change the image source
-            currentIndex = (currentIndex + 1) % vehicleImages.length;
-            heroImage.src = vehicleImages[currentIndex];
-            
-            // Wait for the new image to load before fading in
-            heroImage.onload = function() {
-                // Apply fade in
-                heroImage.style.opacity = 1;
-                
-                // Reset transition flag after fade in is complete
-                setTimeout(() => {
-                    isTransitioning = false;
-                }, 500);
-            };
-            
-            // Backup in case the image is already cached and onload doesn't fire
-            setTimeout(() => {
-                heroImage.style.opacity = 1;
-                isTransitioning = false;
-            }, 100);
-        }, 500); // This time should match your CSS transition duration
-    }
-    
-    // Add transition style to the image
-    heroImage.style.transition = 'opacity 0.5s ease-in-out';
-    
-    // Change the image every 5 seconds
-    setInterval(changeImage, 2500);
-});
-
-
-if (footerWhatsappButton) {
-    footerWhatsappButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const phoneNumber = '50244771088';
-        const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
     });
-}
+
+    // Add event listener to contact link
+    const contactLinks = document.querySelectorAll('.nav__link');
+    contactLinks.forEach(link => {
+        if (link.textContent.trim() === 'Contáctanos') {
+            link.addEventListener('click', toggleContactCard);
+        }
+    });
+
+    // Setup WhatsApp links
+    setupWhatsAppLinks();
+});

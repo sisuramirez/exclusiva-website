@@ -157,9 +157,9 @@ header {
 
 .nav__logo img {
   max-width: 200px;
-  height: 50px; /* Igual al footer */
-  width: auto; /* Para mantener proporción si la imagen es más pequeña */
-  filter: none; /* Para asegurar que no tenga filtros */
+  height: 50px; 
+  width: auto;
+  filter: none; 
 }
 
 .nav__hamburger {
