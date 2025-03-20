@@ -126,7 +126,7 @@ const cars = [
     name: "Toyota Hiace",
     category: "Microbuses",
     imageUrl: "./img/hiace.png",
-    price: 120,
+    price: 600,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -138,7 +138,7 @@ const cars = [
     name: "Nissan Urvan",
     category: "Microbuses",
     imageUrl: "./img/urvan.png",
-    price: 115,
+    price: 600,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -150,11 +150,11 @@ const cars = [
     name: "Hyundai H1",
     category: "Microbuses",
     imageUrl: "./img/h1.png",
-    price: 125,
+    price: 550,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
-      transmission: "Automático"
+      transmission: "Automático/Manual"
     }
   },
   {
@@ -162,11 +162,11 @@ const cars = [
     name: "Hyundai Staria",
     category: "Microbuses",
     imageUrl: "./img/staria.png",
-    price: 130,
+    price: 600,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
-      transmission: "Automático"
+      transmission: "Automático/Manual"
     }
   },
   
@@ -176,7 +176,7 @@ const cars = [
     name: "Toyota Fortuner",
     category: "SUVs",
     imageUrl: "./img/fortuner.png",
-    price: 110,
+    price: 700,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -188,7 +188,7 @@ const cars = [
     name: "Mitsubishi Montero",
     category: "SUVs",
     imageUrl: "./img/montero.png",
-    price: 115,
+    price: 600,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -200,7 +200,7 @@ const cars = [
     name: "Hyundai Santa Fe",
     category: "SUVs",
     imageUrl: "./img/santafe.png",
-    price: 105,
+    price: 500,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -212,7 +212,7 @@ const cars = [
     name: "Mitsubishi Outlander",
     category: "SUVs",
     imageUrl: "./img/outlander.png",
-    price: 100,
+    price: 500,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -226,11 +226,11 @@ const cars = [
     name: "Toyota Hilux",
     category: "Pick-ups",
     imageUrl: "./img/hilux.png",
-    price: 100,
+    price: 550,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
-      transmission: "Automático"
+      transmission: "Automático/Manual"
     }
   },
   {
@@ -238,11 +238,11 @@ const cars = [
     name: "Mitsubishi L200",
     category: "Pick-ups",
     imageUrl: "./img/l200.png",
-    price: 95,
+    price: 550,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
-      transmission: "Manual"
+      transmission: "Manual/Automático"
     }
   },
   {
@@ -250,11 +250,11 @@ const cars = [
     name: "Nissan Frontier",
     category: "Pick-ups",
     imageUrl: "./img/frontier.png",
-    price: 98,
+    price: 550,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
-      transmission: "Automático"
+      transmission: "Automático/Manual"
     }
   },
   
@@ -264,7 +264,7 @@ const cars = [
     name: "Nissan Kicks",
     category: "Crossovers",
     imageUrl: "./img/kicks.png",
-    price: 85,
+    price: 350,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -276,7 +276,7 @@ const cars = [
     name: "Kia Sonet",
     category: "Crossovers",
     imageUrl: "./img/sonet.png",
-    price: 80,
+    price: 350,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -288,7 +288,7 @@ const cars = [
     name: "Mitsubishi Xpander",
     category: "Crossovers",
     imageUrl: "./img/xpander.png",
-    price: 90,
+    price: 400,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -300,7 +300,31 @@ const cars = [
     name: "Kia Rio",
     category: "Sedanes",
     imageUrl: "./img/rio.png",
-    price: 90,
+    price: 280,
+    specs: {
+      airConditioner: "Sí",
+      fuel: "Gasolina",
+      transmission: "Automático"
+    }
+  },
+  {
+    id: 16,
+    name: "Hyundai Verna",
+    category: "Sedanes",
+    imageUrl: "./img/verna.png",
+    price: 250,
+    specs: {
+      airConditioner: "Sí",
+      fuel: "Gasolina",
+      transmission: "Automático"
+    }
+  },
+  {
+    id: 17,
+    name: "Toyota Corolla",
+    category: "Sedanes",
+    imageUrl: "./img/corolla.png",
+    price: 280,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
