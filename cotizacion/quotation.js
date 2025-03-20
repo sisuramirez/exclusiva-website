@@ -287,7 +287,7 @@ const cars = [
     id: 14,
     name: "Mitsubishi Xpander",
     category: "Crossovers",
-    imageUrl: "./img/xpander.png",
+    imageUrl: "./img/xpander-v2.png",
     price: 400,
     specs: {
       airConditioner: "Sí",
