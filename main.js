@@ -35,8 +35,8 @@ function createContactCard() {
           <button class="contact-card__close">&times;</button>
           <div class="contact-card__info">
               <div class="contact-card__contact">
-                  <span class="contact-card__phone">Phone: +123 456 7890</span>
-                  <span class="contact-card__email">Email: info@exclusivecarrental.com</span>
+                  <span class="contact-card__phone">Phone: +(502)48494290</span>
+                  <span class="contact-card__email">Email: cotizaciones@exclusivarentaautos.com</span>
               </div>
               <div class="contact-card__social">
                   <a href="https://www.facebook.com/profile.php?id=100077124247045" class="contact-card__social-link" target="_blank">
@@ -67,7 +67,7 @@ function createContactCard() {
     if (cardWhatsAppLink) {
         cardWhatsAppLink.addEventListener('click', function(event) {
             event.preventDefault();
-            const phoneNumber = '50244771088';
+            const phoneNumber = '50248494290';
             const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
@@ -149,7 +149,7 @@ contactLinks.forEach(link => {
 if (whatsappButton) {
     whatsappButton.addEventListener('click', function(event) {
         event.preventDefault();
-        const phoneNumber = '50244771088';
+        const phoneNumber = '50248494290';
         const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
 if (footerWhatsappButton) {
     footerWhatsappButton.addEventListener('click', function(event) {
         event.preventDefault();
-        const phoneNumber = '50244771088';
+        const phoneNumber = '50248494290';
         const message = "Hola, estoy interesado en los servicios de renta de autos. ¿Podrían brindarme más información?";
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
