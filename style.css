@@ -533,11 +533,6 @@ header {
   transition: all 0.3s ease;
 }
 
-.vehicle-type:hover {
-  background-color: var(--primary-color, #5a9bd5);
-  color: white;
-  transform: translateY(-2px);
-}
 
 .catalog-link {
   display: inline-block;
