@@ -1,3 +1,14 @@
+const APP_VERSION = "1.1"; 
+const storedVersion = localStorage.getItem('app_version');
+
+if (storedVersion !== APP_VERSION) {
+  localStorage.setItem('app_version', APP_VERSION);
+  if (!sessionStorage.getItem('reloaded')) {
+    sessionStorage.setItem('reloaded', 'true');
+    setTimeout(() => window.location.reload(), 100);
+  }
+}
+
 // DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
