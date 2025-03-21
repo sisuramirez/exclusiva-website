@@ -125,7 +125,7 @@ const cars = [
     id: 1,
     name: "Toyota Hiace",
     category: "Microbuses",
-    imageUrl: "./img/hiace.png",
+    imageUrl: "./img/hiace.png?v=2",
     price: 600,
     specs: {
       airConditioner: "Sí",
@@ -137,7 +137,7 @@ const cars = [
     id: 2,
     name: "Nissan Urvan",
     category: "Microbuses",
-    imageUrl: "./img/urvan.png",
+    imageUrl: "./img/urvan.png?v=2",
     price: 600,
     specs: {
       airConditioner: "Sí",
@@ -149,7 +149,7 @@ const cars = [
     id: 3,
     name: "Hyundai H1",
     category: "Microbuses",
-    imageUrl: "./img/h1.png",
+    imageUrl: "./img/h1.png?v=2",
     price: 550,
     specs: {
       airConditioner: "Sí",
@@ -161,7 +161,7 @@ const cars = [
     id: 4,
     name: "Hyundai Staria",
     category: "Microbuses",
-    imageUrl: "./img/staria.png",
+    imageUrl: "./img/staria.png?v=2",
     price: 600,
     specs: {
       airConditioner: "Sí",
@@ -175,7 +175,7 @@ const cars = [
     id: 5,
     name: "Toyota Fortuner",
     category: "SUVs",
-    imageUrl: "./img/fortuner.png",
+    imageUrl: "./img/fortuner.png?v=2",
     price: 700,
     specs: {
       airConditioner: "Sí",
@@ -187,7 +187,7 @@ const cars = [
     id: 6,
     name: "Mitsubishi Montero",
     category: "SUVs",
-    imageUrl: "./img/montero.png",
+    imageUrl: "./img/montero.png?v=2",
     price: 600,
     specs: {
       airConditioner: "Sí",
@@ -199,7 +199,7 @@ const cars = [
     id: 7,
     name: "Hyundai Santa Fe",
     category: "SUVs",
-    imageUrl: "./img/santafe.png",
+    imageUrl: "./img/santafe.png?v=2",
     price: 500,
     specs: {
       airConditioner: "Sí",
@@ -211,7 +211,7 @@ const cars = [
     id: 8,
     name: "Mitsubishi Outlander",
     category: "SUVs",
-    imageUrl: "./img/outlander.png",
+    imageUrl: "./img/outlander.png?v=2",
     price: 500,
     specs: {
       airConditioner: "Sí",
@@ -225,7 +225,7 @@ const cars = [
     id: 9,
     name: "Toyota Hilux",
     category: "Pick-ups",
-    imageUrl: "./img/hilux.png",
+    imageUrl: "./img/hilux.png?v=2",
     price: 550,
     specs: {
       airConditioner: "Sí",
@@ -237,7 +237,7 @@ const cars = [
     id: 10,
     name: "Mitsubishi L200",
     category: "Pick-ups",
-    imageUrl: "./img/l200.png",
+    imageUrl: "./img/l200.png?v=2",
     price: 550,
     specs: {
       airConditioner: "Sí",
@@ -249,7 +249,7 @@ const cars = [
     id: 11,
     name: "Nissan Frontier",
     category: "Pick-ups",
-    imageUrl: "./img/frontier.png",
+    imageUrl: "./img/frontier.png?v=2",
     price: 550,
     specs: {
       airConditioner: "Sí",
@@ -263,7 +263,7 @@ const cars = [
     id: 12,
     name: "Nissan Kicks",
     category: "Crossovers",
-    imageUrl: "./img/kicks.png",
+    imageUrl: "./img/kicks.png?v=2",
     price: 350,
     specs: {
       airConditioner: "Sí",
@@ -275,7 +275,7 @@ const cars = [
     id: 13,
     name: "Kia Sonet",
     category: "Crossovers",
-    imageUrl: "./img/sonet.png",
+    imageUrl: "./img/sonet.png?v=2",
     price: 350,
     specs: {
       airConditioner: "Sí",
@@ -287,7 +287,7 @@ const cars = [
     id: 14,
     name: "Mitsubishi Xpander",
     category: "Crossovers",
-    imageUrl: "./img/xpander-v2.png",
+    imageUrl: "./img/xpander-v2.png?v=2",
     price: 400,
     specs: {
       airConditioner: "Sí",
@@ -299,7 +299,7 @@ const cars = [
     id: 15,
     name: "Kia Rio",
     category: "Sedanes",
-    imageUrl: "./img/rio.png",
+    imageUrl: "./img/rio.png?v=2",
     price: 280,
     specs: {
       airConditioner: "Sí",
@@ -311,7 +311,7 @@ const cars = [
     id: 16,
     name: "Hyundai Verna",
     category: "Sedanes",
-    imageUrl: "./img/verna.png",
+    imageUrl: "./img/verna.png?v=2",
     price: 250,
     specs: {
       airConditioner: "Sí",
@@ -323,7 +323,7 @@ const cars = [
     id: 17,
     name: "Toyota Corolla",
     category: "Sedanes",
-    imageUrl: "./img/corolla.png",
+    imageUrl: "./img/corolla.png?v=2",
     price: 280,
     specs: {
       airConditioner: "Sí",
