@@ -1,3 +1,14 @@
+const APP_VERSION = "1.1"; 
+const storedVersion = localStorage.getItem('app_version');
+
+if (storedVersion !== APP_VERSION) {
+  localStorage.setItem('app_version', APP_VERSION);
+  if (!sessionStorage.getItem('reloaded')) {
+    sessionStorage.setItem('reloaded', 'true');
+    setTimeout(() => window.location.reload(), 100);
+  }
+}
+
 const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
 let contactCard = null;
 const footerWhatsappButton = document.querySelector('.footer__social-link img[alt="WhatsApp"]').parentElement;
