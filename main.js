@@ -7,7 +7,17 @@ if (storedVersion !== APP_VERSION) {
     sessionStorage.setItem('reloaded', 'true');
     setTimeout(() => window.location.reload(), 100);
   }
+} else {
+  // Forzar recarga si el usuario presiona F5 y aún no se ha hecho un hard reload
+  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
+  if (navigationType === "reload" && !sessionStorage.getItem('hardReload')) {
+    sessionStorage.setItem('hardReload', 'true');
+    window.location.reload();
+  } else {
+    sessionStorage.removeItem('hardReload');
+  }
 }
+
 
 // DOM Elements
 const hamburger = document.getElementById('hamburger');
