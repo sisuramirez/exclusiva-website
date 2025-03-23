@@ -1,18 +1,17 @@
-const APP_VERSION = "1.1"; 
+const APP_VERSION = "1.2"; 
 const storedVersion = localStorage.getItem('app_version');
 
 if (storedVersion !== APP_VERSION) {
   localStorage.setItem('app_version', APP_VERSION);
   if (!sessionStorage.getItem('reloaded')) {
     sessionStorage.setItem('reloaded', 'true');
-    setTimeout(() => window.location.reload(), 100);
+    setTimeout(() => window.location.reload(true), 100);
   }
 } else {
-  // Forzar recarga si el usuario presiona F5 y aún no se ha hecho un hard reload
   const navigationType = performance.getEntriesByType("navigation")[0]?.type;
   if (navigationType === "reload" && !sessionStorage.getItem('hardReload')) {
     sessionStorage.setItem('hardReload', 'true');
-    window.location.reload();
+    window.location.reload(true);
   } else {
     sessionStorage.removeItem('hardReload');
   }

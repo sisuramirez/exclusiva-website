@@ -1,4 +1,23 @@
-// DOM Elements
+const APP_VERSION = "1.2"; 
+const storedVersion = localStorage.getItem('app_version');
+
+if (storedVersion !== APP_VERSION) {
+  localStorage.setItem('app_version', APP_VERSION);
+  if (!sessionStorage.getItem('reloaded')) {
+    sessionStorage.setItem('reloaded', 'true');
+    setTimeout(() => window.location.reload(true), 100);
+  }
+} else {
+  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
+  if (navigationType === "reload" && !sessionStorage.getItem('hardReload')) {
+    sessionStorage.setItem('hardReload', 'true');
+    window.location.reload(true);
+  } else {
+    sessionStorage.removeItem('hardReload');
+  }
+}
+
+
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 const contactLink = document.querySelector('.nav__link[href="#"]'); 
