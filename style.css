@@ -115,6 +115,19 @@ header {
   color: white;
 }
 
+.phone-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.contact-card__phone-icon {
+  width: 30x;
+  height: 30px;
+}
+
+
 .contact-card__social {
   display: flex;
   justify-content: center;

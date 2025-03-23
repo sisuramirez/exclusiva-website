@@ -56,8 +56,13 @@ function createContactCard() {
           <button class="contact-card__close">&times;</button>
           <div class="contact-card__info">
               <div class="contact-card__contact">
-                  <span class="contact-card__phone">Phone: +(502)48494290</span>
-                  <span class="contact-card__email">Email: cotizaciones@exclusivarentaautos.com</span>
+                <span class="contact-card__phone">
+                Teléfono: +502 4849-4290
+                <a href="tel:+50248494290" class="phone-link" aria-label="Call +(502)48494290">
+                    <img src="./img/phone-icon.png" alt="Call" class="contact-card__phone-icon">
+                </a>
+                </span>
+                <span class="contact-card__email">Email: cotizaciones@exclusivarentaautos.com</span>
               </div>
               <div class="contact-card__social">
                   <a href="https://www.facebook.com/profile.php?id=100077124247045" class="contact-card__social-link" target="_blank">
