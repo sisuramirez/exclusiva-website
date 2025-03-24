@@ -868,10 +868,6 @@ header {
     margin-top: 0;
   }
 
-  .col + .col {
-    margin-left: 50px;
-  }
-
   .hero {
     display: flex;
     align-items: center;
