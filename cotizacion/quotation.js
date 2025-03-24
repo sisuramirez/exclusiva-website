@@ -358,7 +358,7 @@ const cars = [
     id: 18,
     name: "Toyota Corolla",
     category: "Sedanes",
-    imageUrl: "./img/corolla.png?v=2",
+    imageUrl: "./img/corolla.png?v=3",
     price: 35,
     specs: {
       airConditioner: "Sí",
