@@ -284,6 +284,18 @@ const cars = [
   // CROSSOVER
   {
     id: 12,
+    name: "Hyundai Creta",
+    category: "Crossovers",
+    imageUrl: "./img/creta.png?v=2",
+    price: 55,
+    specs: {
+      airConditioner: "Sí",
+      fuel: "Gasolina",
+      transmission: "Automático"
+    }
+  },
+  {
+    id: 13,
     name: "Nissan Kicks",
     category: "Crossovers",
     imageUrl: "./img/kicks.png?v=2",
@@ -295,7 +307,7 @@ const cars = [
     }
   },
   {
-    id: 13,
+    id: 14,
     name: "Kia Sonet",
     category: "Crossovers",
     imageUrl: "./img/sonet.png?v=2",
@@ -307,7 +319,7 @@ const cars = [
     }
   },
   {
-    id: 14,
+    id: 15,
     name: "Mitsubishi Xpander",
     category: "Crossovers",
     imageUrl: "./img/xpander-v2.png?v=2",
@@ -319,7 +331,7 @@ const cars = [
     }
   },
   {
-    id: 15,
+    id: 16,
     name: "Kia Rio",
     category: "Sedanes",
     imageUrl: "./img/rio.png?v=2",
@@ -331,7 +343,7 @@ const cars = [
     }
   },
   {
-    id: 16,
+    id: 17,
     name: "Hyundai Verna",
     category: "Sedanes",
     imageUrl: "./img/verna.png?v=2",
@@ -343,7 +355,7 @@ const cars = [
     }
   },
   {
-    id: 17,
+    id: 18,
     name: "Toyota Corolla",
     category: "Sedanes",
     imageUrl: "./img/corolla.png?v=2",
@@ -354,7 +366,7 @@ const cars = [
       transmission: "Automático"
     }
   }
-];
+  ]
 
 // Elementos del DOM
 const catalogGrid = document.getElementById('catalog-grid');
