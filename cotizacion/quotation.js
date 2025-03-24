@@ -532,7 +532,7 @@ Me interesa cotizar el siguiente vehículo:
 ▪️ *Modelo:* ${selectedCar.name}
 ▪️ *Categoría:* ${selectedCar.category}
 
-*Detalles de la reserva:*
+*Detalles de la cotización:*
 📅 *Fecha de inicio:* ${formattedStartDate}
 ⏰ *Hora de recogida:* ${startTime}
 📅 *Fecha de entrega:* ${formattedEndDate}
