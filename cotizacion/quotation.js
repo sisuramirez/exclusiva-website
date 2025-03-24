@@ -504,10 +504,17 @@ function backToCatalog() {
   selectedCar = null;
 }
 
-// Función para formatear la fecha como texto en español
+// Función para formatear la fecha como texto en español considerando la zona horaria de Guatemala
 function formatDateAsText(dateString) {
-  const date = new Date(dateString);
-  const day = date.getDate();
+  // Crear fecha en UTC
+  const dateUTC = new Date(dateString);
+  
+  // Ajustar a la zona horaria de Guatemala (UTC-6)
+  // Nota: usamos una fecha con hora 0 para evitar que el cambio de día afecte el resultado
+  const dateString12PM = dateString + 'T12:00:00';
+  const dateWithTime = new Date(dateString12PM);
+  
+  const day = dateWithTime.getDate();
   
   // Array con los nombres de los meses en español
   const months = [
@@ -515,8 +522,8 @@ function formatDateAsText(dateString) {
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
   
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
+  const month = months[dateWithTime.getMonth()];
+  const year = dateWithTime.getFullYear();
   
   return `${day} de ${month} de ${year}`;
 }
@@ -534,7 +541,7 @@ function sendToWhatsApp() {
       return;
   }
   
-  if (!startTime || !endTime) {
+  if (startTimeInput && endTimeInput && (!startTime || !endTime)) {
       alert('Por favor selecciona horas de inicio y devolución');
       return;
   }
@@ -543,7 +550,7 @@ function sendToWhatsApp() {
   const formattedStartDate = formatDateAsText(startDate);
   const formattedEndDate = formatDateAsText(endDate);
   
-  // Crear mensaje para WhatsApp
+  // Crear mensaje para WhatsApp con zona horaria
   const message = `*¡Mucho gusto!*
 
 Me interesa cotizar el siguiente vehículo:
@@ -552,9 +559,9 @@ Me interesa cotizar el siguiente vehículo:
 
 *Detalles de la cotización:*
 📅 *Fecha de inicio:* ${formattedStartDate}
-⏰ *Hora de recogida:* ${startTime}
+⏰ *Hora de recogida:* ${startTime} (hora de Guatemala)
 📅 *Fecha de entrega:* ${formattedEndDate}
-⏰ *Hora de entrega:* ${endTime}`;
+⏰ *Hora de entrega:* ${endTime} (hora de Guatemala)`;
   
   // URL de WhatsApp con el mensaje - usar el número correcto sin el signo +
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
