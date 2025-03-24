@@ -1,23 +1,20 @@
-const APP_VERSION = "1.2"; 
-const storedVersion = localStorage.getItem('app_version');
-
-if (storedVersion !== APP_VERSION) {
-  localStorage.setItem('app_version', APP_VERSION);
-  if (!sessionStorage.getItem('reloaded')) {
-    sessionStorage.setItem('reloaded', 'true');
-    setTimeout(() => window.location.reload(true), 100);
-  }
-} else {
-  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
-  if (navigationType === "reload" && !sessionStorage.getItem('hardReload')) {
-    sessionStorage.setItem('hardReload', 'true');
-    window.location.reload(true);
-  } else {
-    sessionStorage.removeItem('hardReload');
-  }
-}
-
-
+(() => {
+    const clearCache = () => {
+      const root = document.getElementById('root');
+      if (root) {
+        root.innerHTML += 'Cache cleared using window.location.href <br>';
+      }
+      
+      if (!window.location.href.includes('nocache')) {
+        const baseUrl = window.location.href.split('?')[0];
+        window.location.href = `${baseUrl}?nocache=${Date.now()}`;
+      }
+    };
+    
+    document.addEventListener("DOMContentLoaded", clearCache);
+  })();
+  
+  
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 const contactLink = document.querySelector('.nav__link[href="#"]'); 

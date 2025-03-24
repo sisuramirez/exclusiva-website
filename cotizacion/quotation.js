@@ -1,21 +1,20 @@
-const APP_VERSION = "1.2"; 
-const storedVersion = localStorage.getItem('app_version');
+(() => {
+  const clearCache = () => {
+    const root = document.getElementById('root');
+    if (root) {
+      root.innerHTML += 'Cache cleared using window.location.href <br>';
+    }
+    
+    if (!window.location.href.includes('nocache')) {
+      const baseUrl = window.location.href.split('?')[0];
+      window.location.href = `${baseUrl}?nocache=${Date.now()}`;
+    }
+  };
+  
+  document.addEventListener("DOMContentLoaded", clearCache);
+})();
 
-if (storedVersion !== APP_VERSION) {
-  localStorage.setItem('app_version', APP_VERSION);
-  if (!sessionStorage.getItem('reloaded')) {
-    sessionStorage.setItem('reloaded', 'true');
-    setTimeout(() => window.location.reload(true), 100);
-  }
-} else {
-  const navigationType = performance.getEntriesByType("navigation")[0]?.type;
-  if (navigationType === "reload" && !sessionStorage.getItem('hardReload')) {
-    sessionStorage.setItem('hardReload', 'true');
-    window.location.reload(true);
-  } else {
-    sessionStorage.removeItem('hardReload');
-  }
-}
+
 
 const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
 let contactCard = null;
@@ -150,7 +149,7 @@ const cars = [
     name: "Toyota Hiace",
     category: "Microbuses",
     imageUrl: "./img/hiace.png?v=2",
-    price: 600,
+    price: 80,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -162,7 +161,7 @@ const cars = [
     name: "Nissan Urvan",
     category: "Microbuses",
     imageUrl: "./img/urvan.png?v=2",
-    price: 600,
+    price: 80,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -174,7 +173,7 @@ const cars = [
     name: "Hyundai H1",
     category: "Microbuses",
     imageUrl: "./img/h1.png?v=2",
-    price: 550,
+    price: 70,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -186,7 +185,7 @@ const cars = [
     name: "Hyundai Staria",
     category: "Microbuses",
     imageUrl: "./img/staria.png?v=2",
-    price: 600,
+    price: 80,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -200,7 +199,7 @@ const cars = [
     name: "Toyota Fortuner",
     category: "SUVs",
     imageUrl: "./img/fortuner.png?v=2",
-    price: 700,
+    price: 95,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -212,7 +211,7 @@ const cars = [
     name: "Mitsubishi Montero",
     category: "SUVs",
     imageUrl: "./img/montero.png?v=2",
-    price: 600,
+    price: 80,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -224,7 +223,7 @@ const cars = [
     name: "Hyundai Santa Fe",
     category: "SUVs",
     imageUrl: "./img/santafe.png?v=2",
-    price: 500,
+    price: 65,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -236,7 +235,7 @@ const cars = [
     name: "Mitsubishi Outlander",
     category: "SUVs",
     imageUrl: "./img/outlander.png?v=2",
-    price: 500,
+    price: 65,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -250,7 +249,7 @@ const cars = [
     name: "Toyota Hilux",
     category: "Pick-ups",
     imageUrl: "./img/hilux.png?v=2",
-    price: 550,
+    price: 75,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -262,7 +261,7 @@ const cars = [
     name: "Mitsubishi L200",
     category: "Pick-ups",
     imageUrl: "./img/l200.png?v=2",
-    price: 550,
+    price: 75,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -274,7 +273,7 @@ const cars = [
     name: "Nissan Frontier",
     category: "Pick-ups",
     imageUrl: "./img/frontier.png?v=2",
-    price: 550,
+    price: 75,
     specs: {
       airConditioner: "Sí",
       fuel: "Diésel",
@@ -288,7 +287,7 @@ const cars = [
     name: "Nissan Kicks",
     category: "Crossovers",
     imageUrl: "./img/kicks.png?v=2",
-    price: 350,
+    price: 45,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -300,7 +299,7 @@ const cars = [
     name: "Kia Sonet",
     category: "Crossovers",
     imageUrl: "./img/sonet.png?v=2",
-    price: 350,
+    price: 45,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -312,7 +311,7 @@ const cars = [
     name: "Mitsubishi Xpander",
     category: "Crossovers",
     imageUrl: "./img/xpander-v2.png?v=2",
-    price: 400,
+    price: 55,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -324,7 +323,7 @@ const cars = [
     name: "Kia Rio",
     category: "Sedanes",
     imageUrl: "./img/rio.png?v=2",
-    price: 280,
+    price: 35,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -336,7 +335,7 @@ const cars = [
     name: "Hyundai Verna",
     category: "Sedanes",
     imageUrl: "./img/verna.png?v=2",
-    price: 250,
+    price: 35,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -348,7 +347,7 @@ const cars = [
     name: "Toyota Corolla",
     category: "Sedanes",
     imageUrl: "./img/corolla.png?v=2",
-    price: 280,
+    price: 35,
     specs: {
       airConditioner: "Sí",
       fuel: "Gasolina",
@@ -376,14 +375,13 @@ const whatsappNumber = "50248494290"; // Número correcto sin el signo +
 // Variables globales
 let selectedCar = null;
 
-// Función para formatear precio a formato de moneda
+
 function formatCurrency(amount) {
-  return new Intl.NumberFormat('es-GT', {
+  return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'GTQ'
+      currency: 'USD'
   }).format(amount);
 }
-
 // Función para crear una card de auto
 function createCarCard(car) {
   const carCard = document.createElement('div');

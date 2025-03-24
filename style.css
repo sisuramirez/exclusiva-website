@@ -309,6 +309,19 @@ header {
 }
 
 /* How It Works Section */
+
+.how-it-works__step:nth-child(1) {
+  order: 3; /* El elemento que estaba primero (ubicación) ahora va tercero */
+}
+
+.how-it-works__step:nth-child(2) {
+  order: 2; /* El elemento que estaba segundo (requisitos) se mantiene segundo */
+}
+
+.how-it-works__step:nth-child(3) {
+  order: 1; /* El elemento que estaba tercero (vehículos) ahora va primero */
+}
+
 .how-it-works {
   background-color: var(--how-it-works-bg, #f8f8f8);
   text-align: center;
@@ -913,6 +926,7 @@ header {
     z-index: 3;
     transition: opacity 0.5s ease-in-out;
   }
+
 
 
   .how-it-works {
