@@ -559,7 +559,7 @@ Me interesa cotizar el siguiente vehículo:
 
 *Detalles de la cotización:*
 📅 *Fecha de inicio:* ${formattedStartDate}
-⏰ *Hora de recogida:* ${startTime} (hora de Guatemala)
+⏰ *Hora de inicio:* ${startTime} (hora de Guatemala)
 📅 *Fecha de entrega:* ${formattedEndDate}
 ⏰ *Hora de entrega:* ${endTime} (hora de Guatemala)`;
   
