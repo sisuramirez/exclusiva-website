@@ -504,6 +504,23 @@ function backToCatalog() {
   selectedCar = null;
 }
 
+// Función para formatear la fecha como texto en español
+function formatDateAsText(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  
+  // Array con los nombres de los meses en español
+  const months = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} de ${month} de ${year}`;
+}
+
 // Función para enviar mensaje a WhatsApp
 function sendToWhatsApp() {
   const startDate = startDateInput.value;
@@ -522,8 +539,9 @@ function sendToWhatsApp() {
       return;
   }
   
-  const formattedStartDate = new Date(startDate).toLocaleDateString('es-MX');
-  const formattedEndDate = new Date(endDate).toLocaleDateString('es-MX');
+  // Formatear las fechas como texto en español
+  const formattedStartDate = formatDateAsText(startDate);
+  const formattedEndDate = formatDateAsText(endDate);
   
   // Crear mensaje para WhatsApp
   const message = `*¡Mucho gusto!*
