@@ -528,7 +528,7 @@ function sendToWhatsApp() {
   // Crear mensaje para WhatsApp
   const message = `*¡Mucho gusto!*
 
-Me interesa rentar el siguiente vehículo:
+Me interesa cotizar el siguiente vehículo:
 ▪️ *Modelo:* ${selectedCar.name}
 ▪️ *Categoría:* ${selectedCar.category}
 
