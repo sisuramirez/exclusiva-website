@@ -452,48 +452,38 @@ function displayCars(category = 'all') {
   });
 }
 
-// Función para obtener la fecha actual en la zona horaria de Guatemala
-function getGuatemalaDate() {
-  const now = new Date();
-  const guatemalaOffset = -6 * 60; // UTC-6
-  const localOffset = now.getTimezoneOffset();
-  const guatemalaTime = new Date(now.getTime() + (guatemalaOffset - localOffset) * 60000);
-  return guatemalaTime;
-}
-
-// Función para calcular la fecha mínima de devolución
-function getMinEndDate(startDate) {
-  const start = new Date(startDate);
-  start.setDate(start.getDate() + 2); // Sumar dos días
-  return start.toISOString().split('T')[0];
-}
-
-// Función para validar fechas más estrictamente
 function validateDates() {
-  const today = getGuatemalaDate();
   const startDate = new Date(startDateInput.value);
   const endDate = new Date(endDateInput.value);
+  const today = new Date();
+
+  // Asegurar que today no tenga horas para comparación exacta
+  today.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  // Calcular la fecha de ayer
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
 
   // Limpiar cualquier error previo
   startDateInput.setCustomValidity('');
   endDateInput.setCustomValidity('');
 
-  // Convertir today a una fecha sin hora para comparación precisa
-  const todayNoTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
   // Validación de fecha de inicio
-  if (startDate < todayNoTime) {
+  // Permite seleccionar el día de hoy o un día antes
+  if (startDate < yesterday) {
     startDateInput.setCustomValidity('La fecha de inicio no puede ser anterior a hoy');
     startDateInput.reportValidity();
     return false;
   }
 
-  // Validación de fecha de devolución (mínimo 2 días después)
-  const minEndDate = new Date(todayNoTime);
+  // Calcular fecha mínima de devolución (2 días después de la fecha de inicio)
+  const minEndDate = new Date(startDate);
   minEndDate.setDate(minEndDate.getDate() + 2);
 
   if (endDate < minEndDate) {
-    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 2 días después de hoy');
+    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 2 días después de la fecha de inicio');
     endDateInput.reportValidity();
     return false;
   }
@@ -501,15 +491,31 @@ function validateDates() {
   return true;
 }
 
-// Función para establecer fechas mínimas al cargar
 function setInitialDateRestrictions() {
-  const today = getGuatemalaDate().toISOString().split('T')[0];
-  startDateInput.min = today;
-  
-  const minEndDate = new Date(getGuatemalaDate());
-  minEndDate.setDate(minEndDate.getDate() + 2);
-  endDateInput.min = minEndDate.toISOString().split('T')[0];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Calcular la fecha de ayer
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  // Formatear la fecha de ayer para el input
+  const yesterdayString = yesterday.toISOString().split('T')[0];
+  startDateInput.min = yesterdayString;
+
+  // Calcular fecha mínima para fecha de devolución (2 días después de la fecha de inicio)
+  const minEndDate = new Date(today);
+  minEndDate.setDate(today.getDate() + 2);
+  const minEndDateString = minEndDate.toISOString().split('T')[0];
+
+  endDateInput.min = minEndDateString;
 }
+
+function getDateForWhatsApp(dateInput) {
+  return dateInput.value; // Mantiene la fecha exacta ingresada sin modificarla
+}
+
+// ---------------------------------------------------
 
 // Función para mostrar sección de cotización
 function showQuotationSection() {
@@ -682,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (startDateInput.value) {
           // Establecer fecha mínima de devolución
           const minEndDate = new Date(startDateInput.value);
-          minEndDate.setDate(minEndDate.getDate() + 2);
+          minEndDate.setDate(minEndDate.getDate() + 1);
           
           // Formatear la fecha mínima para el input de fecha de devolución
           const minEndDateString = minEndDate.toISOString().split('T')[0];
