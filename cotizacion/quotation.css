@@ -565,6 +565,10 @@ header {
   background-color: #2c9da3;
 }
 
+#minimum-time{
+  color: red;
+}
+
 .quotation__result {
   margin-top: 20px;
   padding: 20px;
