@@ -468,6 +468,49 @@ function getMinEndDate(startDate) {
   return start.toISOString().split('T')[0];
 }
 
+// Función para validar fechas más estrictamente
+function validateDates() {
+  const today = getGuatemalaDate();
+  const startDate = new Date(startDateInput.value);
+  const endDate = new Date(endDateInput.value);
+
+  // Limpiar cualquier error previo
+  startDateInput.setCustomValidity('');
+  endDateInput.setCustomValidity('');
+
+  // Convertir today a una fecha sin hora para comparación precisa
+  const todayNoTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  // Validación de fecha de inicio
+  if (startDate < todayNoTime) {
+    startDateInput.setCustomValidity('La fecha de inicio no puede ser anterior a hoy');
+    startDateInput.reportValidity();
+    return false;
+  }
+
+  // Validación de fecha de devolución (mínimo 2 días después)
+  const minEndDate = new Date(todayNoTime);
+  minEndDate.setDate(minEndDate.getDate() + 2);
+
+  if (endDate < minEndDate) {
+    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 2 días después de hoy');
+    endDateInput.reportValidity();
+    return false;
+  }
+
+  return true;
+}
+
+// Función para establecer fechas mínimas al cargar
+function setInitialDateRestrictions() {
+  const today = getGuatemalaDate().toISOString().split('T')[0];
+  startDateInput.min = today;
+  
+  const minEndDate = new Date(getGuatemalaDate());
+  minEndDate.setDate(minEndDate.getDate() + 2);
+  endDateInput.min = minEndDate.toISOString().split('T')[0];
+}
+
 // Función para mostrar sección de cotización
 function showQuotationSection() {
   document.querySelector('.catalog').style.display = 'none';
@@ -508,9 +551,7 @@ function showQuotationSection() {
   quotationResult.style.display = 'none';
   
   // Establecer valores mínimos para las fechas
-  const today = getGuatemalaDate().toISOString().split('T')[0];
-  startDateInput.min = today;
-  endDateInput.min = getMinEndDate(today);
+  setInitialDateRestrictions();
 }
 
 // Función para volver al catálogo
@@ -562,6 +603,11 @@ function sendToWhatsApp() {
       return;
   }
   
+  // Validar fechas antes de enviar
+  if (!validateDates()) {
+    return;
+  }
+  
   // Formatear las fechas como texto en español
   const formattedStartDate = formatDateAsText(startDate);
   const formattedEndDate = formatDateAsText(endDate);
@@ -609,7 +655,10 @@ document.addEventListener('DOMContentLoaded', () => {
   backBtn.addEventListener('click', backToCatalog);
   
   // Botón para calcular cotización - cambiado para enviar a WhatsApp
-  calculateBtn.addEventListener('click', sendToWhatsApp);
+  calculateBtn.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevenir envío por defecto
+    sendToWhatsApp();
+  });
   
   // Menu hamburguesa
   hamburgerBtn.addEventListener('click', () => {
@@ -631,11 +680,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Evento para fecha de inicio que actualiza la fecha mínima de devolución
   startDateInput.addEventListener('change', () => {
       if (startDateInput.value) {
-          endDateInput.min = getMinEndDate(startDateInput.value);
+          // Establecer fecha mínima de devolución
+          const minEndDate = new Date(startDateInput.value);
+          minEndDate.setDate(minEndDate.getDate() + 2);
+          
+          // Formatear la fecha mínima para el input de fecha de devolución
+          const minEndDateString = minEndDate.toISOString().split('T')[0];
+          endDateInput.min = minEndDateString;
+          
+          // Limpiar valor de fecha de devolución si es inválido
+          if (new Date(endDateInput.value) < minEndDate) {
+              endDateInput.value = '';
+          }
       }
   });
+
+  // Establecer restricciones de fecha iniciales
+  setInitialDateRestrictions();
 });
 
+// Evento para botón de WhatsApp en footer
 if (footerWhatsappButton) {
   footerWhatsappButton.addEventListener('click', function(event) {
       event.preventDefault();
