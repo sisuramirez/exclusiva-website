@@ -452,6 +452,22 @@ function displayCars(category = 'all') {
   });
 }
 
+// Función para obtener la fecha actual en la zona horaria de Guatemala
+function getGuatemalaDate() {
+  const now = new Date();
+  const guatemalaOffset = -6 * 60; // UTC-6
+  const localOffset = now.getTimezoneOffset();
+  const guatemalaTime = new Date(now.getTime() + (guatemalaOffset - localOffset) * 60000);
+  return guatemalaTime;
+}
+
+// Función para calcular la fecha mínima de devolución
+function getMinEndDate(startDate) {
+  const start = new Date(startDate);
+  start.setDate(start.getDate() + 2); // Sumar dos días
+  return start.toISOString().split('T')[0];
+}
+
 // Función para mostrar sección de cotización
 function showQuotationSection() {
   document.querySelector('.catalog').style.display = 'none';
@@ -492,9 +508,9 @@ function showQuotationSection() {
   quotationResult.style.display = 'none';
   
   // Establecer valores mínimos para las fechas
-  const today = new Date().toISOString().split('T')[0];
+  const today = getGuatemalaDate().toISOString().split('T')[0];
   startDateInput.min = today;
-  endDateInput.min = today;
+  endDateInput.min = getMinEndDate(today);
 }
 
 // Función para volver al catálogo
@@ -518,8 +534,8 @@ function formatDateAsText(dateString) {
   
   // Array con los nombres de los meses en español
   const months = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
   
   const month = months[dateWithTime.getMonth()];
@@ -615,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Evento para fecha de inicio que actualiza la fecha mínima de devolución
   startDateInput.addEventListener('change', () => {
       if (startDateInput.value) {
-          endDateInput.min = startDateInput.value;
+          endDateInput.min = getMinEndDate(startDateInput.value);
       }
   });
 });
