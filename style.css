@@ -280,6 +280,23 @@ header {
   display: block;
 }
 
+.hero__image-container img.active {
+  opacity: 1;
+}
+
+.hero__image-container img.next {
+  opacity: 0;
+}
+
+.hero__image-container img.fade-out {
+  opacity: 0;
+}
+
+.hero__image-container img.fade-in {
+  opacity: 1;
+}
+
+
 .hero__title {
   font-size: 2.2rem;
   line-height: 1.2;
