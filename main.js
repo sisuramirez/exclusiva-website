@@ -179,7 +179,7 @@ if (whatsappButton) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Array de imágenes de vehículos
+    // Array de imágenes de vehículos para rotar
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
@@ -187,87 +187,138 @@ document.addEventListener('DOMContentLoaded', function() {
         './img/transition5-kicks.png'
     ];
     
-    // Elemento de imagen principal
+    // Seleccionar la imagen principal
     const heroImage = document.querySelector('.hero__image-container img');
-    if (!heroImage) return; // Salir si no existe la imagen
-    
-    // Añadir estilos iniciales
-    heroImage.style.transition = 'opacity 0.3s ease';
-    heroImage.style.opacity = '1';
-    
-    // Variables de control
     let currentIndex = 0;
-    let imageObjects = [];
-    let timer = null;
+    let nextIndex = 1;
+    let isTransitioning = false;
     
-    // Precargar todas las imágenes y guardar referencia para uso posterior
-    function preloadAllImages() {
+    // Precargar todas las imágenes para evitar parpadeos
+    function preloadImages() {
+        const preloadedImages = [];
         vehicleImages.forEach(src => {
             const img = new Image();
             img.src = src;
-            imageObjects.push(img);
+            img.onload = () => console.log(`Imagen precargada: ${src}`);
+            preloadedImages.push(img);
         });
-        
-        // Iniciar el carrusel una vez que la primera imagen esté cargada
-        imageObjects[0].onload = startCarousel;
-        
-        // Iniciar de todas formas después de un tiempo razonable
-        setTimeout(startCarousel, 1000);
+        return preloadedImages;
     }
     
-    // Función principal de cambio de imagen
-    function showNextImage() {
-        // Desaparecer la imagen actual
-        heroImage.style.opacity = '0';
+    // Crear un segundo elemento de imagen para la transición
+    function setupDualImageSystem() {
+        // Obtener el contenedor
+        const container = document.querySelector('.hero__image-container');
         
-        // Calcular el índice de la siguiente imagen
-        const nextIndex = (currentIndex + 1) % vehicleImages.length;
+        // Verificar si la imagen actual existe
+        if (!heroImage) return;
         
-        // Esperar a que termine la transición de desvanecimiento
-        setTimeout(() => {
-            // Cambiar la fuente de la imagen
-            heroImage.src = vehicleImages[nextIndex];
+        // Estilo del contenedor
+        container.style.position = 'relative';
+        
+        // Configurar imagen actual
+        heroImage.style.position = 'absolute';
+        heroImage.style.top = '0';
+        heroImage.style.left = '0';
+        heroImage.style.transition = 'opacity 0.8s ease-in-out';
+        heroImage.style.opacity = '1';
+        heroImage.style.zIndex = '1';
+        
+        // Crear la segunda imagen para la transición
+        const secondImage = document.createElement('img');
+        secondImage.src = vehicleImages[nextIndex];
+        secondImage.style.position = 'absolute';
+        secondImage.style.top = '0';
+        secondImage.style.left = '0';
+        secondImage.style.width = '100%';
+        secondImage.style.height = '100%';
+        secondImage.style.objectFit = 'cover';
+        secondImage.style.transition = 'opacity 0.8s ease-in-out';
+        secondImage.style.opacity = '0';
+        secondImage.style.zIndex = '0';
+        
+        // Añadir la segunda imagen al contenedor
+        container.appendChild(secondImage);
+        
+        return { mainImage: heroImage, secondImage };
+    }
+    
+    // Precargar imágenes
+    const preloadedImages = preloadImages();
+    
+    // Configurar el sistema de imágenes duales
+    const { mainImage, secondImage } = setupDualImageSystem();
+    
+    // Función para cambiar la imagen con una transición suave
+    function changeImage() {
+        // Evitar múltiples transiciones a la vez
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        // Calcular el siguiente índice
+        nextIndex = (currentIndex + 1) % vehicleImages.length;
+        
+        // Preparar la siguiente imagen (en la capa inferior)
+        secondImage.src = vehicleImages[nextIndex];
+        secondImage.style.zIndex = '0';
+        mainImage.style.zIndex = '1';
+        
+        // Asegurarse de que la siguiente imagen esté cargada
+        secondImage.onload = function() {
+            // Desvanecer la imagen actual
+            mainImage.style.opacity = '0';
+            // Mostrar la nueva imagen
+            secondImage.style.opacity = '1';
             
-            // Esperar un breve momento
+            // Después de completar la transición
             setTimeout(() => {
-                // Hacer aparecer la nueva imagen
-                heroImage.style.opacity = '1';
+                // Intercambiar roles de las imágenes
+                [mainImage.style.zIndex, secondImage.style.zIndex] = 
+                [secondImage.style.zIndex, mainImage.style.zIndex];
                 
-                // Actualizar el índice
+                // Actualizar imagen principal para el próximo ciclo
+                mainImage.src = vehicleImages[nextIndex];
+                mainImage.style.opacity = '1';
+                
+                // Ocultar segunda imagen para el próximo ciclo
+                secondImage.style.opacity = '0';
+                
+                // Actualizar índice actual
                 currentIndex = nextIndex;
-            }, 50);
-        }, 300);
+                
+                // Permitir la próxima transición
+                isTransitioning = false;
+            }, 800); // Debe coincidir con la duración de la transición CSS
+        };
+        
+        // Respaldo en caso de que la imagen ya esté en caché
+        setTimeout(() => {
+            if (isTransitioning) {
+                mainImage.style.opacity = '0';
+                secondImage.style.opacity = '1';
+                
+                setTimeout(() => {
+                    [mainImage.style.zIndex, secondImage.style.zIndex] = 
+                    [secondImage.style.zIndex, mainImage.style.zIndex];
+                    
+                    mainImage.src = vehicleImages[nextIndex];
+                    mainImage.style.opacity = '1';
+                    secondImage.style.opacity = '0';
+                    
+                    currentIndex = nextIndex;
+                    isTransitioning = false;
+                }, 800);
+            }
+        }, 100);
     }
     
-    // Iniciar el carrusel
-    function startCarousel() {
-        // Solo iniciar una vez
-        if (timer) return;
-        
-        // Asegurarse de que la primera imagen esté establecida
-        heroImage.src = vehicleImages[currentIndex];
-        
-        // Iniciar el temporizador
-        timer = setInterval(showNextImage, 2000);
-    }
-    
-    // Detener el carrusel si la página pierde el foco
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden && timer) {
-            clearInterval(timer);
-            timer = null;
-        } else if (!document.hidden && !timer) {
-            timer = setInterval(showNextImage, 2000);
-        }
-    });
-    
-    // Precargar imágenes e iniciar
-    preloadAllImages();
+    // Cambiar la imagen cada 3 segundos
+    setInterval(changeImage, 3000);
 });
 
-// Código para el botón de WhatsApp (separado para claridad)
+// Código para el botón de WhatsApp
 document.addEventListener('DOMContentLoaded', function() {
-    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
+    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button'); // Ajusta el selector según tu HTML
     
     if (footerWhatsappButton) {
         footerWhatsappButton.addEventListener('click', function(event) {
