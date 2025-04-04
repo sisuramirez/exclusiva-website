@@ -179,84 +179,91 @@ if (whatsappButton) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Vehicle images array
+    // Array de imágenes de vehículos para rotar
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
         './img/transition4-stavia.png', 
         './img/transition5-kicks.png'
     ];
-
-    // Get image container and create image elements
-    const imageContainer = document.querySelector('.hero__image-container');
-    const img1 = document.createElement('img');
-    const img2 = document.createElement('img');
     
-    // Add both images to container
-    imageContainer.appendChild(img1);
-    imageContainer.appendChild(img2);
-
-    // Initial setup
+    // Seleccionar la imagen principal
+    const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
-    let nextIndex = 1;
     let isTransitioning = false;
-    img1.src = vehicleImages[currentIndex];
-    img2.src = vehicleImages[nextIndex];
     
-    // CSS classes setup
-    img1.classList.add('active');
-    img2.classList.add('next');
-
-    // Precarga todas las imágenes
+    // Precargar imágenes para evitar parpadeos
     function preloadImages() {
         vehicleImages.forEach(src => {
-            new Image().src = src;
+            const img = new Image();
+            img.src = src;
         });
     }
+    
+    // Precargar imágenes al inicio
     preloadImages();
-
-    function transitionImages() {
-        if (isTransitioning) return;
-        isTransitioning = true;
-
-        // Update indices
-        currentIndex = nextIndex;
-        nextIndex = (currentIndex + 1) % vehicleImages.length;
-
-        // Get elements
-        const currentImg = imageContainer.querySelector('.active');
-        const nextImg = imageContainer.querySelector('.next');
-
-        // Prepare next image
-        nextImg.src = vehicleImages[nextIndex];
-
-        // Start transition
-        currentImg.classList.add('fade-out');
-        currentImg.classList.remove('active');
-
-        nextImg.classList.add('fade-in');
-        nextImg.classList.remove('next');
-
-        // Wait for transition to complete
-        setTimeout(() => {
-            currentImg.classList.remove('fade-out');
-            nextImg.classList.remove('fade-in');
-            
-            // Swap roles
-            currentImg.classList.add('next');
-            nextImg.classList.add('active');
-            
-            isTransitioning = false;
-        }, 1000); // Match transition duration
+    
+    // Añadir transición CSS a la imagen
+    if (heroImage) {
+        heroImage.style.transition = 'opacity 0.5s ease-in-out';
     }
-
-    // Start interval
-    setInterval(transitionImages, 3000);
+    
+    // Función para cambiar la imagen con una transición suave
+    function changeImage() {
+        // Prevenir múltiples transiciones a la vez
+        if (isTransitioning || !heroImage) return;
+        isTransitioning = true;
+        
+        // Desvanecer completamente la imagen actual
+        heroImage.style.opacity = '0';
+        
+        // Esperar a que termine el desvanecimiento antes de cambiar la imagen
+        setTimeout(() => {
+            // Calcular el siguiente índice
+            currentIndex = (currentIndex + 1) % vehicleImages.length;
+            
+            // Preparar la nueva imagen pero mantenerla invisible
+            const nextImage = new Image();
+            nextImage.src = vehicleImages[currentIndex];
+            
+            // Cuando la nueva imagen esté lista, actualizar src y hacer aparecer
+            nextImage.onload = function() {
+                heroImage.src = vehicleImages[currentIndex];
+                
+                // Pequeña pausa antes de mostrar la nueva imagen
+                setTimeout(() => {
+                    // Hacer aparecer la nueva imagen
+                    heroImage.style.opacity = '1';
+                    
+                    // Permitir la siguiente transición después de completar
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, 500); // Duración de la transición de aparición
+                }, 100); // Pausa entre desaparición y aparición
+            };
+            
+            // Respaldo si la imagen ya está en caché y onload no se dispara
+            setTimeout(() => {
+                if (heroImage.style.opacity === '0') {
+                    heroImage.src = vehicleImages[currentIndex];
+                    heroImage.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, 500);
+                }
+            }, 300);
+        }, 500); // Duración de la transición de desvanecimiento
+    }
+    
+    // Cambiar la imagen cada 3 segundos
+    setInterval(changeImage, 3000);
 });
 
-// WhatsApp button code remains the same
+// Mantener el código del botón WhatsApp separado
 document.addEventListener('DOMContentLoaded', function() {
-    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
+    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button'); // Ajusta según tu HTML
+    
     if (footerWhatsappButton) {
         footerWhatsappButton.addEventListener('click', function(event) {
             event.preventDefault();
