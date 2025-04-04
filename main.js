@@ -190,40 +190,61 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleccionar la imagen principal
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
+    let isAnimating = false;
     
-    // Asegurar que todas las imágenes están precargadas
-    (function preloadImages() {
+    // Precargar imágenes para evitar parpadeos
+    function preloadImages() {
+        const preloadArray = [];
         vehicleImages.forEach(src => {
             const img = new Image();
             img.src = src;
+            preloadArray.push(img);
         });
-    })();
+        return preloadArray;
+    }
     
-    // Configurar transición
+    // Iniciar precarga
+    const preloadedImages = preloadImages();
+    
+    // Configurar transición inicial - más rápida (0.5s en lugar de 1s)
     if (heroImage) {
         heroImage.style.transition = 'opacity 0.5s ease-in-out';
         heroImage.style.opacity = '1';
     }
     
-    // Función simplificada para cambiar imágenes
-    function changeImage() {
-        if (!heroImage) return;
+    // Función para realizar la transición entre imágenes - tiempos reducidos
+    function transitionToNextImage() {
+        if (isAnimating || !heroImage) return;
+        isAnimating = true;
         
-        // Fade out
+        // Fase 1: Fade out completo (ahora dura 0.5s)
         heroImage.style.opacity = '0';
         
+        // Esperar a que termine el fade out (tiempo reducido a 0.5s)
         setTimeout(() => {
-            // Actualizar índice y cambiar imagen
+            // Actualizar al siguiente índice
             currentIndex = (currentIndex + 1) % vehicleImages.length;
+            
+            // Cambiar la fuente de la imagen mientras está invisible
             heroImage.src = vehicleImages[currentIndex];
             
-            // Fade in
-            heroImage.style.opacity = '1';
-        }, 500);
+            // Fase 2: Fade in de la nueva imagen (pausa entre transiciones reducida a 100ms)
+            setTimeout(() => {
+                heroImage.style.opacity = '1';
+                
+                // Permitir la siguiente animación cuando termine el fade in (tiempo reducido a 0.5s)
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500); // Duración del fade in reducida
+            }, 100); // Pequeña pausa entre fade out y fade in reducida
+        }, 500); // Duración del fade out reducida
     }
     
-    // Iniciar el bucle inmediatamente
-    setInterval(changeImage, 3000);
+    // Iniciar el ciclo de transición más rápido (1s en lugar de 2s)
+    setTimeout(() => {
+        // Cambiar la imagen cada 3 segundos (reducido de 5s)
+        setInterval(transitionToNextImage, 3000);
+    }, 1000); // Esperar 1 segundo antes de iniciar el ciclo (reducido de 2s)
     
     // Mantener el código del botón WhatsApp separado
     const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
