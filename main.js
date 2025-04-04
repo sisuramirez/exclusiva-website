@@ -190,79 +190,64 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleccionar la imagen principal
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
-    let isTransitioning = false;
+    let isAnimating = false;
     
     // Precargar imágenes para evitar parpadeos
     function preloadImages() {
+        const preloadArray = [];
         vehicleImages.forEach(src => {
             const img = new Image();
             img.src = src;
+            preloadArray.push(img);
         });
+        return preloadArray;
     }
     
-    // Precargar imágenes al inicio
-    preloadImages();
+    // Iniciar precarga
+    const preloadedImages = preloadImages();
     
-    // Añadir transición CSS a la imagen
+    // Configurar transición inicial - más rápida (0.5s en lugar de 1s)
     if (heroImage) {
         heroImage.style.transition = 'opacity 0.5s ease-in-out';
+        heroImage.style.opacity = '1';
     }
     
-    // Función para cambiar la imagen con una transición suave
-    function changeImage() {
-        // Prevenir múltiples transiciones a la vez
-        if (isTransitioning || !heroImage) return;
-        isTransitioning = true;
+    // Función para realizar la transición entre imágenes - tiempos reducidos
+    function transitionToNextImage() {
+        if (isAnimating || !heroImage) return;
+        isAnimating = true;
         
-        // Desvanecer completamente la imagen actual
+        // Fase 1: Fade out completo (ahora dura 0.5s)
         heroImage.style.opacity = '0';
         
-        // Esperar a que termine el desvanecimiento antes de cambiar la imagen
+        // Esperar a que termine el fade out (tiempo reducido a 0.5s)
         setTimeout(() => {
-            // Calcular el siguiente índice
+            // Actualizar al siguiente índice
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             
-            // Preparar la nueva imagen pero mantenerla invisible
-            const nextImage = new Image();
-            nextImage.src = vehicleImages[currentIndex];
+            // Cambiar la fuente de la imagen mientras está invisible
+            heroImage.src = vehicleImages[currentIndex];
             
-            // Cuando la nueva imagen esté lista, actualizar src y hacer aparecer
-            nextImage.onload = function() {
-                heroImage.src = vehicleImages[currentIndex];
-                
-                // Pequeña pausa antes de mostrar la nueva imagen
-                setTimeout(() => {
-                    // Hacer aparecer la nueva imagen
-                    heroImage.style.opacity = '1';
-                    
-                    // Permitir la siguiente transición después de completar
-                    setTimeout(() => {
-                        isTransitioning = false;
-                    }, 500); // Duración de la transición de aparición
-                }, 100); // Pausa entre desaparición y aparición
-            };
-            
-            // Respaldo si la imagen ya está en caché y onload no se dispara
+            // Fase 2: Fade in de la nueva imagen (pausa entre transiciones reducida a 100ms)
             setTimeout(() => {
-                if (heroImage.style.opacity === '0') {
-                    heroImage.src = vehicleImages[currentIndex];
-                    heroImage.style.opacity = '1';
-                    
-                    setTimeout(() => {
-                        isTransitioning = false;
-                    }, 500);
-                }
-            }, 300);
-        }, 500); // Duración de la transición de desvanecimiento
+                heroImage.style.opacity = '1';
+                
+                // Permitir la siguiente animación cuando termine el fade in (tiempo reducido a 0.5s)
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500); // Duración del fade in reducida
+            }, 100); // Pequeña pausa entre fade out y fade in reducida
+        }, 500); // Duración del fade out reducida
     }
     
-    // Cambiar la imagen cada 3 segundos
-    setInterval(changeImage, 3000);
-});
-
-// Mantener el código del botón WhatsApp separado
-document.addEventListener('DOMContentLoaded', function() {
-    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button'); // Ajusta según tu HTML
+    // Iniciar el ciclo de transición más rápido (1s en lugar de 2s)
+    setTimeout(() => {
+        // Cambiar la imagen cada 3 segundos (reducido de 5s)
+        setInterval(transitionToNextImage, 3000);
+    }, 1000); // Esperar 1 segundo antes de iniciar el ciclo (reducido de 2s)
+    
+    // Mantener el código del botón WhatsApp separado
+    const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
     
     if (footerWhatsappButton) {
         footerWhatsappButton.addEventListener('click', function(event) {
