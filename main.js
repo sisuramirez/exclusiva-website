@@ -1,21 +1,4 @@
-(() => {
-    const clearCache = () => {
-      const root = document.getElementById('root');
-      if (root) {
-        root.innerHTML += 'Cache cleared using window.location.href <br>';
-      }
-      
-      if (!window.location.href.includes('nocache')) {
-        const baseUrl = window.location.href.split('?')[0];
-        window.location.href = `${baseUrl}?nocache=${Date.now()}`;
-      }
-    };
-    
-    document.addEventListener("DOMContentLoaded", clearCache);
-  })();
-  
-  
-// DOM Elements
+  // DOM Elements
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 const contactLink = document.querySelector('.nav__link[href="#"]'); 
