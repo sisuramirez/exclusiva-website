@@ -191,60 +191,94 @@ document.addEventListener('DOMContentLoaded', function() {
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
     let isAnimating = false;
+    let imagesLoaded = 0;
     
-    // Precargar imágenes para evitar parpadeos
-    function preloadImages() {
-        const preloadArray = [];
+    // Función mejorada para precargar imágenes correctamente
+    function preloadImages(callback) {
+        const totalImages = vehicleImages.length;
+        
         vehicleImages.forEach(src => {
             const img = new Image();
+            img.onload = function() {
+                imagesLoaded++;
+                if (imagesLoaded === totalImages && callback) {
+                    callback(); // Todas las imágenes han sido precargadas
+                }
+            };
+            img.onerror = function() {
+                imagesLoaded++;
+                console.error('Error cargando imagen:', src);
+                if (imagesLoaded === totalImages && callback) {
+                    callback(); // Continuar incluso si hay errores
+                }
+            };
             img.src = src;
-            preloadArray.push(img);
         });
-        return preloadArray;
     }
     
-    // Iniciar precarga
-    const preloadedImages = preloadImages();
-    
-    // Configurar transición inicial - más rápida (0.5s en lugar de 1s)
+    // Configurar transición inicial
     if (heroImage) {
         heroImage.style.transition = 'opacity 0.5s ease-in-out';
-        heroImage.style.opacity = '1';
+        heroImage.style.opacity = '0'; // Comenzar invisible
+        
+        // Establecer la primera imagen y mostrarla solo cuando esté cargada
+        const firstImage = new Image();
+        firstImage.onload = function() {
+            heroImage.src = firstImage.src;
+            heroImage.style.opacity = '1';
+        };
+        firstImage.src = vehicleImages[0];
     }
     
-    // Función para realizar la transición entre imágenes - tiempos reducidos
+    // Función mejorada para realizar la transición entre imágenes de manera confiable
     function transitionToNextImage() {
         if (isAnimating || !heroImage) return;
         isAnimating = true;
         
-        // Fase 1: Fade out completo (ahora dura 0.5s)
+        // Fase 1: Fade out completo
         heroImage.style.opacity = '0';
         
-        // Esperar a que termine el fade out (tiempo reducido a 0.5s)
+        // Esperar a que termine el fade out
         setTimeout(() => {
             // Actualizar al siguiente índice
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             
-            // Cambiar la fuente de la imagen mientras está invisible
-            heroImage.src = vehicleImages[currentIndex];
+            // Crear una nueva imagen para asegurar un manejo correcto de eventos
+            const nextImage = new Image();
             
-            // Fase 2: Fade in de la nueva imagen (pausa entre transiciones reducida a 100ms)
-            setTimeout(() => {
-                heroImage.style.opacity = '1';
+            // Configurar el evento onload para hacer la transición solo cuando la imagen esté lista
+            nextImage.onload = function() {
+                // Cambiar la fuente de la imagen mientras está invisible
+                heroImage.src = nextImage.src;
                 
-                // Permitir la siguiente animación cuando termine el fade in (tiempo reducido a 0.5s)
+                // Fase 2: Fade in de la nueva imagen
                 setTimeout(() => {
-                    isAnimating = false;
-                }, 500); // Duración del fade in reducida
-            }, 100); // Pequeña pausa entre fade out y fade in reducida
-        }, 500); // Duración del fade out reducida
+                    heroImage.style.opacity = '1';
+                    
+                    // Permitir la siguiente animación cuando termine el fade in
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 500);
+                }, 50); // Reducimos este tiempo para una transición más fluida
+            };
+            
+            // Iniciar la carga de la imagen
+            nextImage.src = vehicleImages[currentIndex];
+            
+            // Si la imagen ya está en caché, el evento onload podría no dispararse
+            if (nextImage.complete) {
+                nextImage.onload();
+            }
+        }, 500);
     }
     
-    // Iniciar el ciclo de transición más rápido (1s en lugar de 2s)
-    setTimeout(() => {
-        // Cambiar la imagen cada 3 segundos (reducido de 5s)
-        setInterval(transitionToNextImage, 3000);
-    }, 1000); // Esperar 1 segundo antes de iniciar el ciclo (reducido de 2s)
+    // Iniciar el ciclo solo después de que las imágenes estén precargadas
+    preloadImages(() => {
+        setTimeout(() => {
+            // Cambiar la imagen cada 3 segundos
+            setInterval(transitionToNextImage, 3000);
+        }, 1000);
+    });
     
     // Mantener el código del botón WhatsApp separado
     const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
