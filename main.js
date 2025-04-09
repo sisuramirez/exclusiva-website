@@ -201,14 +201,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Configurar transición inicial
     if (heroImage) {
-        heroImage.style.transition = 'opacity 0.5s ease-in-out';
-        heroImage.style.opacity = '0'; // Comenzar invisible
+        heroImage.style.transition = 'opacity 0.3s ease-in-out';
+        heroImage.style.opacity = '0';
         
         // Establecer la primera imagen y mostrarla solo cuando esté cargada
         const firstImage = new Image();
         firstImage.onload = function() {
             heroImage.src = firstImage.src;
-            heroImage.style.opacity = '1';
+            setTimeout(() => {
+                heroImage.style.opacity = '1';
+            }, 100);
         };
         firstImage.src = vehicleImages[0];
     }
@@ -218,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isAnimating || !heroImage) return;
         isAnimating = true;
         
-        // Fase 1: Fade out más prolongado (aumentamos el tiempo de transición)
-        heroImage.style.transition = 'opacity 1s ease-in-out'; // Aumentado a 1s para fade out
+        // Fase 1: Fade out
+        heroImage.style.transition = 'opacity 1s ease-in-out';
         heroImage.style.opacity = '0';
         
         // Esperar a que termine el fade out completo
@@ -234,17 +236,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Cambiar la fuente de la imagen mientras está invisible
                 heroImage.src = nextImage.src;
                 
-                // Un pequeño retraso adicional para asegurar que no haya traslape visual
+                // Esperar 2.5 segundos antes de mostrar la siguiente imagen
                 setTimeout(() => {
-                    // Fase 2: Fade in puede ser más rápido que el fade out
-                    heroImage.style.transition = 'opacity 0.8s ease-in-out'; // Transición para fade in
+                    // Fase 2: Fade in
+                    heroImage.style.transition = 'opacity 0.8s ease-in-out';
                     heroImage.style.opacity = '1';
                     
                     // Permitir la siguiente animación cuando termine el fade in
                     setTimeout(() => {
                         isAnimating = false;
-                    }, 800); // Ajustado al tiempo del fade in
-                }, 200); // Pausa breve entre cambio de imagen y fade in
+                    }, 800);
+                }, 2500); // 2.5 segundos de pausa sin carro visible
             };
             
             // Iniciar la carga de la imagen
@@ -254,14 +256,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (nextImage.complete) {
                 nextImage.onload();
             }
-        }, 1000); // Ajustado al tiempo del fade out
+        }, 1000); // Tiempo del fade out
     }
     
     // Iniciar el ciclo solo después de que las imágenes estén precargadas
     preloadImages(() => {
         setTimeout(() => {
-            // Cambiar la imagen cada 3 segundos
-            setInterval(transitionToNextImage, 3000);
+            // Cambiar la imagen cada 6.3 segundos (1s fade out + 2.5s pausa + 0.8s fade in + ~2s visible)
+            setInterval(transitionToNextImage, 6300);
         }, 1000);
     });
     // Mantener el código del botón WhatsApp separado
