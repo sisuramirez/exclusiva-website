@@ -480,10 +480,10 @@ function validateDates() {
 
   // Calcular fecha mínima de devolución (2 días después de la fecha de inicio)
   const minEndDate = new Date(startDate);
-  minEndDate.setDate(minEndDate.getDate() + 2);
+  minEndDate.setDate(minEndDate.getDate() + 7);
 
   if (endDate < minEndDate) {
-    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 2 días después de la fecha de inicio');
+    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 7 días después de la fecha de inicio');
     endDateInput.reportValidity();
     return false;
   }
@@ -505,7 +505,7 @@ function setInitialDateRestrictions() {
 
   // Calcular fecha mínima para fecha de devolución (2 días después de la fecha de inicio)
   const minEndDate = new Date(today);
-  minEndDate.setDate(today.getDate() + 2);
+  minEndDate.setDate(today.getDate() + 7);
   const minEndDateString = minEndDate.toISOString().split('T')[0];
 
   endDateInput.min = minEndDateString;
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (startDateInput.value) {
           // Establecer fecha mínima de devolución
           const minEndDate = new Date(startDateInput.value);
-          minEndDate.setDate(minEndDate.getDate() + 1);
+          minEndDate.setDate(minEndDate.getDate() + 7);
           
           // Formatear la fecha mínima para el input de fecha de devolución
           const minEndDateString = minEndDate.toISOString().split('T')[0];
