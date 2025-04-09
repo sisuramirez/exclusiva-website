@@ -218,41 +218,43 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isAnimating || !heroImage) return;
         isAnimating = true;
         
-        // Fase 1: Fade out completo
+        // Fase 1: Fade out más prolongado (aumentamos el tiempo de transición)
+        heroImage.style.transition = 'opacity 1s ease-in-out'; // Aumentado a 1s para fade out
         heroImage.style.opacity = '0';
         
-        // Esperar a que termine el fade out
+        // Esperar a que termine el fade out completo
         setTimeout(() => {
             // Actualizar al siguiente índice
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             
-            // Crear una nueva imagen para asegurar un manejo correcto de eventos
+            // Crear una nueva imagen
             const nextImage = new Image();
             
-            // Configurar el evento onload para hacer la transición solo cuando la imagen esté lista
             nextImage.onload = function() {
                 // Cambiar la fuente de la imagen mientras está invisible
                 heroImage.src = nextImage.src;
                 
-                // Fase 2: Fade in de la nueva imagen
+                // Un pequeño retraso adicional para asegurar que no haya traslape visual
                 setTimeout(() => {
+                    // Fase 2: Fade in puede ser más rápido que el fade out
+                    heroImage.style.transition = 'opacity 0.8s ease-in-out'; // Transición para fade in
                     heroImage.style.opacity = '1';
                     
                     // Permitir la siguiente animación cuando termine el fade in
                     setTimeout(() => {
                         isAnimating = false;
-                    }, 500);
-                }, 50); // Reducimos este tiempo para una transición más fluida
+                    }, 800); // Ajustado al tiempo del fade in
+                }, 200); // Pausa breve entre cambio de imagen y fade in
             };
             
             // Iniciar la carga de la imagen
             nextImage.src = vehicleImages[currentIndex];
             
-            // Si la imagen ya está en caché, el evento onload podría no dispararse
+            // Si la imagen ya está en caché
             if (nextImage.complete) {
                 nextImage.onload();
             }
-        }, 500);
+        }, 1000); // Ajustado al tiempo del fade out
     }
     
     // Iniciar el ciclo solo después de que las imágenes estén precargadas
@@ -262,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setInterval(transitionToNextImage, 3000);
         }, 1000);
     });
-    
     // Mantener el código del botón WhatsApp separado
     const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
     
