@@ -473,7 +473,7 @@ function validateDates() {
   // Start date validation
   // Allows selecting today or one day before
   if (startDate < yesterday) {
-    startDateInput.setCustomValidity('The start date cannot be earlier than today');
+    startDateInput.setCustomValidity('La fecha de inicio no puede ser anterior a hoy');
     startDateInput.reportValidity();
     return false;
   }
@@ -483,7 +483,7 @@ function validateDates() {
   minEndDate.setDate(minEndDate.getDate() + 7);
 
   if (endDate < minEndDate) {
-    endDateInput.setCustomValidity('The return date must be at least 7 days after the start date');
+    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 7 días después de la fecha de inicio');
     endDateInput.reportValidity();
     return false;
   }
