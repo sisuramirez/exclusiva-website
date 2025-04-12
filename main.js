@@ -162,7 +162,7 @@ if (whatsappButton) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Array de imágenes de vehículos para rotar
+    // Array of vehicle images to rotate
     const vehicleImages = [
         './img/transition1-hilux.png',
         './img/transition2-fortuner.png',
@@ -170,13 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
         './img/transition5-kicks.png'
     ];
     
-    // Seleccionar la imagen principal
+    // Select the main image
     const heroImage = document.querySelector('.hero__image-container img');
     let currentIndex = 0;
     let isAnimating = false;
     let imagesLoaded = 0;
     
-    // Función mejorada para precargar imágenes correctamente
+    // Improved function to preload images correctly
     function preloadImages(callback) {
         const totalImages = vehicleImages.length;
         
@@ -185,26 +185,26 @@ document.addEventListener('DOMContentLoaded', function() {
             img.onload = function() {
                 imagesLoaded++;
                 if (imagesLoaded === totalImages && callback) {
-                    callback(); // Todas las imágenes han sido precargadas
+                    callback(); // All images have been preloaded
                 }
             };
             img.onerror = function() {
                 imagesLoaded++;
-                console.error('Error cargando imagen:', src);
+                console.error('Error loading image:', src);
                 if (imagesLoaded === totalImages && callback) {
-                    callback(); // Continuar incluso si hay errores
+                    callback(); // Continue even if there are errors
                 }
             };
             img.src = src;
         });
     }
     
-    // Configurar transición inicial
+    // Configure initial transition
     if (heroImage) {
         heroImage.style.transition = 'opacity 0.3s ease-in-out';
         heroImage.style.opacity = '0';
         
-        // Establecer la primera imagen y mostrarla solo cuando esté cargada
+        // Set the first image and show it only when loaded
         const firstImage = new Image();
         firstImage.onload = function() {
             heroImage.src = firstImage.src;
@@ -215,58 +215,58 @@ document.addEventListener('DOMContentLoaded', function() {
         firstImage.src = vehicleImages[0];
     }
     
-    // Función mejorada para realizar la transición entre imágenes de manera confiable
+    // Improved function to perform transitions between images reliably
     function transitionToNextImage() {
         if (isAnimating || !heroImage) return;
         isAnimating = true;
         
-        // Fase 1: Fade out
+        // Phase 1: Fade out
         heroImage.style.transition = 'opacity 1s ease-in-out';
         heroImage.style.opacity = '0';
         
-        // Esperar a que termine el fade out completo
+        // Wait for fade out to complete
         setTimeout(() => {
-            // Actualizar al siguiente índice
+            // Update to next index
             currentIndex = (currentIndex + 1) % vehicleImages.length;
             
-            // Crear una nueva imagen
+            // Create new image
             const nextImage = new Image();
             
             nextImage.onload = function() {
-                // Cambiar la fuente de la imagen mientras está invisible
+                // Change image source while invisible
                 heroImage.src = nextImage.src;
                 
-                // Esperar 2.5 segundos antes de mostrar la siguiente imagen
+                // Wait 2.5 seconds before showing next image
                 setTimeout(() => {
-                    // Fase 2: Fade in
+                    // Phase 2: Fade in
                     heroImage.style.transition = 'opacity 0.8s ease-in-out';
                     heroImage.style.opacity = '1';
                     
-                    // Permitir la siguiente animación cuando termine el fade in
+                    // Allow next animation when fade in completes
                     setTimeout(() => {
                         isAnimating = false;
                     }, 800);
-                }, 2500); // 2.5 segundos de pausa sin carro visible
+                }, 2500); // 2.5 seconds pause without car visible
             };
             
-            // Iniciar la carga de la imagen
+            // Start loading the image
             nextImage.src = vehicleImages[currentIndex];
             
-            // Si la imagen ya está en caché
+            // If image is already cached
             if (nextImage.complete) {
                 nextImage.onload();
             }
-        }, 1000); // Tiempo del fade out
+        }, 1000); // Fade out time
     }
     
-    // Iniciar el ciclo solo después de que las imágenes estén precargadas
+    // Start cycle only after images are preloaded
     preloadImages(() => {
         setTimeout(() => {
-            // Cambiar la imagen cada 6.3 segundos (1s fade out + 2.5s pausa + 0.8s fade in + ~2s visible)
+            // Change image every 6.3 seconds (1s fade out + 2.5s pause + 0.8s fade in + ~2s visible)
             setInterval(transitionToNextImage, 6300);
         }, 1000);
     });
-    // Mantener el código del botón WhatsApp separado
+    // Keep WhatsApp button code separate
     const footerWhatsappButton = document.querySelector('.footer-whatsapp-button');
     
     if (footerWhatsappButton) {

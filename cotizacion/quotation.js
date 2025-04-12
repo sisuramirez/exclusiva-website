@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Array de vehículos disponibles
+// Array of available vehicles
 const cars = [
   // MICROBUSES
   {
@@ -382,7 +382,7 @@ const calculateBtn = document.getElementById('calculate-btn');
 const quotationResult = document.getElementById('quotation-result');
 const hamburgerBtn = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
-const whatsappNumber = "50248494290"; // Número correcto sin el signo +
+const whatsappNumber = "50248494290"; // Correct number without the + sign
 
 // Variables globales
 let selectedCar = null;
@@ -394,7 +394,7 @@ function formatCurrency(amount) {
       currency: 'USD'
   }).format(amount);
 }
-// Función para crear una card de auto
+// Function to create a car card
 function createCarCard(car) {
   const carCard = document.createElement('div');
   carCard.className = 'car-card';
@@ -431,7 +431,7 @@ function createCarCard(car) {
   return carCard;
 }
 
-// Función para mostrar todos los autos o filtrar por categoría
+// Function to display all cars or filter by category
 function displayCars(category = 'all') {
   catalogGrid.innerHTML = '';
   
@@ -457,33 +457,33 @@ function validateDates() {
   const endDate = new Date(endDateInput.value);
   const today = new Date();
 
-  // Asegurar que today no tenga horas para comparación exacta
+  // Ensure today has no hours for exact comparison
   today.setHours(0, 0, 0, 0);
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
 
-  // Calcular la fecha de ayer
+  // Calculate yesterday
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
-  // Limpiar cualquier error previo
+  // Clear any previous error
   startDateInput.setCustomValidity('');
   endDateInput.setCustomValidity('');
 
-  // Validación de fecha de inicio
-  // Permite seleccionar el día de hoy o un día antes
+  // Start date validation
+  // Allows selecting today or one day before
   if (startDate < yesterday) {
-    startDateInput.setCustomValidity('La fecha de inicio no puede ser anterior a hoy');
+    startDateInput.setCustomValidity('The start date cannot be earlier than today');
     startDateInput.reportValidity();
     return false;
   }
 
-  // Calcular fecha mínima de devolución (2 días después de la fecha de inicio)
+  // Calculate minimum return date (2 days after start date)
   const minEndDate = new Date(startDate);
   minEndDate.setDate(minEndDate.getDate() + 7);
 
   if (endDate < minEndDate) {
-    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 7 días después de la fecha de inicio');
+    endDateInput.setCustomValidity('The return date must be at least 7 days after the start date');
     endDateInput.reportValidity();
     return false;
   }
@@ -495,15 +495,15 @@ function setInitialDateRestrictions() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Calcular la fecha de ayer
+  // Calculate yesterday
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
-  // Formatear la fecha de ayer para el input
+  // Format yesterday for input
   const yesterdayString = yesterday.toISOString().split('T')[0];
   startDateInput.min = yesterdayString;
 
-  // Calcular fecha mínima para fecha de devolución (2 días después de la fecha de inicio)
+  // Calculate minimum date for return date (2 days after start date)
   const minEndDate = new Date(today);
   minEndDate.setDate(today.getDate() + 7);
   const minEndDateString = minEndDate.toISOString().split('T')[0];
@@ -512,17 +512,17 @@ function setInitialDateRestrictions() {
 }
 
 function getDateForWhatsApp(dateInput) {
-  return dateInput.value; // Mantiene la fecha exacta ingresada sin modificarla
+  return dateInput.value; // Mantains the exact date entered without modifying it
 }
 
 // ---------------------------------------------------
 
-// Función para mostrar sección de cotización
+// Function to show quotation section
 function showQuotationSection() {
   document.querySelector('.catalog').style.display = 'none';
   quotationSection.style.display = 'block';
   
-  // Mostrar información del auto seleccionado
+  // Display selected car information
   selectedCarInfo.innerHTML = `
       <img src="${selectedCar.imageUrl}" alt="${selectedCar.name}" class="quotation__car-image">
       <div class="quotation__car-details">
@@ -543,82 +543,82 @@ function showQuotationSection() {
               </div>
               <div class="quotation__car-spec">
                   <span class="car-card__spec-icon">💰</span>
-                  <span class="quotation__car-spec-text">Precio base: ${formatCurrency(selectedCar.price)}/día</span>
+                  <span class="quotation__car-spec-text">Base price: ${formatCurrency(selectedCar.price)}/day</span>
               </div>
           </div>
       </div>
   `;
   
-  // Limpiar inputs y resultado de cotización
+  // Clear inputs and quotation result
   startDateInput.value = '';
   endDateInput.value = '';
   if (startTimeInput) startTimeInput.value = '';
   if (endTimeInput) endTimeInput.value = '';
   quotationResult.style.display = 'none';
   
-  // Establecer valores mínimos para las fechas
+  // Set minimum values for dates
   setInitialDateRestrictions();
 }
 
-// Función para volver al catálogo
+// Function to return to catalog
 function backToCatalog() {
   quotationSection.style.display = 'none';
   document.querySelector('.catalog').style.display = 'block';
   selectedCar = null;
 }
 
-// Función para formatear la fecha como texto en español considerando la zona horaria de Guatemala
+// Function to format date as text in Spanish considering Guatemala timezone
 function formatDateAsText(dateString) {
-  // Crear fecha en UTC
+  // Create date in UTC
   const dateUTC = new Date(dateString);
   
-  // Ajustar a la zona horaria de Guatemala (UTC-6)
-  // Nota: usamos una fecha con hora 0 para evitar que el cambio de día afecte el resultado
+  // Adjust to Guatemala timezone (UTC-6)
+  // Note: we use a date with hour 0 to avoid day change affecting the result
   const dateString12PM = dateString + 'T12:00:00';
   const dateWithTime = new Date(dateString12PM);
   
   const day = dateWithTime.getDate();
   
-  // Array con los nombres de los meses en español
+  // Array with month names in Spanish
   const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
   ];
   
   const month = months[dateWithTime.getMonth()];
   const year = dateWithTime.getFullYear();
   
-  return `${day} de ${month} de ${year}`;
+  return `${day} of ${month} of ${year}`;
 }
 
-// Función para enviar mensaje a WhatsApp
+// Function to send WhatsApp message
 function sendToWhatsApp() {
   const startDate = startDateInput.value;
   const endDate = endDateInput.value;
   const startTime = startTimeInput ? startTimeInput.value : '';
   const endTime = endTimeInput ? endTimeInput.value : '';
   
-  // Validaciones
+  // Validations
   if (!startDate || !endDate) {
-      alert('Por favor selecciona fechas de inicio y devolución');
+      alert('Please select start and return dates');
       return;
   }
   
   if (startTimeInput && endTimeInput && (!startTime || !endTime)) {
-      alert('Por favor selecciona horas de inicio y devolución');
+      alert('Please select start and return times');
       return;
   }
   
-  // Validar fechas antes de enviar
+  // Validate dates before sending
   if (!validateDates()) {
     return;
   }
   
-  // Formatear las fechas como texto en español
+  // Format dates as text in Spanish
   const formattedStartDate = formatDateAsText(startDate);
   const formattedEndDate = formatDateAsText(endDate);
   
-  // Crear mensaje para WhatsApp con zona horaria
+  // Create message for WhatsApp with timezone
   const message = `*¡Mucho gusto!*
 
 Me interesa cotizar el siguiente vehículo:
@@ -627,50 +627,50 @@ Me interesa cotizar el siguiente vehículo:
 
 *Detalles de la cotización:*
 📅 *Fecha de inicio:* ${formattedStartDate}
-⏰ *Hora de inicio:* ${startTime} (hora de Guatemala)
+⏰ *Hora de inicio:* ${startTime} (Guatemala time)
 📅 *Fecha de entrega:* ${formattedEndDate}
-⏰ *Hora de entrega:* ${endTime} (hora de Guatemala)`;
+⏰ *Hora de entrega:* ${endTime} (Guatemala time)`;
   
-  // URL de WhatsApp con el mensaje - usar el número correcto sin el signo +
+  // WhatsApp URL with message - use correct number without + sign
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   
-  // Abrir WhatsApp en una nueva ventana
+  // Open WhatsApp in a new window
   window.open(whatsappUrl, '_blank');
 }
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // Mostrar todos los autos al cargar la página
+  // Display all cars when page loads
   displayCars();
   
-  // Filtrar autos por categoría
+  // Filter cars by category
   filterButtons.forEach(button => {
       button.addEventListener('click', () => {
           const filterValue = button.dataset.filter;
           
-          // Actualizar botón activo
+          // Update active button
           filterButtons.forEach(btn => btn.classList.remove('active'));
           button.classList.add('active');
           
-          // Mostrar autos filtrados
+          // Display filtered cars
           displayCars(filterValue);
       });
   });
   
-  // Botón de regresar al catálogo
+  // Back to catalog button
   backBtn.addEventListener('click', backToCatalog);
   
-  // Botón para calcular cotización - cambiado para enviar a WhatsApp
+  // Button to calculate quotation - changed to send to WhatsApp
   calculateBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // Prevenir envío por defecto
+    event.preventDefault(); // Prevent default submission
     sendToWhatsApp();
   });
   
-  // Menu hamburguesa
+  // Menu hamburger
   hamburgerBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
       
-      // Animar las líneas del hamburger
+      // Animate hamburger lines
       const lines = hamburgerBtn.querySelectorAll('.nav__hamburger-line');
       if (navMenu.classList.contains('active')) {
           lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -683,29 +683,29 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
   
-  // Evento para fecha de inicio que actualiza la fecha mínima de devolución
+  // Event for start date that updates minimum return date
   startDateInput.addEventListener('change', () => {
       if (startDateInput.value) {
-          // Establecer fecha mínima de devolución
+          // Set minimum return date
           const minEndDate = new Date(startDateInput.value);
           minEndDate.setDate(minEndDate.getDate() + 7);
           
-          // Formatear la fecha mínima para el input de fecha de devolución
+          // Format minimum date for return date input
           const minEndDateString = minEndDate.toISOString().split('T')[0];
           endDateInput.min = minEndDateString;
           
-          // Limpiar valor de fecha de devolución si es inválido
+          // Clear return date value if invalid
           if (new Date(endDateInput.value) < minEndDate) {
               endDateInput.value = '';
           }
       }
   });
 
-  // Establecer restricciones de fecha iniciales
+  // Set minimum return date restrictions
   setInitialDateRestrictions();
 });
 
-// Evento para botón de WhatsApp en footer
+// Event for WhatsApp button in footer
 if (footerWhatsappButton) {
   footerWhatsappButton.addEventListener('click', function(event) {
       event.preventDefault();
