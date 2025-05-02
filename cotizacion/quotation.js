@@ -480,10 +480,10 @@ function validateDates() {
 
   // Calculate minimum return date (2 days after start date)
   const minEndDate = new Date(startDate);
-  minEndDate.setDate(minEndDate.getDate() + 7);
+  minEndDate.setDate(minEndDate.getDate() + 2);
 
   if (endDate < minEndDate) {
-    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 7 días después de la fecha de inicio');
+    endDateInput.setCustomValidity('La fecha de devolución debe ser al menos 2 días después de la fecha de inicio');
     endDateInput.reportValidity();
     return false;
   }
@@ -505,7 +505,7 @@ function setInitialDateRestrictions() {
 
   // Calculate minimum date for return date (2 days after start date)
   const minEndDate = new Date(today);
-  minEndDate.setDate(today.getDate() + 7);
+  minEndDate.setDate(today.getDate() + 2);
   const minEndDateString = minEndDate.toISOString().split('T')[0];
 
   endDateInput.min = minEndDateString;
@@ -543,7 +543,7 @@ function showQuotationSection() {
               </div>
               <div class="quotation__car-spec">
                   <span class="car-card__spec-icon">💰</span>
-                  <span class="quotation__car-spec-text">Base price: ${formatCurrency(selectedCar.price)}/day</span>
+                  <span class="quotation__car-spec-text">Precio desde: ${formatCurrency(selectedCar.price)}/dia</span>
               </div>
           </div>
       </div>
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (startDateInput.value) {
           // Set minimum return date
           const minEndDate = new Date(startDateInput.value);
-          minEndDate.setDate(minEndDate.getDate() + 7);
+          minEndDate.setDate(minEndDate.getDate() + 2);
           
           // Format minimum date for return date input
           const minEndDateString = minEndDate.toISOString().split('T')[0];
