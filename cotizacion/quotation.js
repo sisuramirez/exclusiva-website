@@ -581,14 +581,14 @@ function formatDateAsText(dateString) {
   
   // Array with month names in Spanish
   const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+];
   
   const month = months[dateWithTime.getMonth()];
   const year = dateWithTime.getFullYear();
   
-  return `${day} of ${month} of ${year}`;
+  return `${day} de ${month} de ${year}`;
 }
 
 // Function to send WhatsApp message
@@ -600,12 +600,12 @@ function sendToWhatsApp() {
   
   // Validations
   if (!startDate || !endDate) {
-      alert('Please select start and return dates');
+      alert('Por favor seleccione fecha de inicio y de devolución');
       return;
   }
   
   if (startTimeInput && endTimeInput && (!startTime || !endTime)) {
-      alert('Please select start and return times');
+      alert('Por favor seleccione hora de inicio y de devolución');
       return;
   }
   
