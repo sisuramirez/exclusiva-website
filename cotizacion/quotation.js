@@ -627,9 +627,9 @@ Me interesa cotizar el siguiente vehículo:
 
 *Detalles de la cotización:*
 📅 *Fecha de inicio:* ${formattedStartDate}
-⏰ *Hora de inicio:* ${startTime} (Guatemala time)
+⏰ *Hora de inicio:* ${startTime} (Hora de Guatemala)
 📅 *Fecha de entrega:* ${formattedEndDate}
-⏰ *Hora de entrega:* ${endTime} (Guatemala time)`;
+⏰ *Hora de entrega:* ${endTime} (Hora de Guatemala)`;
   
   // WhatsApp URL with message - use correct number without + sign
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
