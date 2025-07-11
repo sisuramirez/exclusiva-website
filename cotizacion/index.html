@@ -101,6 +101,85 @@
             </div>
         </div>
     </section>
+    <section class="customer-form-section" id="customer-form-section">
+        <div class="container">
+            <div class="customer-form-header">
+                <button class="quotation__back-btn" id="back-to-quote-btn">← Modificar Cotización</button>
+                <h2 class="customer-form-title">Completa tus Datos para la Reserva</h2>
+            </div>
+    
+            <form id="customer-form" class="customer-form-grid">
+                <div class="form-column">
+                    <fieldset>
+                        <legend>Información Personal</legend>
+                        <div class="form-group">
+                            <label for="customer-name">Nombre Completo</label>
+                            <input type="text" id="customer-name" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-id">No. de DPI o Pasaporte</label>
+                            <input type="text" id="customer-id" name="customerId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-license">Licencia de Conducir No.</label>
+                            <input type="text" id="customer-license" name="customerLicense" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Licencia emitida en:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="license-origin" value="Guatemala" checked> Guatemala</label>
+                                <label><input type="radio" name="license-origin" value="Estados Unidos"> EE.UU.</label>
+                                <label><input type="radio" name="license-origin" value="Otros"> Otros</label>
+                            </div>
+                            <input type="text" id="license-origin-other" name="licenseOriginOther" class="hidden-input" placeholder="Ingrese el país">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">No. de Teléfono</label>
+                            <div class="phone-group">
+                                <select id="country-code" name="countryCode"></select>
+                                <input type="tel" id="customer-phone" name="customerPhone" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-address">Dirección de Domicilio</label>
+                            <textarea id="customer-address" name="customerAddress" rows="3" required></textarea>
+                        </div>
+                    </fieldset>
+    
+                    <fieldset>
+                        <legend>Lugar de Entrega</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="delivery-location" value="Oficinas" checked> Nuestras Oficinas</label>
+                            <label><input type="radio" name="delivery-location" value="Aeropuerto"> Aeropuerto</label>
+                        </div>
+                    </fieldset>
+    
+                    <fieldset id="flight-details" class="hidden-input">
+                        <legend>Datos de la Aerolínea</legend>
+                        <div class="form-group">
+                            <label for="airline-name">Nombre de Aerolínea</label>
+                            <input type="text" id="airline-name" name="airlineName">
+                        </div>
+                        <div class="form-group">
+                            <label for="flight-number">No. de Vuelo</label>
+                            <input type="text" id="flight-number" name="flightNumber">
+                        </div>
+                    </fieldset>
+                </div>
+    
+                <div class="form-column">
+                    <fieldset class="summary-fieldset">
+                        <legend>Resumen de la Reserva</legend>
+                        <div id="summary-car-info">
+                            </div>
+                        <div id="summary-quote-info">
+                            </div>
+                    </fieldset>
+                    <button type="submit" class="btn-submit-reservation">Finalizar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="footer__container container">

@@ -644,7 +644,7 @@ function calculateAndDisplayQuote() {
     
     summaryHTML = `
       <h4>Resumen de la Cotización</h4>
-      <p>Días de renta: <strong>${finalDays}</strong> (incluyendo horas extra)</p>
+      <p>Días de renta: <strong>${finalDays}</strong> </p>
       <p>Precio por día: ${formatCurrency(dailyPrice)}</p>
       <hr>
       <p class="quotation__total">Total Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
@@ -776,3 +776,181 @@ if (footerWhatsappButton) {
       window.open(whatsappUrl, '_blank');
   });
 }
+
+
+// =========== NUEVO CÓDIGO INTEGRADO ===========
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- PASO 1: Selecciona los nuevos elementos del DOM ---
+    const customerFormSection = document.getElementById('customer-form-section');
+    const backToQuoteBtn = document.getElementById('back-to-quote-btn');
+    const customerForm = document.getElementById('customer-form');
+    const licenseOriginRadios = document.querySelectorAll('input[name="license-origin"]');
+    const licenseOriginOtherInput = document.getElementById('license-origin-other');
+    const deliveryLocationRadios = document.querySelectorAll('input[name="delivery-location"]');
+    const flightDetailsFieldset = document.getElementById('flight-details');
+    const countryCodeSelect = document.getElementById('country-code');
+    const summaryCarInfo = document.getElementById('summary-car-info');
+    const summaryQuoteInfo = document.getElementById('summary-quote-info');
+
+    // --- PASO 2: Variable global para guardar detalles de la cotización ---
+    let currentQuoteDetails = {};
+
+    // --- PASO 3: Datos y funciones para el nuevo formulario ---
+    
+    // Lista de códigos de país para el input de teléfono
+    const countryCodes = [
+        { name: "Guatemala", code: "+502" },
+        { name: "USA", code: "+1" },
+        { name: "El Salvador", code: "+503" },
+        { name: "Honduras", code: "+504" },
+        { name: "Mexico", code: "+52" },
+        { name: "Spain", code: "+34" },
+    ];
+
+    /**
+     * Rellena el <select> con los códigos de país.
+     */
+    function populateCountryCodes() {
+        if (!countryCodeSelect) return;
+        countryCodes.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country.code;
+            option.textContent = `${country.name} (${country.code})`;
+            if (country.code === '+502') {
+                option.selected = true;
+            }
+            countryCodeSelect.appendChild(option);
+        });
+    }
+
+    /**
+     * Muestra/oculta el campo de texto para "Otros" países de licencia.
+     */
+    function handleLicenseOriginChange() {
+        const otherRadio = document.querySelector('input[name="license-origin"][value="Otros"]');
+        if (otherRadio.checked) {
+            licenseOriginOtherInput.style.display = 'block';
+            licenseOriginOtherInput.required = true;
+        } else {
+            licenseOriginOtherInput.style.display = 'none';
+            licenseOriginOtherInput.required = false;
+            licenseOriginOtherInput.value = '';
+        }
+    }
+
+    /**
+     * Muestra/oculta el formulario de detalles de vuelo.
+     */
+    function handleDeliveryLocationChange() {
+        const airportRadio = document.querySelector('input[name="delivery-location"][value="Aeropuerto"]');
+        if (airportRadio.checked) {
+            flightDetailsFieldset.style.display = 'block';
+            document.getElementById('airline-name').required = true;
+            document.getElementById('flight-number').required = true;
+        } else {
+            flightDetailsFieldset.style.display = 'none';
+            document.getElementById('airline-name').required = false;
+            document.getElementById('flight-number').required = false;
+            document.getElementById('airline-name').value = '';
+            document.getElementById('flight-number').value = '';
+        }
+    }
+    
+    /**
+     * Maneja el envío del formulario de reserva final.
+     * @param {Event} event - El evento de envío del formulario.
+     */
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(customerForm);
+        const data = Object.fromEntries(formData.entries());
+
+        console.log("--- Reserva Finalizada (simulación) ---");
+        console.log("Datos del Cliente:", data);
+        console.log("Datos del Vehículo:", selectedCar); // 'selectedCar' debe ser accesible
+        console.log("Detalles de la Cotización:", currentQuoteDetails);
+        
+        alert('¡Gracias por tu reserva! (Esto es una simulación). Revisa la consola del navegador para ver los datos enviados.');
+    }
+
+
+    // --- PASO 4: Funciones de navegación de la SPA ---
+
+    /**
+     * Oculta las otras vistas y muestra el formulario del cliente.
+     */
+    function showCustomerForm() {
+        // Asumiendo que 'quotationSection' y 'selectedCarInfo' son accesibles globalmente
+        const quotationSection = document.getElementById('quotation-section');
+
+        quotationSection.style.display = 'none';
+        customerFormSection.style.display = 'block';
+
+        // Llena el resumen con la información guardada
+        summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
+        summaryQuoteInfo.innerHTML = `
+            <h4>Resumen de Cotización</h4>
+            ${currentQuoteDetails.summaryHTML}
+        `;
+
+        window.scrollTo(0, 0);
+    }
+    
+    // --- PASO 5: Asignación de todos los nuevos event listeners ---
+
+    // Llenar el selector de países al cargar la página
+    populateCountryCodes();
+
+    // Botón para regresar de la reserva a la cotización
+    if (backToQuoteBtn) {
+        backToQuoteBtn.addEventListener('click', () => {
+            customerFormSection.style.display = 'none';
+            document.getElementById('quotation-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        });
+    }
+
+    // Radios de origen de licencia
+    if (licenseOriginRadios) {
+        licenseOriginRadios.forEach(radio => radio.addEventListener('change', handleLicenseOriginChange));
+    }
+
+    // Radios de lugar de entrega
+    if (deliveryLocationRadios) {
+        deliveryLocationRadios.forEach(radio => radio.addEventListener('change', handleDeliveryLocationChange));
+    }
+
+    // Listener para el envío del formulario principal
+    if (customerForm) {
+        customerForm.addEventListener('submit', handleFormSubmit);
+    }
+
+    // **IMPORTANTE**: Conexión entre la vista de cotización y el nuevo formulario.
+    const proceedButton = document.querySelector('#quotation-result');
+    if(proceedButton){
+        proceedButton.addEventListener('click', function(event){
+            if(event.target && event.target.id === 'proceed-to-form-btn'){
+                // Guarda el HTML del resumen en la variable global.
+                let summaryHtmlContent = '';
+                // Selecciona todos los elementos directos del resumen para reconstruirlo.
+                const resultElements = quotationResult.querySelectorAll('h4, p, hr');
+                resultElements.forEach(el => {
+                    summaryHtmlContent += el.outerHTML;
+                });
+
+                // Elimina el botón "Continuar" del HTML que se guarda para el resumen.
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = summaryHtmlContent;
+                const buttonToRemove = tempDiv.querySelector('#proceed-to-form-btn');
+                if (buttonToRemove) {
+                    buttonToRemove.remove();
+                }
+                
+                currentQuoteDetails.summaryHTML = tempDiv.innerHTML;
+
+                showCustomerForm();
+            }
+        });
+    }
+});

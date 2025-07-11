@@ -152,7 +152,6 @@ header {
   height: 24px;
 }
 
-
 /* Navigation - Mobile First */
 .nav {
   display: flex;
@@ -239,7 +238,6 @@ header {
 .nav__auth {
   display: none;
 }
-
 
 /* Hero Section */
 .hero {
@@ -578,52 +576,162 @@ header {
   display: none;
 }
 
-.quotation__result-title {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+.quotation__result h4, .quotation__total {
+  margin-bottom: 10px;
+}
+
+.quotation__result hr {
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0;
+}
+
+/* =================================
+ Customer Form Section
+=================================
+*/
+
+.customer-form-section {
+  padding: 3rem 0;
+  background-color: var(--how-it-works-bg);
+  display: none; /* Initially hidden */
+}
+
+.customer-form-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.customer-form-title {
+  font-size: 1.8rem;
   color: var(--text-color);
 }
 
-.quotation__result-details {
+.customer-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: var(--step-shadow);
+}
+
+.form-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1.5rem;
 }
 
-.quotation__result-item {
-  display: flex;
-  justify-content: space-between;
+.form-column fieldset {
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  border-radius: 8px;
 }
 
-.quotation__result-label {
-  font-size: 0.95rem;
+.form-column legend {
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 0 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
   color: #666;
 }
 
-.quotation__result-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-color);
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="email"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
-.quotation__result-total {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #ddd;
+.radio-group {
   display: flex;
-  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
 }
 
-.quotation__result-total-label {
-  font-size: 1.1rem;
-  font-weight: 600;
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
   color: var(--text-color);
 }
 
-.quotation__result-total-value {
+.phone-group {
+    display: flex;
+    gap: 10px;
+}
+
+.phone-group select {
+    flex: 0 0 120px; /* Ancho fijo para el código de país */
+}
+
+.phone-group input {
+    flex: 1;
+}
+
+.hidden-input {
+  display: none;
+  margin-top: 1rem;
+}
+
+.summary-fieldset {
+  background-color: #f9f9f9;
+  border-color: #eee;
+}
+
+#summary-car-info .quotation__car-details {
+  padding: 0;
+}
+#summary-car-info .quotation__car-image{
+  max-width: 250px;
+}
+#summary-quote-info {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #ccc;
+}
+#summary-quote-info p {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+#summary-quote-info strong {
+  float: right;
+}
+
+.btn-submit-reservation {
+  padding: 15px;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--primary-color);
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.btn-submit-reservation:hover {
+  opacity: 0.9;
 }
 
 /* Footer */
@@ -754,8 +862,6 @@ header {
   height: 35px;
   filter: brightness(0) invert(1); /* Cambia el ícono a color blanco */
 }
-
-
 
 @media (min-width: 1024px) {
   /* Navigation */
@@ -888,6 +994,15 @@ header {
   
   .quotation__title {
     font-size: 2.2rem;
+  }
+
+  /* Customer Form on Desktop */
+  .customer-form-grid {
+      grid-template-columns: 2fr 1fr; /* Two columns, left one is wider */
+  }
+
+  .customer-form-title {
+      font-size: 2.2rem;
   }
   
   /* Footer */
