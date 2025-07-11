@@ -596,6 +596,7 @@ header {
   padding: 3rem 0;
   background-color: var(--how-it-works-bg);
   display: none; /* Initially hidden */
+  align-items: center;
 }
 
 .customer-form-header {
@@ -701,7 +702,7 @@ header {
   padding: 0;
 }
 #summary-car-info .quotation__car-image{
-  max-width: 250px;
+  max-width: 100%;
 }
 #summary-quote-info {
   margin-top: 1.5rem;
@@ -733,6 +734,60 @@ header {
 .btn-submit-reservation:hover {
   opacity: 0.9;
 }
+
+
+.addons-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.addon-button {
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  text-align: center;
+  width: 180px;
+  transition: all 0.3s ease;
+}
+
+.addon-button:hover {
+  border-color: #007bff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.addon-button.selected {
+  background-color: #e0f0ff;
+  border-color: #007bff;
+}
+
+.addon-button h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.addon-button p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.addon-button.mandatory {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.mandatory-label {
+  font-weight: bold;
+  color: #d9534f;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
 
 /* Footer */
 .footer {

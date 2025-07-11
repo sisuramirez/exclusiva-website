@@ -376,6 +376,34 @@ const cars = [
     "Sedanes": 10
   };
 
+// --- AÑADIDO: Estructura de datos para los seguros (add-ons)
+const insuranceAddOns = [
+    { 
+        id: 'cdw', 
+        name: 'Seguro CDW', 
+        dailyCost: 10, // Costo de ejemplo
+        mandatory: true, 
+        selected: true, 
+        description: 'Cobertura Parcial de Colisión' 
+    },
+    { 
+        id: 'tpp', 
+        name: 'Protección a Terceros', 
+        dailyCost: 10, // Costo de ejemplo
+        mandatory: false, 
+        selected: false, 
+        description: 'Cubre daños a otras propiedades.' 
+    },
+    { 
+        id: 'pai', 
+        name: 'Asistencia Personal', 
+        dailyCost: 10, // Costo de ejemplo
+        mandatory: false, 
+        selected: false, 
+        description: 'Cubre gastos médicos para ocupantes.' 
+    }
+];
+
 // Elementos del DOM
 const catalogGrid = document.getElementById('catalog-grid');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -394,6 +422,8 @@ const whatsappNumber = "50248494290"; // Correct number without the + sign
 
 // Variables globales
 let selectedCar = null;
+// --- AÑADIDO: Se inicializa la variable de detalles de cotización para que esté lista.
+let currentQuoteDetails = {};
 
 
 function formatCurrency(amount) {
@@ -583,6 +613,7 @@ function backToCatalog() {
   selectedCar = null;
 }
 
+// --- MODIFICADO: Esta función ahora guarda los datos clave en `currentQuoteDetails`.
 function calculateAndDisplayQuote() {
   // --- 1. OBTENER Y VALIDAR ENTRADAS ---
   const startDateValue = startDateInput.value;
@@ -644,11 +675,12 @@ function calculateAndDisplayQuote() {
     
     summaryHTML = `
       <h4>Resumen de la Cotización</h4>
-      <p>Días de renta: <strong>${finalDays}</strong> </p>
+      <p>Días de renta: <strong>${finalDays}</strong> (incluyendo horas extra)</p>
       <p>Precio por día: ${formatCurrency(dailyPrice)}</p>
       <hr>
-      <p class="quotation__total">Total Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
+      <p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
     `;
+    currentQuoteDetails.rentalDays = finalDays; // Guardar días
 
   } else {
     // Si no, se cobran los días y las horas extra por separado.
@@ -659,18 +691,22 @@ function calculateAndDisplayQuote() {
       <p>${fullDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(fullDays * dailyPrice)}</strong></p>
       ${extraHours > 0 ? `<p>${extraHours} hora(s) extra x ${formatCurrency(extraHourPrice)}/hora = <strong>${formatCurrency(extraHoursCost)}</strong></p>` : ''}
       <hr>
-      <p class="quotation__total">Total Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
+      <p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
     `;
+    currentQuoteDetails.rentalDays = fullDays > 0 ? fullDays : 1; // Guardar días (mínimo 1)
   }
   
+  // --- AÑADIDO: Guardar el total base en el objeto global.
+  currentQuoteDetails.baseTotal = finalTotal;
+
   // --- 5. MOSTRAR EL RESULTADO ---
   summaryHTML += `<button id="proceed-to-form-btn" class="btn">Continuar y Llenar Datos</button>`;
   quotationResult.innerHTML = summaryHTML;
   quotationResult.style.display = 'block';
 
-  // Añadimos el listener para el nuevo botón (esto lo haremos funcionar en el siguiente paso)
+  // Este listener se mantiene como estaba en el código original.
   document.getElementById('proceed-to-form-btn').addEventListener('click', () => {
-    alert('¡Siguiente paso: mostrar el formulario de cliente!');
+   console.log("Botón 'Continuar' presionado. La lógica principal está en el otro listener.");
   });
 }
 
@@ -722,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Back to catalog button
   backBtn.addEventListener('click', backToCatalog);
   
-  // Button to calculate quotation - changed to send to WhatsApp
+  // Button to calculate quotation
   calculateBtn.addEventListener('click', (event) => {
     event.preventDefault(); // Prevent default submission
     calculateAndDisplayQuote();
@@ -778,10 +814,10 @@ if (footerWhatsappButton) {
 }
 
 
-// =========== NUEVO CÓDIGO INTEGRADO ===========
+// =========== CÓDIGO DEL FORMULARIO DE CLIENTE (CON LÓGICA DE ADDONS) ===========
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- PASO 1: Selecciona los nuevos elementos del DOM ---
+    // --- Selecciona los elementos del DOM ---
     const customerFormSection = document.getElementById('customer-form-section');
     const backToQuoteBtn = document.getElementById('back-to-quote-btn');
     const customerForm = document.getElementById('customer-form');
@@ -792,117 +828,133 @@ document.addEventListener('DOMContentLoaded', () => {
     const countryCodeSelect = document.getElementById('country-code');
     const summaryCarInfo = document.getElementById('summary-car-info');
     const summaryQuoteInfo = document.getElementById('summary-quote-info');
+    // --- AÑADIDO: Elementos para los addons.
+    const addonsContainer = document.getElementById('addons-container');
+    const finalTotalContainer = document.getElementById('final-total-container');
 
-    // --- PASO 2: Variable global para guardar detalles de la cotización ---
-    let currentQuoteDetails = {};
-
-    // --- PASO 3: Datos y funciones para el nuevo formulario ---
-    
-    // Lista de códigos de país para el input de teléfono
+    // --- Datos y funciones para el nuevo formulario ---
     const countryCodes = [
-        { name: "Guatemala", code: "+502" },
-        { name: "USA", code: "+1" },
-        { name: "El Salvador", code: "+503" },
-        { name: "Honduras", code: "+504" },
-        { name: "Mexico", code: "+52" },
-        { name: "Spain", code: "+34" },
+        { name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" },
+        { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" },
+        { name: "Mexico", code: "+52" }, { name: "Spain", code: "+34" },
     ];
 
-    /**
-     * Rellena el <select> con los códigos de país.
-     */
     function populateCountryCodes() {
         if (!countryCodeSelect) return;
         countryCodes.forEach(country => {
             const option = document.createElement('option');
             option.value = country.code;
             option.textContent = `${country.name} (${country.code})`;
-            if (country.code === '+502') {
-                option.selected = true;
-            }
+            if (country.code === '+502') { option.selected = true; }
             countryCodeSelect.appendChild(option);
         });
     }
 
-    /**
-     * Muestra/oculta el campo de texto para "Otros" países de licencia.
-     */
     function handleLicenseOriginChange() {
         const otherRadio = document.querySelector('input[name="license-origin"][value="Otros"]');
-        if (otherRadio.checked) {
-            licenseOriginOtherInput.style.display = 'block';
-            licenseOriginOtherInput.required = true;
-        } else {
-            licenseOriginOtherInput.style.display = 'none';
-            licenseOriginOtherInput.required = false;
-            licenseOriginOtherInput.value = '';
-        }
+        licenseOriginOtherInput.style.display = otherRadio.checked ? 'block' : 'none';
+        licenseOriginOtherInput.required = otherRadio.checked;
+        if (!otherRadio.checked) licenseOriginOtherInput.value = '';
     }
 
-    /**
-     * Muestra/oculta el formulario de detalles de vuelo.
-     */
     function handleDeliveryLocationChange() {
         const airportRadio = document.querySelector('input[name="delivery-location"][value="Aeropuerto"]');
-        if (airportRadio.checked) {
-            flightDetailsFieldset.style.display = 'block';
-            document.getElementById('airline-name').required = true;
-            document.getElementById('flight-number').required = true;
-        } else {
-            flightDetailsFieldset.style.display = 'none';
-            document.getElementById('airline-name').required = false;
-            document.getElementById('flight-number').required = false;
+        flightDetailsFieldset.style.display = airportRadio.checked ? 'block' : 'none';
+        document.getElementById('airline-name').required = airportRadio.checked;
+        document.getElementById('flight-number').required = airportRadio.checked;
+        if (!airportRadio.checked) {
             document.getElementById('airline-name').value = '';
             document.getElementById('flight-number').value = '';
         }
     }
     
-    /**
-     * Maneja el envío del formulario de reserva final.
-     * @param {Event} event - El evento de envío del formulario.
-     */
     function handleFormSubmit(event) {
         event.preventDefault();
         const formData = new FormData(customerForm);
         const data = Object.fromEntries(formData.entries());
+        // --- AÑADIDO: Captura de seguros seleccionados.
+        const selectedAddOns = insuranceAddOns.filter(addon => addon.selected);
 
         console.log("--- Reserva Finalizada (simulación) ---");
         console.log("Datos del Cliente:", data);
-        console.log("Datos del Vehículo:", selectedCar); // 'selectedCar' debe ser accesible
+        console.log("Datos del Vehículo:", selectedCar);
         console.log("Detalles de la Cotización:", currentQuoteDetails);
+        console.log("Seguros Seleccionados:", selectedAddOns);
         
         alert('¡Gracias por tu reserva! (Esto es una simulación). Revisa la consola del navegador para ver los datos enviados.');
     }
 
-
-    // --- PASO 4: Funciones de navegación de la SPA ---
-
-    /**
-     * Oculta las otras vistas y muestra el formulario del cliente.
-     */
+    // --- MODIFICADO: `showCustomerForm` ahora prepara la vista con los addons.
     function showCustomerForm() {
-        // Asumiendo que 'quotationSection' y 'selectedCarInfo' son accesibles globalmente
-        const quotationSection = document.getElementById('quotation-section');
-
         quotationSection.style.display = 'none';
         customerFormSection.style.display = 'block';
 
-        // Llena el resumen con la información guardada
         summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
-        summaryQuoteInfo.innerHTML = `
-            <h4>Resumen de Cotización</h4>
-            ${currentQuoteDetails.summaryHTML}
-        `;
+        
+        // Llamadas para renderizar los add-ons y calcular el total inicial
+        renderInsuranceAddOns();
+        updateQuoteSummaryAndTotal();
 
         window.scrollTo(0, 0);
     }
     
-    // --- PASO 5: Asignación de todos los nuevos event listeners ---
+    // --- AÑADIDO: Nuevas funciones para manejar la lógica de los addons.
+    /**
+     * Crea los botones para los seguros y los muestra en el DOM.
+     */
+    function renderInsuranceAddOns() {
+        if (!addonsContainer) return;
+        addonsContainer.innerHTML = ''; // Limpiar contenedor
 
-    // Llenar el selector de países al cargar la página
+        insuranceAddOns.forEach(addon => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'addon-button';
+            button.dataset.id = addon.id;
+
+            if (addon.selected) button.classList.add('selected');
+            if (addon.mandatory) button.classList.add('mandatory');
+
+            button.innerHTML = `
+                <h4>${addon.name}</h4>
+                <p>${addon.description}</p>
+                <p><strong>${formatCurrency(addon.dailyCost)} / día</strong></p>
+                ${addon.mandatory ? '<span class="mandatory-label">(Obligatorio)</span>' : ''}
+            `;
+            addonsContainer.appendChild(button);
+        });
+    }
+
+    /**
+     * Actualiza el resumen de la cotización y el total final, incluyendo los addons seleccionados.
+     */
+    function updateQuoteSummaryAndTotal() {
+        if (!summaryQuoteInfo || !finalTotalContainer || !currentQuoteDetails.baseTotal) return;
+        
+        let addonsTotal = 0;
+        let addonsHTML = '<hr><h4>Seguros y Extras</h4>';
+
+        insuranceAddOns.forEach(addon => {
+            if (addon.selected) {
+                const addonCost = addon.dailyCost * currentQuoteDetails.rentalDays;
+                addonsTotal += addonCost;
+                addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> (${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(addon.dailyCost)})</p>`;
+            }
+        });
+
+        const finalTotal = currentQuoteDetails.baseTotal + addonsTotal;
+
+        // Mostrar resumen de renta + resumen de add-ons
+        summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + addonsHTML;
+
+        // Mostrar el gran total
+
+        finalTotalContainer.innerHTML = `<hr>Total Final Estimado: <strong>${formatCurrency(finalTotal)}</strong>`;
+    }
+
+    // --- Asignación de todos los nuevos event listeners ---
     populateCountryCodes();
 
-    // Botón para regresar de la reserva a la cotización
     if (backToQuoteBtn) {
         backToQuoteBtn.addEventListener('click', () => {
             customerFormSection.style.display = 'none';
@@ -911,43 +963,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Radios de origen de licencia
     if (licenseOriginRadios) {
         licenseOriginRadios.forEach(radio => radio.addEventListener('change', handleLicenseOriginChange));
     }
 
-    // Radios de lugar de entrega
     if (deliveryLocationRadios) {
         deliveryLocationRadios.forEach(radio => radio.addEventListener('change', handleDeliveryLocationChange));
     }
 
-    // Listener para el envío del formulario principal
     if (customerForm) {
         customerForm.addEventListener('submit', handleFormSubmit);
     }
+    
+    // --- AÑADIDO: Listener para los botones de addons.
+    if (addonsContainer) {
+        addonsContainer.addEventListener('click', (event) => {
+            const button = event.target.closest('.addon-button');
+            if (!button) return;
 
-    // **IMPORTANTE**: Conexión entre la vista de cotización y el nuevo formulario.
-    const proceedButton = document.querySelector('#quotation-result');
-    if(proceedButton){
-        proceedButton.addEventListener('click', function(event){
+            const addonId = button.dataset.id;
+            const addon = insuranceAddOns.find(a => a.id === addonId);
+
+            if (addon && !addon.mandatory) {
+                addon.selected = !addon.selected; // Cambiar estado
+                button.classList.toggle('selected'); // Cambiar clase visual
+                updateQuoteSummaryAndTotal(); // Recalcular todo
+            }
+        });
+    }
+
+
+    // **IMPORTANTE**: Conexión entre la vista de cotización y el nuevo formulario (estructura original).
+    const quotationResultContainer = document.querySelector('#quotation-result');
+    if(quotationResultContainer){
+        quotationResultContainer.addEventListener('click', function(event){
             if(event.target && event.target.id === 'proceed-to-form-btn'){
                 // Guarda el HTML del resumen en la variable global.
                 let summaryHtmlContent = '';
-                // Selecciona todos los elementos directos del resumen para reconstruirlo.
-                const resultElements = quotationResult.querySelectorAll('h4, p, hr');
+                const resultElements = quotationResultContainer.querySelectorAll('h4, p, hr');
                 resultElements.forEach(el => {
                     summaryHtmlContent += el.outerHTML;
                 });
-
-                // Elimina el botón "Continuar" del HTML que se guarda para el resumen.
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = summaryHtmlContent;
-                const buttonToRemove = tempDiv.querySelector('#proceed-to-form-btn');
-                if (buttonToRemove) {
-                    buttonToRemove.remove();
-                }
                 
-                currentQuoteDetails.summaryHTML = tempDiv.innerHTML;
+                currentQuoteDetails.summaryHTML = summaryHtmlContent;
 
                 showCustomerForm();
             }
