@@ -368,6 +368,14 @@ const cars = [
   }
   ]
 
+  const extraHourRates = {
+    "Microbuses": 15,
+    "SUVs": 18,
+    "Pick-ups": 16,
+    "Crossovers": 12,
+    "Sedanes": 10
+  };
+
 // Elementos del DOM
 const catalogGrid = document.getElementById('catalog-grid');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -567,6 +575,85 @@ function backToCatalog() {
   selectedCar = null;
 }
 
+// Coloca esta función donde habíamos acordado (después de backToCatalog)
+
+function calculateAndDisplayQuote() {
+  // --- 1. OBTENER Y VALIDAR ENTRADAS ---
+  const startDateValue = startDateInput.value;
+  const endDateValue = endDateInput.value;
+  const startTimeValue = startTimeInput.value;
+  const endTimeValue = endTimeInput.value;
+
+  if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
+    quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora.</p>`;
+    quotationResult.style.display = 'block';
+    return;
+  }
+
+  const startDate = new Date(`${startDateValue}T${startTimeValue}`);
+  const endDate = new Date(`${endDateValue}T${endTimeValue}`);
+
+  if (endDate <= startDate) {
+    quotationResult.innerHTML = `<p class="error">La fecha y hora de entrega debe ser posterior a la de inicio.</p>`;
+    quotationResult.style.display = 'block';
+    return;
+  }
+
+  // --- 2. OBTENER VARIABLES DE PRECIO ---
+  const dailyPrice = selectedCar.price;
+  const extraHourPrice = extraHourRates[selectedCar.category] || 10; // Usa 10 como valor por defecto si la categoría no existe
+
+  // --- 3. REALIZAR EL CÁLCULO MATEMÁTICO ---
+  const durationMs = endDate.getTime() - startDate.getTime();
+  const durationHours = Math.ceil(durationMs / (1000 * 60 * 60)); // Redondear horas hacia arriba
+
+  const fullDays = Math.floor(durationHours / 24);
+  const extraHours = durationHours % 24;
+
+  let finalDays = fullDays;
+  let extraHoursCost = extraHours * extraHourPrice;
+  let finalTotal = 0;
+  let summaryHTML = '';
+
+  // --- 4. APLICAR LA REGLA DE "MEJOR PRECIO" ---
+  if (extraHours > 0 && extraHoursCost >= dailyPrice) {
+    // Si el costo de horas extra es mayor o igual al de un día, se cobra un día más.
+    finalDays += 1;
+    finalTotal = finalDays * dailyPrice;
+    
+    summaryHTML = `
+      <h4>Resumen de la Cotización</h4>
+      <p>Días de renta: <strong>${finalDays}</strong> (incluyendo horas extra)</p>
+      <p>Precio por día: ${formatCurrency(dailyPrice)}</p>
+      <hr>
+      <p class="quotation__total">Total Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
+    `;
+
+  } else {
+    // Si no, se cobran los días y las horas extra por separado.
+    finalTotal = (fullDays * dailyPrice) + extraHoursCost;
+    
+    summaryHTML = `
+      <h4>Resumen de la Cotización</h4>
+      <p>${fullDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(fullDays * dailyPrice)}</strong></p>
+      ${extraHours > 0 ? `<p>${extraHours} hora(s) extra x ${formatCurrency(extraHourPrice)}/hora = <strong>${formatCurrency(extraHoursCost)}</strong></p>` : ''}
+      <hr>
+      <p class="quotation__total">Total Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
+    `;
+  }
+  
+  // --- 5. MOSTRAR EL RESULTADO ---
+  summaryHTML += `<button id="proceed-to-form-btn" class="btn">Continuar y Llenar Datos</button>`;
+  quotationResult.innerHTML = summaryHTML;
+  quotationResult.style.display = 'block';
+
+  // Añadimos el listener para el nuevo botón (esto lo haremos funcionar en el siguiente paso)
+  document.getElementById('proceed-to-form-btn').addEventListener('click', () => {
+    alert('¡Siguiente paso: mostrar el formulario de cliente!');
+  });
+}
+
+
 // Function to format date as text in Spanish considering Guatemala timezone
 function formatDateAsText(dateString) {
   // Create date in UTC
@@ -591,52 +678,6 @@ function formatDateAsText(dateString) {
   return `${day} de ${month} de ${year}`;
 }
 
-// Function to send WhatsApp message
-function sendToWhatsApp() {
-  const startDate = startDateInput.value;
-  const endDate = endDateInput.value;
-  const startTime = startTimeInput ? startTimeInput.value : '';
-  const endTime = endTimeInput ? endTimeInput.value : '';
-  
-  // Validations
-  if (!startDate || !endDate) {
-      alert('Por favor seleccione fecha de inicio y de devolución');
-      return;
-  }
-  
-  if (startTimeInput && endTimeInput && (!startTime || !endTime)) {
-      alert('Por favor seleccione hora de inicio y de devolución');
-      return;
-  }
-  
-  // Validate dates before sending
-  if (!validateDates()) {
-    return;
-  }
-  
-  // Format dates as text in Spanish
-  const formattedStartDate = formatDateAsText(startDate);
-  const formattedEndDate = formatDateAsText(endDate);
-  
-  // Create message for WhatsApp with timezone
-  const message = `*¡Mucho gusto!*
-
-Me interesa cotizar el siguiente vehículo:
-▪️ *Modelo:* ${selectedCar.name}
-▪️ *Categoría:* ${selectedCar.category}
-
-*Detalles de la cotización:*
-📅 *Fecha de inicio:* ${formattedStartDate}
-⏰ *Hora de inicio:* ${startTime} (Hora de Guatemala)
-📅 *Fecha de entrega:* ${formattedEndDate}
-⏰ *Hora de entrega:* ${endTime} (Hora de Guatemala)`;
-  
-  // WhatsApp URL with message - use correct number without + sign
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  
-  // Open WhatsApp in a new window
-  window.open(whatsappUrl, '_blank');
-}
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -663,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Button to calculate quotation - changed to send to WhatsApp
   calculateBtn.addEventListener('click', (event) => {
     event.preventDefault(); // Prevent default submission
-    sendToWhatsApp();
+    calculateAndDisplayQuote();
   });
   
   // Menu hamburger
