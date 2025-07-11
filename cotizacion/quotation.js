@@ -519,11 +519,19 @@ function setInitialDateRestrictions() {
   endDateInput.min = minEndDateString;
 }
 
-function getDateForWhatsApp(dateInput) {
-  return dateInput.value; // Mantains the exact date entered without modifying it
-}
-
-// ---------------------------------------------------
+const fabWhatsapp = document.getElementById('whatsapp-fab');
+      if (fabWhatsapp) {
+          fabWhatsapp.addEventListener('click', function(event) {
+              event.preventDefault();
+              
+              const phoneNumber = '50248494290';
+              const message = "Hola, estoy interesado en rentar un vehículo y me gustaría más información.";
+              
+              const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+              
+              window.open(whatsappUrl, '_blank');
+          });
+      }
 
 // Function to show quotation section
 function showQuotationSection() {
@@ -575,8 +583,6 @@ function backToCatalog() {
   selectedCar = null;
 }
 
-// Coloca esta función donde habíamos acordado (después de backToCatalog)
-
 function calculateAndDisplayQuote() {
   // --- 1. OBTENER Y VALIDAR ENTRADAS ---
   const startDateValue = startDateInput.value;
@@ -598,6 +604,21 @@ function calculateAndDisplayQuote() {
     quotationResult.style.display = 'block';
     return;
   }
+
+  // --- NUEVA VALIDACIÓN: FECHA DE INICIO NO ANTERIOR A HOY ---
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Se establece la hora a medianoche para comparar solo la fecha.
+
+  // Se crea una fecha a partir del valor del input para una comparación precisa.
+  const selectedDateOnly = new Date(startDateValue + 'T00:00:00');
+
+  if (selectedDateOnly < today) {
+    quotationResult.innerHTML = `<p class="error">la fecha de inicio no puede ser anterior a hoy</p>`;
+    quotationResult.style.display = 'block';
+    return; // Detiene la ejecución de la función si la fecha es inválida.
+  }
+  // --- FIN DE LA NUEVA VALIDACIÓN ---
+
 
   // --- 2. OBTENER VARIABLES DE PRECIO ---
   const dailyPrice = selectedCar.price;
@@ -746,7 +767,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setInitialDateRestrictions();
 });
 
-// Event for WhatsApp button in footer
 if (footerWhatsappButton) {
   footerWhatsappButton.addEventListener('click', function(event) {
       event.preventDefault();
