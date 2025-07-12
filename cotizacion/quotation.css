@@ -1118,8 +1118,8 @@ header {
   }
   
   .quotation__car-specs {
-    display: flex; /* Mantenemos flex para escritorio */
-    flex-wrap: wrap; /* Para que los elementos se envuelvan */
+    display: flex; 
+    flex-wrap: wrap; 
     justify-content: flex-start;
     gap: 15px;
     margin-top: 10px;
@@ -1146,6 +1146,10 @@ header {
     align-items: center;
     justify-content: flex-start;
     overflow-x: visible;
+  }
+
+  .form-container {
+    width: 100%;
   }
 
   .customer-form-header {
