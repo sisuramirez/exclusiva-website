@@ -323,7 +323,7 @@ header {
   overflow: hidden;
   box-shadow: var(--step-shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 400px; /* Ancho fijo */
+  width: 400px;
 }
 
 .car-card:hover {
@@ -606,42 +606,51 @@ header {
 */
 
 .customer-form-section {
-  padding: 3rem 0;
+  padding: 1.5rem 1rem;
   background-color: var(--how-it-works-bg);
-  display: none; /* Initially hidden */
-  align-items: center;
+  display: none;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .customer-form-header {
   display: flex;
-  align-items: center;
-  margin-bottom: 2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
 }
 
 .customer-form-title {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   color: var(--text-color);
+  text-align: left;
+  width: 100%;
 }
 
 .customer-form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 30px;
+  gap: 20px;
   background-color: white;
   border-radius: 12px;
-  padding: 30px;
+  padding: 20px;
   box-shadow: var(--step-shadow);
+  width: calc(100% - 2rem);
+  margin: 0 auto;
+  max-width: 600px;
+  overflow-x: hidden;
 }
 
 .form-column {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .form-column fieldset {
   border: 1px solid #ddd;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 8px;
 }
 
@@ -667,16 +676,19 @@ header {
 .form-group input[type="email"],
 .form-group textarea,
 .form-group select {
-    width: 100%;
+    width: 90%;
+    max-width: 90%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .radio-group {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-top: 0.5rem;
 }
 
@@ -690,15 +702,18 @@ header {
 
 .phone-group {
     display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
 .phone-group select {
-    flex: 0 0 120px; /* Ancho fijo para el código de país */
+    flex: none;
+    width: 100%;
 }
 
 .phone-group input {
     flex: 1;
+    width: 100%;
 }
 
 .hidden-input {
@@ -755,9 +770,8 @@ header {
 
 .addons-container {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.8rem;
   margin-top: 1rem;
 }
 
@@ -765,10 +779,10 @@ header {
   background-color: #f0f0f0;
   border: 2px solid #ccc;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.8rem;
   cursor: pointer;
   text-align: center;
-  width: 180px;
+  width: 100%;
   transition: all 0.3s ease;
 }
 
@@ -806,14 +820,14 @@ header {
 }
 
 .summary-box {
-  padding: 1.5rem; /* Le da un relleno uniforme a toda la caja */
+  padding: 1rem;
   background-color: #f9f9f9;
   border: 1px solid #eee;
   border-radius: 8px;
 }
 
 #summary-quote-info p {
-  padding: 0; /* Quita el padding individual para que se ajuste al ancho */
+  padding: 0;
 }
 
 #summary-quote-info h4 {
@@ -868,12 +882,12 @@ header {
 
 .footer__column {
   margin-bottom: 1.5rem;
-  text-align: center; /* Centrado para mobile */
+  text-align: center;
 }
 
 .footer__logo {
   display: flex;
-  justify-content: center; /* Centra el logo */
+  justify-content: center;
 }
 
 .footer__logo img {
@@ -917,7 +931,7 @@ header {
 .footer__social {
   display: flex;
   gap: 1rem;
-  justify-content: center; /* Centra íconos sociales */
+  justify-content: center;
 }
 
 .footer__social-link {
@@ -961,25 +975,25 @@ header {
   right: 20px;
   width: 60px;
   height: 60px;
-  background-color: #25D366; /* Color oficial de WhatsApp */
+  background-color: #25D366;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  z-index: 1000;
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .whatsapp-fab:hover {
-  transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
-  background-color: #128C7E; /* Un tono más oscuro al pasar el mouse */
+  transform: scale(1.1);
+  background-color: #128C7E;
 }
 
 .whatsapp-fab__icon {
   width: 35px;
   height: 35px;
-  filter: brightness(0) invert(1); /* Cambia el ícono a color blanco */
+  filter: brightness(0) invert(1);
 }
 
 @media (min-width: 1024px) {
@@ -1116,12 +1130,62 @@ header {
   }
 
   /* Customer Form on Desktop */
-  .customer-form-grid {
-      grid-template-columns: 2fr 1fr; /* Two columns, left one is wider */
+  .customer-form-section {
+    padding: 3rem 0;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: visible;
+  }
+
+  .customer-form-header {
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 0;
   }
 
   .customer-form-title {
       font-size: 2.2rem;
+      text-align: left;
+      width: auto;
+  }
+  
+  .customer-form-grid {
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      padding: 30px;
+      width: 100%;
+      max-width: none;
+      overflow-x: visible;
+  }
+
+  .form-column {
+    gap: 1.5rem;
+  }
+
+  .form-column fieldset {
+    padding: 1.5rem;
+  }
+
+  .phone-group {
+      flex-direction: row;
+      gap: 10px;
+  }
+
+  .phone-group select {
+      flex: 0 0 120px;
+      width: auto;
+  }
+
+  .addons-container {
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .addon-button {
+    width: 180px;
+    padding: 1rem;
   }
   
   /* Footer */
