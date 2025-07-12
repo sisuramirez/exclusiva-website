@@ -369,10 +369,10 @@ const cars = [
   ]
 
   const extraHourRates = {
-    "Microbuses": 15,
-    "SUVs": 18,
-    "Pick-ups": 16,
-    "Crossovers": 12,
+    "Microbuses": 20,
+    "SUVs": 20,
+    "Pick-ups": 20,
+    "Crossovers": 20,
     "Sedanes": 10
   };
 

@@ -587,6 +587,19 @@ header {
   margin: 10px 0;
 }
 
+#proceed-to-form-btn {
+  padding: 12px 20px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
 /* =================================
  Customer Form Section
 =================================
@@ -698,6 +711,10 @@ header {
   border-color: #eee;
 }
 
+#summary-car-info {
+  margin-bottom: 30px;
+}
+
 #summary-car-info .quotation__car-details {
   padding: 0;
 }
@@ -786,6 +803,53 @@ header {
   font-size: 0.8rem;
   margin-top: 0.5rem;
   display: block;
+}
+
+.summary-box {
+  padding: 1.5rem; /* Le da un relleno uniforme a toda la caja */
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+#summary-quote-info p {
+  padding: 0; /* Quita el padding individual para que se ajuste al ancho */
+}
+
+#summary-quote-info h4 {
+  margin-top: 10px;
+}
+
+.summary-box h3,
+#summary-quote-info h4 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#submit-form {
+  padding: 12px 20px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+#back-to-quote-btn {
+  padding: 12px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 

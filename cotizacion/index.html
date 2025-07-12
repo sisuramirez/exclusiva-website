@@ -118,6 +118,10 @@
                                 <input type="text" id="customer-id" name="customerId" required>
                             </div>
                             <div class="form-group">
+                                <label for="customer-email">Correo electrónico</label>
+                                <input type="text" id="customer-email" name="customerEmail" required>
+                            </div>
+                            <div class="form-group">
                                 <label for="customer-license">Licencia de Conducir No.</label>
                                 <input type="text" id="customer-license" name="customerLicense" required>
                             </div>
@@ -138,8 +142,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="customer-address">Dirección de Domicilio</label>
-                                <textarea id="customer-address" name="customerAddress" rows="3" required></textarea>
+                                <label for="customer-address">Dirección de Domicilio (opcional)</label>
+                                <textarea id="customer-address" name="customerAddress" rows="3" ></textarea>
                             </div>
                         </fieldset>
         
@@ -182,7 +186,7 @@
                                 </div>
                         </div>
 
-                        <button type="submit" form="customer-form" class="btn">Finalizar Reserva</button>
+                        <button type="submit" form="customer-form" class="btn" id="submit-form">Finalizar Reserva</button>
                         <button type="button" id="back-to-quote-btn" class="btn btn--secondary">← Regresar a Cotización</button>
                     </div>
                 </div>
