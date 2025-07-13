@@ -675,7 +675,7 @@ function calculateAndDisplayQuote() {
     
     summaryHTML = `
       <h4>Resumen de la Cotización</h4>
-      <p>Días de renta: <strong>${finalDays}</strong> (incluyendo horas extra)</p>
+      <p>Días de renta: <strong>${finalDays}</strong></p>
       <p>Precio por día: ${formatCurrency(dailyPrice)}</p>
       <hr>
       <p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>

@@ -604,6 +604,10 @@ header {
   overflow-x: hidden;
 }
 
+.form-container {
+  width: 100%;
+}
+
 .customer-form-header {
   display: flex;
   flex-direction: column;
