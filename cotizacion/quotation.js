@@ -4,34 +4,29 @@
     if (root) {
       root.innerHTML += 'Cache cleared using window.location.href <br>';
     }
-    
+
     if (!window.location.href.includes('nocache')) {
       const baseUrl = window.location.href.split('?')[0];
       window.location.href = `${baseUrl}?nocache=${Date.now()}`;
     }
   };
-  
+
   document.addEventListener("DOMContentLoaded", clearCache);
 })();
 
-
-
-const contactLink = document.querySelector('.nav__link[href="#"]'); // Selects the "Contact Us" link
+const contactLink = document.querySelector('.nav__link[href="#"]');
 let contactCard = null;
 const footerWhatsappButton = document.querySelector('.footer__social-link img[alt="WhatsApp"]').parentElement;
 
 
 function createContactCard(clickEvent) {
-  // Prevent the event from propagating
   if (clickEvent) {
     clickEvent.stopPropagation();
   }
-  
-  // Create card container
+
   contactCard = document.createElement('div');
   contactCard.className = 'contact-card';
-  
-  // Create card content
+
   const cardContent = `
       <div class="contact-card__content">
           <button class="contact-card__close">&times;</button>
@@ -59,17 +54,14 @@ function createContactCard(clickEvent) {
           </div>
       </div>
   `;
-  
+
   contactCard.innerHTML = cardContent;
-  
-  // Add card to the DOM
+
   document.body.appendChild(contactCard);
-  
-  // Add event listener to close button
+
   const closeButton = contactCard.querySelector('.contact-card__close');
   closeButton.addEventListener('click', hideContactCard);
-  
-  // Add event listener to WhatsApp link
+
   const whatsappLink = contactCard.querySelector('.whatsapp-link');
   if (whatsappLink) {
     whatsappLink.addEventListener('click', function(event) {
@@ -80,50 +72,43 @@ function createContactCard(clickEvent) {
       window.open(whatsappUrl, '_blank');
     });
   }
-  
-  // Show the card with animation
+
   setTimeout(() => {
       contactCard.classList.add('active');
   }, 10);
-  
-  // Add outside click listener - but with a delay to prevent immediate triggering
+
   setTimeout(() => {
     document.addEventListener('click', closeCardOutside);
   }, 100);
 }
 
-// Hide contact card function
 function hideContactCard() {
   if (contactCard) {
       contactCard.classList.remove('active');
-      
-      // Wait for transition to finish before removing from DOM
+
       setTimeout(() => {
           if (contactCard && contactCard.parentNode) {
               document.body.removeChild(contactCard);
               contactCard = null;
           }
-      }, 300); // Match transition duration
-      
-      // Remove outside click listener
+      }, 300);
+
       document.removeEventListener('click', closeCardOutside);
   }
 }
 
-// Close card when clicking outside
 function closeCardOutside(event) {
-  if (contactCard && 
-      !contactCard.contains(event.target) && 
+  if (contactCard &&
+      !contactCard.contains(event.target) &&
       !event.target.classList.contains('nav__link')) {
       hideContactCard();
   }
 }
 
-// Toggle contact card function
 function toggleContactCard(event) {
   event.preventDefault();
-  event.stopPropagation(); // Stop the event from bubbling up
-  
+  event.stopPropagation();
+
   if (contactCard) {
       hideContactCard();
   } else {
@@ -131,7 +116,6 @@ function toggleContactCard(event) {
   }
 }
 
-// Add event listener to contact link
 document.addEventListener('DOMContentLoaded', function() {
   const contactLinks = document.querySelectorAll('.nav__link');
   contactLinks.forEach(link => {
@@ -141,9 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Array of available vehicles
 const cars = [
-  // MICROBUSES
   {
     id: 1,
     name: "Toyota Hiace",
@@ -192,8 +174,6 @@ const cars = [
       transmission: "Automático/Manual"
     }
   },
-  
-  // SUVs
   {
     id: 5,
     name: "Toyota Fortuner",
@@ -242,8 +222,6 @@ const cars = [
       transmission: "Automático"
     }
   },
-  
-  // PICK-UPS
   {
     id: 9,
     name: "Toyota Hilux",
@@ -280,8 +258,6 @@ const cars = [
       transmission: "Automático/Manual"
     }
   },
-  
-  // CROSSOVER
   {
     id: 12,
     name: "Hyundai Creta",
@@ -376,35 +352,36 @@ const cars = [
     "Sedanes": 10
   };
 
-// --- AÑADIDO: Estructura de datos para los seguros (add-ons)
 const insuranceAddOns = [
-    { 
-        id: 'cdw', 
-        name: 'Seguro CDW', 
-        dailyCost: 10, // Costo de ejemplo
-        mandatory: true, 
-        selected: true, 
-        description: 'Cobertura Parcial de Colisión' 
+    {
+        id: 'cdw',
+        name: 'Protección a Terceros',
+        dailyCost: 10,
+        mandatory: true,
+        selected: true,
+        description: 'Cubre daños a terceros.',
+        popupDescription: 'Esta cobertura es fundamental y obligatoria. Protege contra daños a vehículos, propiedades o personas ajenas al contrato de alquiler, brindándote seguridad completa en la carretera. Incluye responsabilidad civil por lesiones corporales y daños a la propiedad de terceros hasta los límites establecidos por la ley. Es tu primer nivel de protección para conducir con tranquilidad.'
     },
-    { 
-        id: 'tpp', 
-        name: 'Protección a Terceros', 
-        dailyCost: 10, // Costo de ejemplo
-        mandatory: false, 
-        selected: false, 
-        description: 'Cubre daños a otras propiedades.' 
+    {
+        id: 'tpp',
+        name: 'Cobertura Deducible por Pérdida y Daño',
+        dailyCost: 10,
+        mandatory: false,
+        selected: false,
+        description: 'Cubre deducible por pérdida y daño.',
+        popupDescription: 'Si El Arrendatario acepta mediante sus iniciales el deducible por PÉRDIDA/DAÑO que no es un seguro, su responsabilidad se limita a un deducible variable según el caso más gastos por remolque, almacenamiento, recuperación y un cargo razonable por la perdida de uso. Al aceptar esto, "El Arrendatario" conviene pagar una cuota adicional por día o fracción. Si El Arrendatario NO ACEPTA, mediante sus iniciales, su responsabilidad no excederá el VALOR REAL DEL MERCADO del vehículo al momento de su PÉRDIDA/DAÑO, más gastos por remolque, almacenamiento, recuperación y un cobro razonable por la perdida de uso.'
     },
-    { 
-        id: 'pai', 
-        name: 'Asistencia Personal', 
-        dailyCost: 10, // Costo de ejemplo
-        mandatory: false, 
-        selected: false, 
-        description: 'Cubre gastos médicos para ocupantes.' 
+    {
+        id: 'pai',
+        name: 'Seguro Personal de Accidente',
+        dailyCost: 10,
+        mandatory: false,
+        selected: false,
+        description: 'Seguro médico para ocupantes.',
+        popupDescription: 'Si el Arrendatario ACEPTA, con sus iniciales, acepta pagar una tarifa adicional cuyo monto variará por día de tracción. El arrendatario acepta haber leído un resumen de los términos y limitaciones de la póliza del Arrendador.'
     }
 ];
 
-// Elementos del DOM
 const catalogGrid = document.getElementById('catalog-grid');
 const filterButtons = document.querySelectorAll('.filter-btn');
 const quotationSection = document.getElementById('quotation-section');
@@ -412,17 +389,15 @@ const backBtn = document.getElementById('back-btn');
 const selectedCarInfo = document.getElementById('selected-car-info');
 const startDateInput = document.getElementById('start-date');
 const endDateInput = document.getElementById('end-date');
-const startTimeInput = document.getElementById('start-time'); // Referencia al nuevo campo de hora de inicio
-const endTimeInput = document.getElementById('end-time');     // Referencia al nuevo campo de hora de entrega
+const startTimeInput = document.getElementById('start-time');
+const endTimeInput = document.getElementById('end-time');
 const calculateBtn = document.getElementById('calculate-btn');
 const quotationResult = document.getElementById('quotation-result');
 const hamburgerBtn = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
-const whatsappNumber = "50248494290"; // Correct number without the + sign
+const whatsappNumber = "50248494290";
 
-// Variables globales
 let selectedCar = null;
-// --- AÑADIDO: Se inicializa la variable de detalles de cotización para que esté lista.
 let currentQuoteDetails = {};
 
 
@@ -432,12 +407,12 @@ function formatCurrency(amount) {
       currency: 'USD'
   }).format(amount);
 }
-// Function to create a car card
+
 function createCarCard(car) {
   const carCard = document.createElement('div');
   carCard.className = 'car-card';
   carCard.dataset.category = car.category;
-  
+
   carCard.innerHTML = `
       <img src="${car.imageUrl}" alt="${car.name}" class="car-card__image">
       <div class="car-card__content">
@@ -465,22 +440,20 @@ function createCarCard(car) {
           </div>
       </div>
   `;
-  
+
   return carCard;
 }
 
-// Function to display all cars or filter by category
 function displayCars(category = 'all') {
   catalogGrid.innerHTML = '';
-  
+
   cars.forEach(car => {
       if (category === 'all' || car.category === category) {
           const carCard = createCarCard(car);
           catalogGrid.appendChild(carCard);
       }
   });
-  
-  // Agregar event listeners a los botones de cotizar
+
   document.querySelectorAll('.car-card__button').forEach(button => {
       button.addEventListener('click', () => {
           const carId = parseInt(button.dataset.id);
@@ -495,28 +468,22 @@ function validateDates() {
   const endDate = new Date(endDateInput.value);
   const today = new Date();
 
-  // Ensure today has no hours for exact comparison
   today.setHours(0, 0, 0, 0);
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
 
-  // Calculate yesterday
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
-  // Clear any previous error
   startDateInput.setCustomValidity('');
   endDateInput.setCustomValidity('');
 
-  // Start date validation
-  // Allows selecting today or one day before
   if (startDate < yesterday) {
     startDateInput.setCustomValidity('La fecha de inicio no puede ser anterior a hoy');
     startDateInput.reportValidity();
     return false;
   }
 
-  // Calculate minimum return date (2 days after start date)
   const minEndDate = new Date(startDate);
   minEndDate.setDate(minEndDate.getDate() + 2);
 
@@ -533,15 +500,12 @@ function setInitialDateRestrictions() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Calculate yesterday
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
-  // Format yesterday for input
   const yesterdayString = yesterday.toISOString().split('T')[0];
   startDateInput.min = yesterdayString;
 
-  // Calculate minimum date for return date (2 days after start date)
   const minEndDate = new Date(today);
   minEndDate.setDate(today.getDate() + 2);
   const minEndDateString = minEndDate.toISOString().split('T')[0];
@@ -553,22 +517,20 @@ const fabWhatsapp = document.getElementById('whatsapp-fab');
       if (fabWhatsapp) {
           fabWhatsapp.addEventListener('click', function(event) {
               event.preventDefault();
-              
+
               const phoneNumber = '50248494290';
               const message = "Hola, estoy interesado en rentar un vehículo y me gustaría más información.";
-              
+
               const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-              
+
               window.open(whatsappUrl, '_blank');
           });
       }
 
-// Function to show quotation section
 function showQuotationSection() {
   document.querySelector('.catalog').style.display = 'none';
   quotationSection.style.display = 'block';
-  
-  // Display selected car information
+
   selectedCarInfo.innerHTML = `
       <img src="${selectedCar.imageUrl}" alt="${selectedCar.name}" class="quotation__car-image">
       <div class="quotation__car-details">
@@ -594,35 +556,30 @@ function showQuotationSection() {
           </div>
       </div>
   `;
-  
-  // Clear inputs and quotation result
+
   startDateInput.value = '';
   endDateInput.value = '';
   if (startTimeInput) startTimeInput.value = '';
   if (endTimeInput) endTimeInput.value = '';
   quotationResult.style.display = 'none';
-  
-  // Set minimum values for dates
+
   setInitialDateRestrictions();
 }
 
-// Function to return to catalog
 function backToCatalog() {
   quotationSection.style.display = 'none';
   document.querySelector('.catalog').style.display = 'block';
   selectedCar = null;
 }
 
-// --- MODIFICADO: Esta función ahora guarda los datos clave en `currentQuoteDetails`.
 function calculateAndDisplayQuote() {
-  // --- 1. OBTENER Y VALIDAR ENTRADAS ---
   const startDateValue = startDateInput.value;
   const endDateValue = endDateInput.value;
   const startTimeValue = startTimeInput.value;
   const endTimeValue = endTimeInput.value;
 
   if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
-    quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora.</p>`;
+    quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
     quotationResult.style.display = 'block';
     return;
   }
@@ -631,33 +588,27 @@ function calculateAndDisplayQuote() {
   const endDate = new Date(`${endDateValue}T${endTimeValue}`);
 
   if (endDate <= startDate) {
-    quotationResult.innerHTML = `<p class="error">La fecha y hora de entrega debe ser posterior a la de inicio.</p>`;
+    quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio del alquiler.</p>`;
     quotationResult.style.display = 'block';
     return;
   }
 
-  // --- NUEVA VALIDACIÓN: FECHA DE INICIO NO ANTERIOR A HOY ---
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Se establece la hora a medianoche para comparar solo la fecha.
+  today.setHours(0, 0, 0, 0);
 
-  // Se crea una fecha a partir del valor del input para una comparación precisa.
   const selectedDateOnly = new Date(startDateValue + 'T00:00:00');
 
   if (selectedDateOnly < today) {
-    quotationResult.innerHTML = `<p class="error">la fecha de inicio no puede ser anterior a hoy</p>`;
+    quotationResult.innerHTML = `<p class="error">La fecha de inicio no puede ser anterior al día de hoy. Por favor, elige una fecha válida.</p>`;
     quotationResult.style.display = 'block';
-    return; // Detiene la ejecución de la función si la fecha es inválida.
+    return;
   }
-  // --- FIN DE LA NUEVA VALIDACIÓN ---
 
-
-  // --- 2. OBTENER VARIABLES DE PRECIO ---
   const dailyPrice = selectedCar.price;
-  const extraHourPrice = extraHourRates[selectedCar.category] || 10; // Usa 10 como valor por defecto si la categoría no existe
+  const extraHourPrice = extraHourRates[selectedCar.category] || 10;
 
-  // --- 3. REALIZAR EL CÁLCULO MATEMÁTICO ---
   const durationMs = endDate.getTime() - startDate.getTime();
-  const durationHours = Math.ceil(durationMs / (1000 * 60 * 60)); // Redondear horas hacia arriba
+  const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
 
   const fullDays = Math.floor(durationHours / 24);
   const extraHours = durationHours % 24;
@@ -667,12 +618,10 @@ function calculateAndDisplayQuote() {
   let finalTotal = 0;
   let summaryHTML = '';
 
-  // --- 4. APLICAR LA REGLA DE "MEJOR PRECIO" ---
   if (extraHours > 0 && extraHoursCost >= dailyPrice) {
-    // Si el costo de horas extra es mayor o igual al de un día, se cobra un día más.
     finalDays += 1;
     finalTotal = finalDays * dailyPrice;
-    
+
     summaryHTML = `
       <h4>Resumen de la Cotización</h4>
       <p>Días de renta: <strong>${finalDays}</strong></p>
@@ -680,12 +629,11 @@ function calculateAndDisplayQuote() {
       <hr>
       <p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
     `;
-    currentQuoteDetails.rentalDays = finalDays; // Guardar días
+    currentQuoteDetails.rentalDays = finalDays;
 
   } else {
-    // Si no, se cobran los días y las horas extra por separado.
     finalTotal = (fullDays * dailyPrice) + extraHoursCost;
-    
+
     summaryHTML = `
       <h4>Resumen de la Cotización</h4>
       <p>${fullDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(fullDays * dailyPrice)}</strong></p>
@@ -693,82 +641,63 @@ function calculateAndDisplayQuote() {
       <hr>
       <p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>
     `;
-    currentQuoteDetails.rentalDays = fullDays > 0 ? fullDays : 1; // Guardar días (mínimo 1)
+    currentQuoteDetails.rentalDays = fullDays > 0 ? fullDays : 1;
   }
-  
-  // --- AÑADIDO: Guardar el total base en el objeto global.
+
   currentQuoteDetails.baseTotal = finalTotal;
 
-  // --- 5. MOSTRAR EL RESULTADO ---
-  summaryHTML += `<button id="proceed-to-form-btn" class="btn">Continuar y Llenar Datos</button>`;
+  summaryHTML += `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
   quotationResult.innerHTML = summaryHTML;
   quotationResult.style.display = 'block';
 
-  // Este listener se mantiene como estaba en el código original.
   document.getElementById('proceed-to-form-btn').addEventListener('click', () => {
    console.log("Botón 'Continuar' presionado. La lógica principal está en el otro listener.");
   });
 }
 
-
-// Function to format date as text in Spanish considering Guatemala timezone
 function formatDateAsText(dateString) {
-  // Create date in UTC
   const dateUTC = new Date(dateString);
-  
-  // Adjust to Guatemala timezone (UTC-6)
-  // Note: we use a date with hour 0 to avoid day change affecting the result
+
   const dateString12PM = dateString + 'T12:00:00';
   const dateWithTime = new Date(dateString12PM);
-  
+
   const day = dateWithTime.getDate();
-  
-  // Array with month names in Spanish
+
   const months = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
 ];
-  
+
   const month = months[dateWithTime.getMonth()];
   const year = dateWithTime.getFullYear();
-  
+
   return `${day} de ${month} de ${year}`;
 }
 
-
-// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // Display all cars when page loads
   displayCars();
-  
-  // Filter cars by category
+
   filterButtons.forEach(button => {
       button.addEventListener('click', () => {
           const filterValue = button.dataset.filter;
-          
-          // Update active button
+
           filterButtons.forEach(btn => btn.classList.remove('active'));
           button.classList.add('active');
-          
-          // Display filtered cars
+
           displayCars(filterValue);
       });
   });
-  
-  // Back to catalog button
+
   backBtn.addEventListener('click', backToCatalog);
-  
-  // Button to calculate quotation
+
   calculateBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent default submission
+    event.preventDefault();
     calculateAndDisplayQuote();
   });
-  
-  // Menu hamburger
+
   hamburgerBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
-      
-      // Animate hamburger lines
+
       const lines = hamburgerBtn.querySelectorAll('.nav__hamburger-line');
       if (navMenu.classList.contains('active')) {
           lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -780,26 +709,21 @@ document.addEventListener('DOMContentLoaded', () => {
           lines[2].style.transform = 'none';
       }
   });
-  
-  // Event for start date that updates minimum return date
+
   startDateInput.addEventListener('change', () => {
       if (startDateInput.value) {
-          // Set minimum return date
           const minEndDate = new Date(startDateInput.value);
           minEndDate.setDate(minEndDate.getDate() + 2);
-          
-          // Format minimum date for return date input
+
           const minEndDateString = minEndDate.toISOString().split('T')[0];
           endDateInput.min = minEndDateString;
-          
-          // Clear return date value if invalid
+
           if (new Date(endDateInput.value) < minEndDate) {
               endDateInput.value = '';
           }
       }
   });
 
-  // Set minimum return date restrictions
   setInitialDateRestrictions();
 });
 
@@ -813,11 +737,50 @@ if (footerWhatsappButton) {
   });
 }
 
+let infoPopup = null;
 
-// =========== CÓDIGO DEL FORMULARIO DE CLIENTE (CON LÓGICA DE ADDONS) ===========
+function showAddonInfoPopup(description) {
+  if (infoPopup) {
+    hideAddonInfoPopup();
+  }
+
+  infoPopup = document.createElement('div');
+  infoPopup.className = 'info-popup-overlay';
+  infoPopup.innerHTML = `
+    <div class="info-popup-content">
+      <button class="info-popup-close-btn">&times;</button>
+      <p>${description}</p>
+    </div>
+  `;
+  document.body.appendChild(infoPopup);
+
+  setTimeout(() => {
+    infoPopup.classList.add('active');
+  }, 10);
+
+  infoPopup.querySelector('.info-popup-close-btn').addEventListener('click', hideAddonInfoPopup);
+
+  infoPopup.addEventListener('click', (event) => {
+    if (event.target === infoPopup) {
+      hideAddonInfoPopup();
+    }
+  });
+}
+
+function hideAddonInfoPopup() {
+  if (infoPopup) {
+    infoPopup.classList.remove('active');
+    infoPopup.addEventListener('transitionend', function handler() {
+      if (infoPopup && infoPopup.parentNode) {
+        infoPopup.parentNode.removeChild(infoPopup);
+        infoPopup = null;
+      }
+      infoPopup.removeEventListener('transitionend', handler);
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Selecciona los elementos del DOM ---
     const customerFormSection = document.getElementById('customer-form-section');
     const backToQuoteBtn = document.getElementById('back-to-quote-btn');
     const customerForm = document.getElementById('customer-form');
@@ -828,11 +791,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const countryCodeSelect = document.getElementById('country-code');
     const summaryCarInfo = document.getElementById('summary-car-info');
     const summaryQuoteInfo = document.getElementById('summary-quote-info');
-    // --- AÑADIDO: Elementos para los addons.
     const addonsContainer = document.getElementById('addons-container');
     const finalTotalContainer = document.getElementById('final-total-container');
 
-    // --- Datos y funciones para el nuevo formulario ---
     const countryCodes = [
         { name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" },
         { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" },
@@ -867,70 +828,81 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('flight-number').value = '';
         }
     }
-    
+
     function handleFormSubmit(event) {
         event.preventDefault();
         const formData = new FormData(customerForm);
-        const data = Object.fromEntries(formData.entries());
-        // --- AÑADIDO: Captura de seguros seleccionados.
         const selectedAddOns = insuranceAddOns.filter(addon => addon.selected);
+
+        formData.append('VehiculoSeleccionado', selectedCar.name);
+        formData.append('CategoriaVehiculo', selectedCar.category);
+        formData.append('PrecioBaseDiario', selectedCar.price);
+        formData.append('DiasDeRenta', currentQuoteDetails.rentalDays);
+        formData.append('SubtotalCotizacion', currentQuoteDetails.baseTotal);
+
+        insuranceAddOns.filter(addon => addon.selected).forEach(addon => {
+            formData.append(`Seguro_${addon.name.replace(/ /g, '')}`, `${addon.name} (${formatCurrency(addon.dailyCost)}/día)`);
+        });
+
+        const finalTotalElement = document.getElementById('final-total-container');
+        if (finalTotalElement) {
+            const finalTotalText = finalTotalElement.textContent.replace('Total Final Estimado:', '').trim();
+            formData.append('TotalFinalEstimado', finalTotalText);
+        }
+
+        const data = Object.fromEntries(formData.entries());
 
         console.log("--- Reserva Finalizada (simulación) ---");
         console.log("Datos del Cliente:", data);
         console.log("Datos del Vehículo:", selectedCar);
         console.log("Detalles de la Cotización:", currentQuoteDetails);
         console.log("Seguros Seleccionados:", selectedAddOns);
-        
+
         alert('¡Gracias por tu reserva! (Esto es una simulación). Revisa la consola del navegador para ver los datos enviados.');
     }
 
-    // --- MODIFICADO: `showCustomerForm` ahora prepara la vista con los addons.
-    function showCustomerForm() {
-        quotationSection.style.display = 'none';
-        customerFormSection.style.display = 'block';
-
-        summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
-        
-        // Llamadas para renderizar los add-ons y calcular el total inicial
-        renderInsuranceAddOns();
-        updateQuoteSummaryAndTotal();
-
-        window.scrollTo(0, 0);
-    }
-    
-    // --- AÑADIDO: Nuevas funciones para manejar la lógica de los addons.
-    /**
-     * Crea los botones para los seguros y los muestra en el DOM.
-     */
     function renderInsuranceAddOns() {
-        if (!addonsContainer) return;
-        addonsContainer.innerHTML = ''; // Limpiar contenedor
+      const addonsContainer = document.getElementById('addons-container');
+      if (!addonsContainer) return;
+      addonsContainer.innerHTML = '';
 
-        insuranceAddOns.forEach(addon => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'addon-button';
-            button.dataset.id = addon.id;
+      insuranceAddOns.forEach(addon => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'addon-button';
+          button.dataset.id = addon.id;
 
-            if (addon.selected) button.classList.add('selected');
-            if (addon.mandatory) button.classList.add('mandatory');
+          if (addon.selected) button.classList.add('selected');
+          if (addon.mandatory) button.classList.add('mandatory');
 
-            button.innerHTML = `
-                <h4>${addon.name}</h4>
-                <p>${addon.description}</p>
-                <p><strong>${formatCurrency(addon.dailyCost)} / día</strong></p>
-                ${addon.mandatory ? '<span class="mandatory-label">(Obligatorio)</span>' : ''}
-            `;
-            addonsContainer.appendChild(button);
-        });
+          let buttonContent = '';
+
+          if (addon.id === 'cdw') {
+              buttonContent += '<p class="basic-insurance-inline-label">Seguro Básico</p>';
+          }
+
+          buttonContent += `<h4>${addon.name}</h4>`;
+          buttonContent += `<p>${addon.description}</p>`;
+          buttonContent += `<p><strong>${formatCurrency(addon.dailyCost)} / día</strong></p>`;
+
+          if (addon.mandatory) {
+              buttonContent += '<span class="mandatory-label">(Obligatorio)</span>';
+          }
+
+          buttonContent += `
+              <button type="button" class="addon-info-button" data-description="${addon.popupDescription}">
+                  <img src="./img/question-icon.png" alt="Información" class="addon-info-icon">
+              </button>
+          `;
+
+          button.innerHTML = buttonContent;
+          addonsContainer.appendChild(button);
+      });
     }
 
-    /**
-     * Actualiza el resumen de la cotización y el total final, incluyendo los addons seleccionados.
-     */
     function updateQuoteSummaryAndTotal() {
         if (!summaryQuoteInfo || !finalTotalContainer || !currentQuoteDetails.baseTotal) return;
-        
+
         let addonsTotal = 0;
         let addonsHTML = '<hr><h4>Seguros y Extras</h4>';
 
@@ -944,15 +916,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const finalTotal = currentQuoteDetails.baseTotal + addonsTotal;
 
-        // Mostrar resumen de renta + resumen de add-ons
         summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + addonsHTML;
-
-        // Mostrar el gran total
 
         finalTotalContainer.innerHTML = `<hr>Total Final Estimado: <strong>${formatCurrency(finalTotal)}</strong>`;
     }
 
-    // --- Asignación de todos los nuevos event listeners ---
+    function showCustomerForm() {
+        quotationSection.style.display = 'none';
+        customerFormSection.style.display = 'block';
+
+        summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
+
+        renderInsuranceAddOns();
+        updateQuoteSummaryAndTotal();
+
+        window.scrollTo(0, 0);
+    }
+
     populateCountryCodes();
 
     if (backToQuoteBtn) {
@@ -974,37 +954,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (customerForm) {
         customerForm.addEventListener('submit', handleFormSubmit);
     }
-    
-    // --- AÑADIDO: Listener para los botones de addons.
+
     if (addonsContainer) {
         addonsContainer.addEventListener('click', (event) => {
-            const button = event.target.closest('.addon-button');
-            if (!button) return;
+            const addonButton = event.target.closest('.addon-button');
+            const infoButton = event.target.closest('.addon-info-button');
 
-            const addonId = button.dataset.id;
-            const addon = insuranceAddOns.find(a => a.id === addonId);
+            if (infoButton) {
+                event.stopPropagation();
+                showAddonInfoPopup(infoButton.dataset.description);
+            } else if (addonButton) {
+                const addonId = addonButton.dataset.id;
+                const addon = insuranceAddOns.find(a => a.id === addonId);
 
-            if (addon && !addon.mandatory) {
-                addon.selected = !addon.selected; // Cambiar estado
-                button.classList.toggle('selected'); // Cambiar clase visual
-                updateQuoteSummaryAndTotal(); // Recalcular todo
+                if (addon && !addon.mandatory) {
+                    addon.selected = !addon.selected;
+                    addonButton.classList.toggle('selected');
+                    updateQuoteSummaryAndTotal();
+                }
             }
         });
     }
 
-
-    // **IMPORTANTE**: Conexión entre la vista de cotización y el nuevo formulario (estructura original).
     const quotationResultContainer = document.querySelector('#quotation-result');
     if(quotationResultContainer){
         quotationResultContainer.addEventListener('click', function(event){
             if(event.target && event.target.id === 'proceed-to-form-btn'){
-                // Guarda el HTML del resumen en la variable global.
                 let summaryHtmlContent = '';
                 const resultElements = quotationResultContainer.querySelectorAll('h4, p, hr');
                 resultElements.forEach(el => {
                     summaryHtmlContent += el.outerHTML;
                 });
-                
+
                 currentQuoteDetails.summaryHTML = summaryHtmlContent;
 
                 showCustomerForm();
