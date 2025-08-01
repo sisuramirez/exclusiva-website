@@ -1,0 +1,4 @@
+# Ignorar dependencias de Composer
+vendor/
+
+config.php

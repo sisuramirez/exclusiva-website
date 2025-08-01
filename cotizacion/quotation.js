@@ -368,7 +368,7 @@ const insuranceAddOns = [
         dailyCost: 10,
         mandatory: false,
         selected: false,
-        description: 'Cubre deducible por pérdida y daño.',
+        description: '<strong>Low Damage Waiver (LWD)</strong> <br><br> Cubre deducible por pérdida y daño.',
         popupDescription: 'Si El Arrendatario acepta mediante sus iniciales el deducible por PÉRDIDA/DAÑO que no es un seguro, su responsabilidad se limita a un deducible variable según el caso más gastos por remolque, almacenamiento, recuperación y un cargo razonable por la perdida de uso. Al aceptar esto, "El Arrendatario" conviene pagar una cuota adicional por día o fracción. Si El Arrendatario NO ACEPTA, mediante sus iniciales, su responsabilidad no excederá el VALOR REAL DEL MERCADO del vehículo al momento de su PÉRDIDA/DAÑO, más gastos por remolque, almacenamiento, recuperación y un cobro razonable por la perdida de uso.'
     },
     {
@@ -377,7 +377,7 @@ const insuranceAddOns = [
         dailyCost: 10,
         mandatory: false,
         selected: false,
-        description: 'Seguro médico para ocupantes.',
+        description: '<strong>Personal Accident Insurance (PAI)</strong> <br><br> Seguro médico para ocupantes.',
         popupDescription: 'Si el Arrendatario ACEPTA, con sus iniciales, acepta pagar una tarifa adicional cuyo monto variará por día de tracción. El arrendatario acepta haber leído un resumen de los términos y limitaciones de la póliza del Arrendador.'
     }
 ];
@@ -829,37 +829,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        const formData = new FormData(customerForm);
-        const selectedAddOns = insuranceAddOns.filter(addon => addon.selected);
-
-        formData.append('VehiculoSeleccionado', selectedCar.name);
-        formData.append('CategoriaVehiculo', selectedCar.category);
-        formData.append('PrecioBaseDiario', selectedCar.price);
-        formData.append('DiasDeRenta', currentQuoteDetails.rentalDays);
-        formData.append('SubtotalCotizacion', currentQuoteDetails.baseTotal);
-
-        insuranceAddOns.filter(addon => addon.selected).forEach(addon => {
-            formData.append(`Seguro_${addon.name.replace(/ /g, '')}`, `${addon.name} (${formatCurrency(addon.dailyCost)}/día)`);
-        });
-
-        const finalTotalElement = document.getElementById('final-total-container');
-        if (finalTotalElement) {
-            const finalTotalText = finalTotalElement.textContent.replace('Total Final Estimado:', '').trim();
-            formData.append('TotalFinalEstimado', finalTotalText);
-        }
-
-        const data = Object.fromEntries(formData.entries());
-
-        console.log("--- Reserva Finalizada (simulación) ---");
-        console.log("Datos del Cliente:", data);
-        console.log("Datos del Vehículo:", selectedCar);
-        console.log("Detalles de la Cotización:", currentQuoteDetails);
-        console.log("Seguros Seleccionados:", selectedAddOns);
-
-        alert('¡Gracias por tu reserva! (Esto es una simulación). Revisa la consola del navegador para ver los datos enviados.');
-    }
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const submitButton = document.getElementById('submit-form');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Procesando...';
+  
+      try {
+          const formData = new FormData(customerForm);
+          const data = Object.fromEntries(formData.entries());
+  
+          // Añadir datos de la cotización y el vehículo
+          data.VehiculoSeleccionado = selectedCar.name;
+          data.CategoriaVehiculo = selectedCar.category;
+          data.PrecioBaseDiario = selectedCar.price;
+          data.DiasDeRenta = currentQuoteDetails.rentalDays;
+          data.SubtotalCotizacion = currentQuoteDetails.baseTotal;
+          data.fechaRecogida = document.getElementById('start-date').value;
+          data.horaRecogida = document.getElementById('start-time').value;
+          data.fechaDevolucion = document.getElementById('end-date').value;
+          data.horaDevolucion = document.getElementById('end-time').value;
+  
+          // Añadir seguros seleccionados
+          data.segurosSeleccionados = insuranceAddOns
+              .filter(addon => addon.selected)
+              .map(addon => addon.name);
+  
+          // Añadir total final
+          const finalTotalElement = document.querySelector('.total-amount');
+          data.TotalFinalEstimado = finalTotalElement ? finalTotalElement.textContent : 'No calculado';
+  
+          // --- ¡IMPORTANTE! Cambia la URL de abajo por tu dominio real ---
+          const response = await fetch('https://exclusivarentaautos.com/api/reservar.php', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+  
+          const result = await response.json();
+  
+          if (response.ok && result.status === 'success') {
+              alert('¡Reserva completada! Hemos enviado una confirmación a tu correo electrónico.');
+              window.location.href = "https://exclusivarentaautos.com"; // Redirige a la página de inicio
+          } else {
+              throw new Error(result.message || 'Error desconocido al procesar la reserva.');
+          }
+  
+      } catch (error) {
+          console.error('Error en la reserva:', error);
+          alert(`Hubo un problema al enviar tu reserva: ${error.message}. Por favor, intenta de nuevo.`);
+          submitButton.disabled = false;
+          submitButton.textContent = 'Finalizar Reserva';
+      }
+  }
 
     function renderInsuranceAddOns() {
       const addonsContainer = document.getElementById('addons-container');
@@ -910,7 +934,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (addon.selected) {
                 const addonCost = addon.dailyCost * currentQuoteDetails.rentalDays;
                 addonsTotal += addonCost;
-                addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> (${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(addon.dailyCost)})</p>`;
+                addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> <br> (${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(addon.dailyCost)})</p>`;
             }
         });
 
@@ -918,7 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + addonsHTML;
 
-        finalTotalContainer.innerHTML = `<hr>Total Final Estimado: <strong>${formatCurrency(finalTotal)}</strong>`;
+        finalTotalContainer.innerHTML = `<hr><span class="total-label">Total Final Estimado:</span><strong class="total-amount">${formatCurrency(finalTotal)}</strong>`;
     }
 
     function showCustomerForm() {

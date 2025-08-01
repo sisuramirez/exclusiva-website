@@ -1,0 +1,8 @@
+{
+  "name": "exclusiva/api",
+  "description": "API de reservas para Exclusiva Renta Autos",
+  "type": "project",
+  "require": {
+    "phpmailer/phpmailer": "^6.9"
+  }
+}

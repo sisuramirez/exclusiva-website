@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Reserva</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header { background-color: #2D3047; padding: 20px; text-align: center; }
+        .header img { max-width: 200px; height: auto; }
+        .content { padding: 30px; color: #333; line-height: 1.6; }
+        .content h1 { color: #2D3047; font-size: 24px; }
+        .content p { font-size: 16px; }
+        .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .details-table th, .details-table td { padding: 12px; border-bottom: 1px solid #eeeeee; text-align: left; }
+        .details-table th { background-color: #f8f8f8; font-weight: 600; }
+        .footer { background-color: #f4f4f4; color: #777; padding: 20px; text-align: center; font-size: 12px; }
+        .footer a { color: #32aeb5; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logo" alt="Logo de Exclusiva Renta Autos">
+        </div>
+        <div class="content">
+            <h1>¡Reserva Confirmada, {nombreCliente}!</h1>
+            <p>Gracias por elegir Exclusiva Renta Autos. Hemos recibido los detalles de tu solicitud de reserva y nos pondremos en contacto contigo a la brevedad para finalizar el proceso.</p>
+            <p>A continuación, te presentamos un resumen de tu solicitud:</p>
+
+            <table class="details-table">
+                <tr>
+                    <th colspan="2" style="text-align:center; background-color: #32aeb5; color: white;">Detalles de la Reserva</th>
+                </tr>
+                <tr>
+                    <td>Vehículo:</td>
+                    <td><strong>{nombreVehiculo}</strong></td>
+                </tr>
+                <tr>
+                    <td>Recogida:</td>
+                    <td>{fechaRecogida} a las {horaRecogida}</td>
+                </tr>
+                <tr>
+                    <td>Devolución:</td>
+                    <td>{fechaDevolucion} a las {horaDevolucion}</td>
+                </tr>
+                <tr>
+                    <td>Lugar de Entrega:</td>
+                    <td>{lugarEntrega}</td>
+                </tr>
+                <tr>
+                    <td>Total Estimado:</td>
+                    <td><strong>{totalEstimado}</strong></td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 30px;">Si tienes alguna pregunta o necesitas realizar cambios, no dudes en contactarnos a través de nuestro correo <a href="mailto:{emailEmpresa}">{emailEmpresa}</a> o por teléfono.</p>
+            <p>¡Esperamos verte pronto!</p>
+            <p><strong>El equipo de Exclusiva Renta Autos</strong></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 Exclusiva Renta Autos. Todos los derechos reservados.</p>
+            <p>Este es un correo electrónico automático, por favor no respondas directamente.</p>
+        </div>
+    </div>
+</body>
+</html>
