@@ -1,9 +1,23 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// --- CONFIGURACIÓN DE CORS ---
+// Origen permitido (tu URL de Netlify). ¡No pongas una barra al final!
+$origen_permitido = 'https://exclusivacotizacionautomatica.netlify.app';
+
+// Si el origen de la solicitud coincide con el permitido, establece la cabecera.
+if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $origen_permitido) {
+    header("Access-Control-Allow-Origin: " . $origen_permitido);
+}
+
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+// Manejar solicitud OPTIONS (pre-flight) que envía el navegador para verificar CORS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Manejar solicitud OPTIONS (pre-flight)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
