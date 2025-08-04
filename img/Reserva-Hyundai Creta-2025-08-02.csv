@@ -1,0 +1,2 @@
+FechaReserva,NombreCliente,EmailCliente,TelefonoCliente,DocumentoID,Licencia,OrigenLicencia,Vehiculo,DiasRenta,FechaRecogida,HoraRecogida,FechaDevolucion,HoraDevolucion,LugarEntrega,TotalEstimado,SeguroDeducible,SeguroAccidentes,Aerolinea,NumeroVuelo
+"2025-08-02 13:24:58","Prueba ",famramirezsuruy@gmail.com,"+502 221515188",28373773,284737282,Guatemala,"Hyundai Creta",9,2025-08-02,07:23,2025-08-10,15:23,Oficinas,$585.00,No,No,,

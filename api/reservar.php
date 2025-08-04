@@ -1,9 +1,6 @@
 <?php
-// ==========================================================
-// == API DE RESERVAS v2 - Exclusiva Renta Autos           ==
-// ==========================================================
 
-// --- CONFIGURACIÓN DE CORS (Cross-Origin Resource Sharing) ---
+// --- CONFIGURACIÓN DE CORS ---
 $origen_permitido = 'https://fastidious-raindrop-ccb903.netlify.app';
 
 if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $origen_permitido) {
@@ -20,20 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Cargar dependencias y configuración
 require 'vendor/autoload.php';
 require 'config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// --- FUNCIONES DE FORMATO (NUEVO) ---
 function formatSpanishDate($dateStr) {
     if (empty($dateStr)) return '';
-    // Habilitar el locale en español para que los nombres de los meses salgan correctamente.
     setlocale(LC_TIME, 'es_ES.UTF-8', 'Spanish_Spain.1252');
     $date = new DateTime($dateStr);
-    // Usamos IntlDateFormatter para un formato localizado robusto.
     $formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
     return $formatter->format($date);
 }
@@ -44,7 +37,6 @@ function formatAmPmTime($timeStr) {
     return $date->format('h:i A');
 }
 
-
 try {
     $input = json_decode(file_get_contents('php://input'), true);
 
@@ -52,19 +44,24 @@ try {
         throw new Exception("Error al decodificar los datos JSON.");
     }
     
+    // --- Lógica de Seguros ---
+    $seguros = $input['segurosSeleccionados'] ?? [];
+    $seguro_lwd_text = in_array('Cobertura Deducible por Pérdida y Daño', $seguros) ? 'Sí' : 'No';
+    $seguro_pai_text = in_array('Seguro Personal de Accidente', $seguros) ? 'Sí' : 'No';
+
     // ==========================================================
     // == 1. ENVIAR CORREO INTERNO A LA EMPRESA CON CSV        ==
     // ==========================================================
     
     $mail_empresa = new PHPMailer(true);
     $mail_empresa->isSMTP();
-    $mail_empresa->Host       = SMTP_HOST;
-    $mail_empresa->SMTPAuth   = true;
-    $mail_empresa->Username   = SMTP_USER;
-    $mail_empresa->Password   = SMTP_PASS;
+    $mail_empresa->Host = SMTP_HOST;
+    $mail_empresa->SMTPAuth = true;
+    $mail_empresa->Username = SMTP_USER;
+    $mail_empresa->Password = SMTP_PASS;
     $mail_empresa->SMTPSecure = SMTP_SECURE;
-    $mail_empresa->Port       = SMTP_PORT;
-    $mail_empresa->CharSet    = 'UTF-8';
+    $mail_empresa->Port = SMTP_PORT;
+    $mail_empresa->CharSet = 'UTF-8';
 
     $mail_empresa->setFrom(SMTP_USER, NOMBRE_EMPRESA);
     $mail_empresa->addAddress(EMAIL_EMPRESA); 
@@ -73,19 +70,10 @@ try {
     $vehiculo = $input['VehiculoSeleccionado'] ?? 'N/A';
     $cliente = $input['customerName'] ?? 'N/A';
     $mail_empresa->Subject = "Nueva Solicitud de Reserva: {$vehiculo} para {$cliente}";
-    
-    $cuerpo_html_empresa = "<h1>Nueva Solicitud de Reserva</h1><p>Se ha recibido una nueva solicitud. Se adjunta un archivo CSV con los datos.</p>";
-    $mail_empresa->Body = $cuerpo_html_empresa;
+    $mail_empresa->Body = "<h1>Nueva Solicitud de Reserva</h1><p>Se ha recibido una nueva solicitud. Se adjunta un archivo CSV con los datos.</p>";
     $mail_empresa->isHTML(true);
 
-    // --- Generación del archivo CSV (ACTUALIZADO) ---
     $csv_header = ['Fecha de Reserva', 'Nombre del Cliente', 'Email del Cliente', 'Teléfono', 'No. de Documento', 'No. de Licencia', 'País de Licencia', 'Vehículo Solicitado', 'Días de Renta', 'Fecha de Recogida', 'Hora de Recogida', 'Fecha de Devolución', 'Hora de Devolución', 'Lugar de Entrega', 'Total Estimado', 'Seguro LWD', 'Seguro PAI', 'Aerolínea', 'No. de Vuelo'];
-    
-    $seguros = $input['segurosSeleccionados'] ?? [];
-    // Comprobar cada seguro individualmente
-    $seguro_lwd = in_array('Cobertura Deducible por Pérdida y Daño', $seguros) ? 'Sí' : 'No';
-    $seguro_pai = in_array('Seguro Personal de Accidente', $seguros) ? 'Sí' : 'No';
-
     $csv_data = [
         date('d/m/Y H:i:s'),
         $input['customerName'] ?? '',
@@ -102,15 +90,15 @@ try {
         $input['horaDevolucion'] ?? '',
         $input['delivery-location'] ?? '',
         $input['TotalFinalEstimado'] ?? '',
-        $seguro_lwd, // Nueva columna
-        $seguro_pai, // Nueva columna
+        $seguro_lwd_text,
+        $seguro_pai_text,
         $input['airlineName'] ?? '',
         $input['flightNumber'] ?? ''
     ];
 
     $csv_filename = "Reserva-{$vehiculo}-" . date('Y-m-d') . ".csv";
     $stream = fopen('php://memory', 'w+');
-    fprintf($stream, chr(0xEF).chr(0xBB).chr(0xBF)); // BOM para compatibilidad con Excel en español
+    fprintf($stream, chr(0xEF).chr(0xBB).chr(0xBF));
     fputcsv($stream, $csv_header);
     fputcsv($stream, $csv_data);
     rewind($stream);
@@ -125,20 +113,18 @@ try {
     // ==========================================================
     
     $mail_cliente = new PHPMailer(true);
-    // (La configuración SMTP se repite, esto es normal y seguro)
     $mail_cliente->isSMTP();
-    $mail_cliente->Host       = SMTP_HOST;
-    $mail_cliente->SMTPAuth   = true;
-    $mail_cliente->Username   = SMTP_USER;
-    $mail_cliente->Password   = SMTP_PASS;
+    $mail_cliente->Host = SMTP_HOST;
+    $mail_cliente->SMTPAuth = true;
+    $mail_cliente->Username = SMTP_USER;
+    $mail_cliente->Password = SMTP_PASS;
     $mail_cliente->SMTPSecure = SMTP_SECURE;
-    $mail_cliente->Port       = SMTP_PORT;
-    $mail_cliente->CharSet    = 'UTF-8';
+    $mail_cliente->Port = SMTP_PORT;
+    $mail_cliente->CharSet = 'UTF-8';
 
     $mail_cliente->setFrom(SMTP_USER, NOMBRE_EMPRESA);
     $mail_cliente->addAddress($input['customerEmail'], $input['customerName']);
 
-    // Cargar plantilla y reemplazar placeholders (ACTUALIZADO con nuevos formatos)
     $template = file_get_contents('templates/email_template_cliente.html');
     $placeholders = [
         '{nombreCliente}'   => htmlspecialchars($input['customerName'] ?? 'Cliente'),
@@ -150,6 +136,8 @@ try {
         '{lugarEntrega}'    => htmlspecialchars($input['delivery-location'] ?? ''),
         '{totalEstimado}'   => htmlspecialchars($input['TotalFinalEstimado'] ?? ''),
         '{emailEmpresa}'    => EMAIL_EMPRESA,
+        '{seguroLWD}'       => $seguro_lwd_text, // Nuevo placeholder
+        '{seguroPAI}'       => $seguro_pai_text  // Nuevo placeholder
     ];
     $body_cliente = str_replace(array_keys($placeholders), array_values($placeholders), $template);
 
@@ -159,9 +147,6 @@ try {
     $mail_cliente->addEmbeddedImage('templates/logo.png', 'logo');
     $mail_cliente->send();
 
-    // ==========================================================
-    // == 3. DEVOLVER RESPUESTA DE ÉXITO AL FRONTEND           ==
-    // ==========================================================
     http_response_code(200);
     echo json_encode(['status' => 'success', 'message' => 'Reserva procesada exitosamente.']);
 
