@@ -15,8 +15,11 @@
         .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .details-table th, .details-table td { padding: 12px; border-bottom: 1px solid #eeeeee; text-align: left; }
         .details-table th { background-color: #f8f8f8; font-weight: 600; }
-        .footer { background-color: #f4f4f4; color: #777; padding: 20px; text-align: center; font-size: 12px; }
+        .footer { background-color: #f4f4f4; color: #777; padding: 20px; text-align: center; font-size: 14px; }
         .footer a { color: #32aeb5; text-decoration: none; }
+        .social-links { margin-top: 15px; }
+        .social-links a { margin: 0 10px; }
+        .social-links img { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
@@ -49,19 +52,47 @@
                     <td>Lugar de Entrega:</td>
                     <td>{lugarEntrega}</td>
                 </tr>
+                 <tr>
+                    <th colspan="2" style="text-align:center; background-color: #f8f8f8;">Seguros y Extras</th>
+                </tr>
+                <tr>
+                    <td>Seguro Básico (Protección a Terceros):</td>
+                    <td><strong>Sí (Incluido)</strong></td>
+                </tr>
+                <tr>
+                    <td>Cobertura Deducible (LWD):</td>
+                    <td><strong>{seguroLWD}</strong></td>
+                </tr>
+                <tr>
+                    <td>Seguro de Accidentes Personales (PAI):</td>
+                    <td><strong>{seguroPAI}</strong></td>
+                </tr>
+                 <tr>
+                    <th colspan="2" style="text-align:center; background-color: #f8f8f8;">Costo Total</th>
+                </tr>
                 <tr>
                     <td>Total Estimado:</td>
                     <td><strong>{totalEstimado}</strong></td>
                 </tr>
             </table>
 
-            <p style="margin-top: 30px;">Si tienes alguna pregunta o necesitas realizar cambios, no dudes en contactarnos a través de nuestro correo <a href="mailto:{emailEmpresa}">{emailEmpresa}</a> o por teléfono.</p>
+            <p style="margin-top: 30px;">Si tienes alguna pregunta o necesitas realizar cambios, no dudes en contactarnos.</p>
             <p>¡Esperamos verte pronto!</p>
             <p><strong>El equipo de Exclusiva Renta Autos</strong></p>
         </div>
         <div class="footer">
+            <p>
+                <a href="mailto:{emailEmpresa}">{emailEmpresa}</a> | Teléfono: +502 4849-4290
+            </p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/p/Exclusiva-Renta-Autos-100077124247045" target="_blank">
+                    <img src="https://ci3.googleusercontent.com/proxy/Ue7aA0p-E7Y4s-6p8S_H-Gn1ymVd4SFY4QxGg2uDk_9rY5oW4pM3bY8=s0-d-e1-ft#https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook">
+                </a>
+                <a href="https://www.instagram.com/exclusivarentaautos" target="_blank">
+                     <img src="https://ci3.googleusercontent.com/proxy/S-T2k8v-O_Yq-XG1J-yT-6wQJzC0b-8E8R-tY6Q=s0-d-e1-ft#https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram">
+                </a>
+            </div>
             <p>&copy; 2025 Exclusiva Renta Autos. Todos los derechos reservados.</p>
-            <p>Este es un correo electrónico automático, por favor no respondas directamente.</p>
         </div>
     </div>
 </body>
