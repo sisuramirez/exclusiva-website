@@ -780,240 +780,310 @@ function hideAddonInfoPopup() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const customerFormSection = document.getElementById('customer-form-section');
-    const backToQuoteBtn = document.getElementById('back-to-quote-btn');
-    const customerForm = document.getElementById('customer-form');
-    const licenseOriginRadios = document.querySelectorAll('input[name="license-origin"]');
-    const licenseOriginOtherInput = document.getElementById('license-origin-other');
-    const deliveryLocationRadios = document.querySelectorAll('input[name="delivery-location"]');
-    const flightDetailsFieldset = document.getElementById('flight-details');
-    const countryCodeSelect = document.getElementById('country-code');
-    const summaryCarInfo = document.getElementById('summary-car-info');
-    const summaryQuoteInfo = document.getElementById('summary-quote-info');
-    const addonsContainer = document.getElementById('addons-container');
-    const finalTotalContainer = document.getElementById('final-total-container');
+document.addEventListener("DOMContentLoaded", () => {
+  const customerFormSection = document.getElementById('customer-form-section');
+  const backToQuoteBtn = document.getElementById('back-to-quote-btn');
+  const customerForm = document.getElementById('customer-form');
+  const licenseOriginRadios = document.querySelectorAll('input[name="license-origin"]');
+  const licenseOriginOtherInput = document.getElementById('license-origin-other');
+  const deliveryLocationRadios = document.querySelectorAll('input[name="delivery-location"]');
+  const flightDetailsFieldset = document.getElementById('flight-details');
+  const countryCodeSelect = document.getElementById('country-code');
+  const summaryCarInfo = document.getElementById('summary-car-info');
+  const summaryQuoteInfo = document.getElementById('summary-quote-info');
+  const addonsContainer = document.getElementById('addons-container');
+  const finalTotalContainer = document.getElementById('final-total-container');
 
-    const countryCodes = [
-        { name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" },
-        { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" },
-        { name: "Mexico", code: "+52" }, { name: "Spain", code: "+34" },
-    ];
+  const countryCodes = [
+      { name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" },
+      { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" },
+      { name: "Mexico", code: "+52" }, { name: "Spain", code: "+34" },
+  ];
 
-    function populateCountryCodes() {
-        if (!countryCodeSelect) return;
-        countryCodes.forEach(country => {
-            const option = document.createElement('option');
-            option.value = country.code;
-            option.textContent = `${country.name} (${country.code})`;
-            if (country.code === '+502') { option.selected = true; }
-            countryCodeSelect.appendChild(option);
-        });
-    }
+  function populateCountryCodes() {
+      if (!countryCodeSelect) return;
+      countryCodes.forEach(country => {
+          const option = document.createElement('option');
+          option.value = country.code;
+          option.textContent = `${country.name} (${country.code})`;
+          if (country.code === '+502') { option.selected = true; }
+          countryCodeSelect.appendChild(option);
+      });
+  }
 
-    function handleLicenseOriginChange() {
-        const otherRadio = document.querySelector('input[name="license-origin"][value="Otros"]');
-        licenseOriginOtherInput.style.display = otherRadio.checked ? 'block' : 'none';
-        licenseOriginOtherInput.required = otherRadio.checked;
-        if (!otherRadio.checked) licenseOriginOtherInput.value = '';
-    }
+  function handleLicenseOriginChange() {
+      const otherRadio = document.querySelector('input[name="license-origin"][value="Otros"]');
+      licenseOriginOtherInput.style.display = otherRadio.checked ? 'block' : 'none';
+      licenseOriginOtherInput.required = otherRadio.checked;
+      if (!otherRadio.checked) licenseOriginOtherInput.value = '';
+  }
 
-    function handleDeliveryLocationChange() {
-        const airportRadio = document.querySelector('input[name="delivery-location"][value="Aeropuerto"]');
-        flightDetailsFieldset.style.display = airportRadio.checked ? 'block' : 'none';
-        document.getElementById('airline-name').required = airportRadio.checked;
-        document.getElementById('flight-number').required = airportRadio.checked;
-        if (!airportRadio.checked) {
-            document.getElementById('airline-name').value = '';
-            document.getElementById('flight-number').value = '';
-        }
-    }
-
-    async function handleFormSubmit(event) {
-      event.preventDefault();
-      const submitButton = document.getElementById('submit-form');
-      submitButton.disabled = true;
-      submitButton.textContent = 'Procesando...';
-  
-      try {
-          const formData = new FormData(customerForm);
-          const data = Object.fromEntries(formData.entries());
-  
-          // Añadir datos de la cotización y el vehículo
-          data.VehiculoSeleccionado = selectedCar.name;
-          data.CategoriaVehiculo = selectedCar.category;
-          data.PrecioBaseDiario = selectedCar.price;
-          data.DiasDeRenta = currentQuoteDetails.rentalDays;
-          data.SubtotalCotizacion = currentQuoteDetails.baseTotal;
-          data.fechaRecogida = document.getElementById('start-date').value;
-          data.horaRecogida = document.getElementById('start-time').value;
-          data.fechaDevolucion = document.getElementById('end-date').value;
-          data.horaDevolucion = document.getElementById('end-time').value;
-  
-          // Añadir seguros seleccionados
-          data.segurosSeleccionados = insuranceAddOns
-              .filter(addon => addon.selected)
-              .map(addon => addon.name);
-  
-          // Añadir total final
-          const finalTotalElement = document.querySelector('.total-amount');
-          data.TotalFinalEstimado = finalTotalElement ? finalTotalElement.textContent : 'No calculado';
-  
-          // --- ¡IMPORTANTE! Cambia la URL de abajo por tu dominio real ---
-          const response = await fetch('https://exclusivarentaautos.com/api/reservar.php', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-          });
-  
-          const result = await response.json();
-  
-          if (response.ok && result.status === 'success') {
-              alert('¡Reserva completada! Hemos enviado una confirmación a tu correo electrónico.');
-              window.location.href = "https://exclusivarentaautos.com"; // Redirige a la página de inicio
-          } else {
-              throw new Error(result.message || 'Error desconocido al procesar la reserva.');
-          }
-  
-      } catch (error) {
-          console.error('Error en la reserva:', error);
-          alert(`Hubo un problema al enviar tu reserva: ${error.message}. Por favor, intenta de nuevo.`);
-          submitButton.disabled = false;
-          submitButton.textContent = 'Finalizar Reserva';
+  function handleDeliveryLocationChange() {
+      const airportRadio = document.querySelector('input[name="delivery-location"][value="Aeropuerto"]');
+      flightDetailsFieldset.style.display = airportRadio.checked ? 'block' : 'none';
+      document.getElementById('airline-name').required = airportRadio.checked;
+      document.getElementById('flight-number').required = airportRadio.checked;
+      if (!airportRadio.checked) {
+          document.getElementById('airline-name').value = '';
+          document.getElementById('flight-number').value = '';
       }
   }
 
-    function renderInsuranceAddOns() {
-      const addonsContainer = document.getElementById('addons-container');
-      if (!addonsContainer) return;
-      addonsContainer.innerHTML = '';
+  async function handleFormSubmit(event) {
+    event.preventDefault();
+    const submitButton = document.getElementById('submit-form');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Procesando...';
+
+    try {
+        const formData = new FormData(customerForm);
+        const data = Object.fromEntries(formData.entries());
+
+        data.VehiculoSeleccionado = selectedCar.name;
+        data.CategoriaVehiculo = selectedCar.category;
+        data.PrecioBaseDiario = selectedCar.price;
+        data.DiasDeRenta = currentQuoteDetails.rentalDays;
+        data.SubtotalCotizacion = currentQuoteDetails.baseTotal;
+        data.fechaRecogida = document.getElementById('start-date').value;
+        data.horaRecogida = document.getElementById('start-time').value;
+        data.fechaDevolucion = document.getElementById('end-date').value;
+        data.horaDevolucion = document.getElementById('end-time').value;
+
+        data.segurosSeleccionados = insuranceAddOns
+            .filter(addon => addon.selected)
+            .map(addon => addon.name);
+
+        const finalTotalElement = document.querySelector('.total-amount');
+        data.TotalFinalEstimado = finalTotalElement ? finalTotalElement.textContent : 'No calculado';
+
+        const response = await fetch('https://exclusivarentaautos.com/api/reservar.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+            alert('¡Reserva completada! Hemos enviado una confirmación a tu correo electrónico.');
+            window.location.href = "https://exclusivarentaautos.com";
+        } else {
+            throw new Error(result.message || 'Error desconocido al procesar la reserva.');
+        }
+
+    } catch (error) {
+        console.error('Error en la reserva:', error);
+        alert(`Hubo un problema al enviar tu reserva: ${error.message}. Por favor, intenta de nuevo.`);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Finalizar Reserva';
+    }
+}
+
+  function renderInsuranceAddOns() {
+    if (!addonsContainer) return;
+    addonsContainer.innerHTML = '';
+
+    insuranceAddOns.forEach(addon => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'addon-button';
+        button.dataset.id = addon.id;
+
+        if (addon.selected) button.classList.add('selected');
+        if (addon.mandatory) button.classList.add('mandatory');
+
+        let buttonContent = '';
+
+        if (addon.id === 'cdw') {
+            buttonContent += '<p class="basic-insurance-inline-label">Seguro Básico</p>';
+        }
+
+        buttonContent += `<h4>${addon.name}</h4>`;
+        buttonContent += `<p>${addon.description}</p>`;
+        buttonContent += `<p><strong>${formatCurrency(addon.dailyCost)} / día</strong></p>`;
+
+        if (addon.mandatory) {
+            buttonContent += '<span class="mandatory-label">(Obligatorio)</span>';
+        }
+
+        buttonContent += `
+            <button type="button" class="addon-info-button" data-description="${addon.popupDescription}">
+                <img src="./img/question-icon.png" alt="Información" class="addon-info-icon">
+            </button>
+        `;
+
+        button.innerHTML = buttonContent;
+        addonsContainer.appendChild(button);
+    });
+  }
+
+  function updateQuoteSummaryAndTotal() {
+      if (!summaryQuoteInfo || !finalTotalContainer || !currentQuoteDetails.baseTotal) return;
+
+      let addonsTotal = 0;
+      let addonsHTML = '<hr><h4>Seguros y Extras</h4>';
 
       insuranceAddOns.forEach(addon => {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'addon-button';
-          button.dataset.id = addon.id;
-
-          if (addon.selected) button.classList.add('selected');
-          if (addon.mandatory) button.classList.add('mandatory');
-
-          let buttonContent = '';
-
-          if (addon.id === 'cdw') {
-              buttonContent += '<p class="basic-insurance-inline-label">Seguro Básico</p>';
+          if (addon.selected) {
+              const addonCost = addon.dailyCost * currentQuoteDetails.rentalDays;
+              addonsTotal += addonCost;
+              addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> <br> (${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(addon.dailyCost)})</p>`;
           }
-
-          buttonContent += `<h4>${addon.name}</h4>`;
-          buttonContent += `<p>${addon.description}</p>`;
-          buttonContent += `<p><strong>${formatCurrency(addon.dailyCost)} / día</strong></p>`;
-
-          if (addon.mandatory) {
-              buttonContent += '<span class="mandatory-label">(Obligatorio)</span>';
-          }
-
-          buttonContent += `
-              <button type="button" class="addon-info-button" data-description="${addon.popupDescription}">
-                  <img src="./img/question-icon.png" alt="Información" class="addon-info-icon">
-              </button>
-          `;
-
-          button.innerHTML = buttonContent;
-          addonsContainer.appendChild(button);
       });
+
+      const finalTotal = currentQuoteDetails.baseTotal + addonsTotal;
+
+      summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + addonsHTML;
+
+      finalTotalContainer.innerHTML = `<hr><span class="total-label">Total Final Estimado:</span><strong class="total-amount">${formatCurrency(finalTotal)}</strong>`;
+  }
+
+  function showCustomerForm() {
+      quotationSection.style.display = 'none';
+      customerFormSection.style.display = 'block';
+      summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
+      renderInsuranceAddOns();
+      updateQuoteSummaryAndTotal();
+      window.scrollTo(0, 0);
+  }
+
+  displayCars();
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filterValue = button.dataset.filter;
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      displayCars(filterValue);
+    });
+  });
+
+  backBtn.addEventListener('click', backToCatalog);
+
+  calculateBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    calculateAndDisplayQuote();
+  });
+
+  hamburgerBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    const lines = hamburgerBtn.querySelectorAll('.nav__hamburger-line');
+    if (navMenu.classList.contains('active')) {
+      lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      lines[1].style.opacity = '0';
+      lines[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+      lines[0].style.transform = 'none';
+      lines[1].style.opacity = '1';
+      lines[2].style.transform = 'none';
     }
+  });
 
-    function updateQuoteSummaryAndTotal() {
-        if (!summaryQuoteInfo || !finalTotalContainer || !currentQuoteDetails.baseTotal) return;
+  flatpickr.localize(flatpickr.l10ns.es);
 
-        let addonsTotal = 0;
-        let addonsHTML = '<hr><h4>Seguros y Extras</h4>';
+  const datePickerConfig = {
+    altInput: true,
+    altFormat: "d/m/Y",
+    dateFormat: "Y-m-d",
+    minDate: "today"
+  };
 
-        insuranceAddOns.forEach(addon => {
-            if (addon.selected) {
-                const addonCost = addon.dailyCost * currentQuoteDetails.rentalDays;
-                addonsTotal += addonCost;
-                addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> <br> (${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(addon.dailyCost)})</p>`;
-            }
+  const timePickerConfig = {
+    enableTime: true,
+    noCalendar: true,
+    altInput: true,
+    altFormat: "h:i K",
+    dateFormat: "H:i",
+    time_24hr: false
+  };
+
+  const endDatePicker = flatpickr("#end-date", {
+    ...datePickerConfig,
+    minDate: new Date().fp_incr(2)
+  });
+  
+  flatpickr("#start-date", {
+    ...datePickerConfig,
+    onChange: function(selectedDates, dateStr, instance) {
+      if (selectedDates[0]) {
+        const minEndDate = new Date(selectedDates[0]);
+        minEndDate.setDate(minEndDate.getDate() + 2);
+        endDatePicker.set("minDate", minEndDate);
+      }
+    },
+  });
+
+  flatpickr("#start-time", timePickerConfig);
+  flatpickr("#end-time", timePickerConfig);
+
+  const departureDatePicker = flatpickr("#departure-date", datePickerConfig);
+
+  flatpickr("#arrival-date", {
+    ...datePickerConfig,
+    onChange: function(selectedDates, dateStr, instance) {
+      if(selectedDates[0]) {
+        departureDatePicker.set("minDate", selectedDates[0]);
+      }
+    }
+  });
+
+  flatpickr("#arrival-time", timePickerConfig);
+  flatpickr("#departure-time", timePickerConfig);
+  
+  populateCountryCodes();
+
+  if (backToQuoteBtn) {
+    backToQuoteBtn.addEventListener('click', () => {
+      customerFormSection.style.display = 'none';
+      document.getElementById('quotation-section').style.display = 'block';
+      window.scrollTo(0, 0);
+    });
+  }
+  if (licenseOriginRadios) {
+    licenseOriginRadios.forEach(radio => radio.addEventListener('change', handleLicenseOriginChange));
+  }
+  if (deliveryLocationRadios) {
+    deliveryLocationRadios.forEach(radio => radio.addEventListener('change', handleDeliveryLocationChange));
+  }
+  if (customerForm) {
+    customerForm.addEventListener('submit', handleFormSubmit);
+  }
+  if (addonsContainer) {
+    addonsContainer.addEventListener('click', (event) => {
+      const addonButton = event.target.closest('.addon-button');
+      const infoButton = event.target.closest('.addon-info-button');
+
+      if (infoButton) {
+        event.stopPropagation();
+        showAddonInfoPopup(infoButton.dataset.description);
+      } else if (addonButton) {
+        const addonId = addonButton.dataset.id;
+        const addon = insuranceAddOns.find(a => a.id === addonId);
+
+        if (addon && !addon.mandatory) {
+          addon.selected = !addon.selected;
+          addonButton.classList.toggle('selected');
+          updateQuoteSummaryAndTotal();
+        }
+      }
+    });
+  }
+
+  const quotationResultContainer = document.querySelector('#quotation-result');
+  if (quotationResultContainer) {
+    quotationResultContainer.addEventListener('click', function(event) {
+      if (event.target && event.target.id === 'proceed-to-form-btn') {
+        let summaryHtmlContent = '';
+        const resultElements = quotationResultContainer.querySelectorAll('h4, p, hr');
+        resultElements.forEach(el => {
+          summaryHtmlContent += el.outerHTML;
         });
 
-        const finalTotal = currentQuoteDetails.baseTotal + addonsTotal;
-
-        summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + addonsHTML;
-
-        finalTotalContainer.innerHTML = `<hr><span class="total-label">Total Final Estimado:</span><strong class="total-amount">${formatCurrency(finalTotal)}</strong>`;
-    }
-
-    function showCustomerForm() {
-        quotationSection.style.display = 'none';
-        customerFormSection.style.display = 'block';
-
-        summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
-
-        renderInsuranceAddOns();
-        updateQuoteSummaryAndTotal();
-
-        window.scrollTo(0, 0);
-    }
-
-    populateCountryCodes();
-
-    if (backToQuoteBtn) {
-        backToQuoteBtn.addEventListener('click', () => {
-            customerFormSection.style.display = 'none';
-            document.getElementById('quotation-section').style.display = 'block';
-            window.scrollTo(0, 0);
-        });
-    }
-
-    if (licenseOriginRadios) {
-        licenseOriginRadios.forEach(radio => radio.addEventListener('change', handleLicenseOriginChange));
-    }
-
-    if (deliveryLocationRadios) {
-        deliveryLocationRadios.forEach(radio => radio.addEventListener('change', handleDeliveryLocationChange));
-    }
-
-    if (customerForm) {
-        customerForm.addEventListener('submit', handleFormSubmit);
-    }
-
-    if (addonsContainer) {
-        addonsContainer.addEventListener('click', (event) => {
-            const addonButton = event.target.closest('.addon-button');
-            const infoButton = event.target.closest('.addon-info-button');
-
-            if (infoButton) {
-                event.stopPropagation();
-                showAddonInfoPopup(infoButton.dataset.description);
-            } else if (addonButton) {
-                const addonId = addonButton.dataset.id;
-                const addon = insuranceAddOns.find(a => a.id === addonId);
-
-                if (addon && !addon.mandatory) {
-                    addon.selected = !addon.selected;
-                    addonButton.classList.toggle('selected');
-                    updateQuoteSummaryAndTotal();
-                }
-            }
-        });
-    }
-
-    const quotationResultContainer = document.querySelector('#quotation-result');
-    if(quotationResultContainer){
-        quotationResultContainer.addEventListener('click', function(event){
-            if(event.target && event.target.id === 'proceed-to-form-btn'){
-                let summaryHtmlContent = '';
-                const resultElements = quotationResultContainer.querySelectorAll('h4, p, hr');
-                resultElements.forEach(el => {
-                    summaryHtmlContent += el.outerHTML;
-                });
-
-                currentQuoteDetails.summaryHTML = summaryHtmlContent;
-
-                showCustomerForm();
-            }
-        });
-    }
+        currentQuoteDetails.summaryHTML = summaryHtmlContent;
+        showCustomerForm();
+      }
+    });
+  }
 });
