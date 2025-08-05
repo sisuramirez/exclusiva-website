@@ -581,7 +581,7 @@ function calculateAndDisplayQuote() {
   if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
     quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
     quotationResult.style.display = 'block';
-    return;
+    return false;
   }
 
   const startDate = new Date(`${startDateValue}T${startTimeValue}`);
@@ -590,7 +590,7 @@ function calculateAndDisplayQuote() {
   if (endDate <= startDate) {
     quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio del alquiler.</p>`;
     quotationResult.style.display = 'block';
-    return;
+    return false;
   }
 
   const today = new Date();
@@ -601,7 +601,7 @@ function calculateAndDisplayQuote() {
   if (selectedDateOnly < today) {
     quotationResult.innerHTML = `<p class="error">La fecha de inicio no puede ser anterior al día de hoy. Por favor, elige una fecha válida.</p>`;
     quotationResult.style.display = 'block';
-    return;
+    return false;
   }
 
   const dailyPrice = selectedCar.price;
@@ -645,14 +645,18 @@ function calculateAndDisplayQuote() {
   }
 
   currentQuoteDetails.baseTotal = finalTotal;
+  currentQuoteDetails.summaryHTML = summaryHTML;
 
   summaryHTML += `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
   quotationResult.innerHTML = summaryHTML;
   quotationResult.style.display = 'block';
 
   document.getElementById('proceed-to-form-btn').addEventListener('click', () => {
-   console.log("Botón 'Continuar' presionado. La lógica principal está en el otro listener.");
+    if (calculateAndDisplayQuote()) {
+        showCustomerForm();
+    }
   });
+  return true;
 }
 
 function formatDateAsText(dateString) {
@@ -722,6 +726,19 @@ document.addEventListener('DOMContentLoaded', () => {
               endDateInput.value = '';
           }
       }
+      quotationResult.style.display = 'none';
+  });
+
+  endDateInput.addEventListener('change', () => {
+    quotationResult.style.display = 'none';
+  });
+
+  startTimeInput.addEventListener('change', () => {
+    quotationResult.style.display = 'none';
+  });
+
+  endTimeInput.addEventListener('change', () => {
+    quotationResult.style.display = 'none';
   });
 
   setInitialDateRestrictions();
@@ -1012,11 +1029,31 @@ document.addEventListener("DOMContentLoaded", () => {
         minEndDate.setDate(minEndDate.getDate() + 2);
         endDatePicker.set("minDate", minEndDate);
       }
+      quotationResult.style.display = 'none';
     },
   });
 
-  flatpickr("#start-time", timePickerConfig);
-  flatpickr("#end-time", timePickerConfig);
+  flatpickr("#start-time", {
+    ...timePickerConfig,
+    onChange: function() {
+      quotationResult.style.display = 'none';
+    }
+  });
+
+  flatpickr("#end-time", {
+    ...timePickerConfig,
+    onChange: function() {
+      quotationResult.style.display = 'none';
+    }
+  });
+
+  flatpickr("#end-date", {
+    ...datePickerConfig,
+    minDate: new Date().fp_incr(2),
+    onChange: function() {
+      quotationResult.style.display = 'none';
+    }
+  });
 
   const departureDatePicker = flatpickr("#departure-date", datePickerConfig);
 
@@ -1075,14 +1112,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (quotationResultContainer) {
     quotationResultContainer.addEventListener('click', function(event) {
       if (event.target && event.target.id === 'proceed-to-form-btn') {
-        let summaryHtmlContent = '';
-        const resultElements = quotationResultContainer.querySelectorAll('h4, p, hr');
-        resultElements.forEach(el => {
-          summaryHtmlContent += el.outerHTML;
-        });
-
-        currentQuoteDetails.summaryHTML = summaryHtmlContent;
-        showCustomerForm();
+        if (calculateAndDisplayQuote()) {
+          showCustomerForm();
+        }
       }
     });
   }
