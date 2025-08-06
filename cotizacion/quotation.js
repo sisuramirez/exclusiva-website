@@ -229,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="car-card__header">
                     <h3 class="car-card__title">${car.name}</h3>
                     <span class="car-card__category">${car.category}</span>
+                    <small class="card-disclaimer">Precio no incluye seguro</small>
                 </div>
                 <div class="car-card__specs">
                     <div class="car-card__spec"><span class="car-card__spec-icon">❄️</span><span class="car-card__spec-text">Aire acondicionado: ${car.specs.airConditioner}</span></div>
@@ -236,7 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="car-card__spec"><span class="car-card__spec-icon">🔄</span><span class="car-card__spec-text">Transmisión: ${car.specs.transmission}</span></div>
                 </div>
                 <div class="car-card__footer">
-                    <span class="car-card__price">Precio desde: ${formatCurrency(priceFrom)}/día</span>
+                    <div>
+                        <span class="car-card__price">Precio desde: ${formatCurrency(priceFrom)}/día</span>
+                    </div>
                     <button class="car-card__button" data-id="${car.id}">Cotizar este auto</button>
                 </div>
             </div>`;

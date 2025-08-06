@@ -331,6 +331,14 @@ header {
   object-position: center;
 }
 
+.card-disclaimer {
+  display: block;
+  margin-top: 10px;
+  color: #888;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
 .car-card__content {
   padding: 20px;
 }
