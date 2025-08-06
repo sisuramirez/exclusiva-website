@@ -1,34 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadHeaderAndFooter();
     initializeQuotationTool();
-  });
-  
-  async function loadHeaderAndFooter() {
+});
+
+async function loadHeaderAndFooter() {
     const headerPlaceholder = document.getElementById('header-placeholder');
     const footerPlaceholder = document.getElementById('footer-placeholder');
-  
+
     try {
         const [headerResponse, footerResponse] = await Promise.all([
             fetch('../header.html'),
             fetch('../footer.html')
         ]);
-  
+
         const headerHtml = await headerResponse.text();
         const footerHtml = await footerResponse.text();
-  
+
         if (headerPlaceholder) headerPlaceholder.innerHTML = headerHtml;
         if (footerPlaceholder) footerPlaceholder.innerHTML = footerHtml;
-  
+
         initializeEventListeners();
-  
+
     } catch (error) {
         console.error('Error al cargar header o footer:', error);
     }
-  }
-  
-  function initializeEventListeners() {
+}
+
+function initializeEventListeners() {
     let contactCard = null;
-  
+
     function createContactCard(clickEvent) {
         if (clickEvent) clickEvent.stopPropagation();
         contactCard = document.createElement('div');
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => contactCard.classList.add('active'), 10);
         setTimeout(() => document.addEventListener('click', closeCardOutside), 100);
     }
-  
+
     function hideContactCard() {
         if (contactCard) {
             contactCard.classList.remove('active');
@@ -88,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.removeEventListener('click', closeCardOutside);
         }
     }
-  
+
     function closeCardOutside(event) {
         const contactLink = document.querySelector('.nav__link[href="#"]');
         if (contactCard && !contactCard.querySelector('.contact-card__content').contains(event.target) && event.target !== contactLink) {
             hideContactCard();
         }
     }
-  
+
     function toggleContactCard(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -105,17 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
             createContactCard(event);
         }
     }
-  
+
     const contactLinks = document.querySelectorAll('.nav__link');
     contactLinks.forEach(link => {
         if (link.textContent.trim() === 'Contáctanos') {
             link.addEventListener('click', toggleContactCard);
         }
     });
-  
+
     const hamburgerBtn = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
-  
+
     if (hamburgerBtn && navMenu) {
         hamburgerBtn.addEventListener('click', () => {
             navMenu.classList.toggle('active');
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-  
+
     const footerWhatsappButton = document.querySelector('.whatsapp-footer');
     if (footerWhatsappButton) {
         footerWhatsappButton.addEventListener('click', function (event) {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.open(whatsappUrl, '_blank');
         });
     }
-  
+
     const fabWhatsapp = document.getElementById('whatsapp-fab');
     if (fabWhatsapp) {
         fabWhatsapp.addEventListener('click', function (event) {
@@ -153,9 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.open(whatsappUrl, '_blank');
         });
     }
-  }
-  
-  function initializeQuotationTool() {
+}
+
+function initializeQuotationTool() {
     const carsData = [
       { name: "Toyota Hiace", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/hiace.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
       { name: "Nissan Urvan", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/urvan.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
@@ -173,18 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
       { name: "Kia Sonet", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/sonet.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
       { name: "Kia Rio", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/rio.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
       { name: "Hyundai Verna", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/verna.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Toyota Yaris", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/yaris.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Hyundai Accent", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/accent.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } }
     ].map((car, index) => ({ ...car, id: index + 1 }));
-  
-    const extraHourRates = { "Microbuses": 20, "SUVs": 20, "Pick-ups": 20, "Crossovers": 20, "Sedanes": 10 };
-  
+
     const insuranceAddOns = [
-        { id: 'cdw', name: 'Protección a Terceros', dailyCost: 10, mandatory: true, selected: true, description: 'Cubre daños a terceros.', popupDescription: 'Esta cobertura es fundamental y obligatoria. Protege contra daños a vehículos, propiedades o personas ajenas al contrato de alquiler, brindándote seguridad completa en la carretera. Incluye responsabilidad civil por lesiones corporales y daños a la propiedad de terceros hasta los límites establecidos por la ley. Es tu primer nivel de protección para conducir con tranquilidad.' },
-        { id: 'tpp', name: 'Cobertura Deducible por Pérdida y Daño', dailyCost: 20, mandatory: false, selected: false, description: '<strong>Low Damage Waiver (LWD)</strong> <br><br> Cubre deducible por pérdida y daño.', popupDescription: ' Si el arrendatario (usted) acepta, mediante sus iniciales, el deducible por PÉRDIDA/DAÑO (esto no constituye un seguro), su responsabilidad se limita a un deducible variable según el caso, más los gastos por remolque, almacenamiento, recuperación y un cargo razonable por la pérdida de uso. Al aceptar esto, el arrendatario (usted) conviene pagar una cuota adicional por día o fracción. Si el arrendatario (usted) no acepta, mediante sus iniciales, su responsabilidad no excederá el valor real de mercado del vehículo al momento de su pérdida/daño, más los gastos por remolque, almacenamiento, recuperación y un cobro razonable por la pérdida de uso a favor de la arrendante (Exclusiva Renta Autos).' },
+        { id: 'cdw', name: 'Protección a Terceros', dailyCost: 20, mandatory: true, selected: true, description: 'Cubre daños a terceros.', popupDescription: 'Esta cobertura es fundamental y obligatoria. Protege contra daños a vehículos, propiedades o personas ajenas al contrato de alquiler, brindándote seguridad completa en la carretera. Incluye responsabilidad civil por lesiones corporales y daños a la propiedad de terceros hasta los límites establecidos por la ley. Es tu primer nivel de protección para conducir con tranquilidad.' },
+        { id: 'tpp', name: 'Cobertura Deducible por Pérdida y Daño', dailyCost: 10, mandatory: false, selected: false, description: '<strong>Low Damage Waiver (LWD)</strong> <br><br> Cubre deducible por pérdida y daño.', popupDescription: ' Si el arrendatario (usted) acepta, mediante sus iniciales, el deducible por PÉRDIDA/DAÑO (esto no constituye un seguro), su responsabilidad se limita a un deducible variable según el caso, más los gastos por remolque, almacenamiento, recuperación y un cargo razonable por la pérdida de uso. Al aceptar esto, el arrendatario (usted) conviene pagar una cuota adicional por día o fracción. Si el arrendatario (usted) no acepta, mediante sus iniciales, su responsabilidad no excederá el valor real de mercado del vehículo al momento de su pérdida/daño, más los gastos por remolque, almacenamiento, recuperación y un cobro razonable por la pérdida de uso a favor de la arrendante (Exclusiva Renta Autos).' },
         { id: 'pai', name: 'Seguro Personal de Accidente', dailyCost: 10, mandatory: false, selected: false, description: '<strong>Personal Accident Insurance (PAI)</strong> <br><br> Seguro médico para ocupantes.', popupDescription: ' Si el arrendatario (usted) acepta, mediante sus iniciales, conviene pagar una cuota adicional diaria (monto variable según tarifa vigente) por día de tracción. El arrendatario (usted) acepta haber leído un resumen de los términos, condiciones y límites de la póliza de la arrendante (Exclusiva Renta Autos). ' }
     ];
-  
+
     const catalogGrid = document.getElementById('catalog-grid');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const quotationSection = document.getElementById('quotation-section');
@@ -196,14 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const endTimeInput = document.getElementById('end-time');
     const calculateBtn = document.getElementById('calculate-btn');
     const quotationResult = document.getElementById('quotation-result');
-  
+
     let selectedCar = null;
     let currentQuoteDetails = {};
-  
+
     function formatCurrency(amount) {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
     }
-  
+
     function getDynamicDailyPrice(vehicle, rentalDays) {
         if (rentalDays <= 2) {
             return vehicle["DE 1 A 2 DIAS"];
@@ -217,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return vehicle["1 MES"];
         }
     }
-  
+
     function createCarCard(car) {
         const carCard = document.createElement('div');
         carCard.className = 'car-card';
@@ -245,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         return carCard;
     }
-  
+
     function displayCars(category = 'all') {
         catalogGrid.innerHTML = '';
         carsData.forEach(car => {
@@ -262,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-  
+
     function showQuotationSection() {
         document.querySelector('.catalog').style.display = 'none';
         quotationSection.style.display = 'block';
@@ -283,34 +279,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (endTimeInput) endTimeInput.value = '';
         quotationResult.style.display = 'none';
     }
-  
+
     function backToCatalog() {
         quotationSection.style.display = 'none';
         document.querySelector('.catalog').style.display = 'block';
         selectedCar = null;
     }
-  
+
     function calculateAndDisplayQuote() {
         const startDateValue = startDateInput.value;
         const endDateValue = endDateInput.value;
         const startTimeValue = startTimeInput.value;
         const endTimeValue = endTimeInput.value;
-  
+
         if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
             quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
-  
+
         const startDate = new Date(`${startDateValue}T${startTimeValue}`);
         const endDate = new Date(`${endDateValue}T${endTimeValue}`);
-  
+
         if (endDate <= startDate) {
             quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio del alquiler.</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
-  
+
         const durationMs = endDate.getTime() - startDate.getTime();
         const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
         const fullDays = Math.floor(durationHours / 24);
@@ -322,6 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const rentalDaysForPrice = finalDays > 0 ? finalDays : 1;
+
+        if (rentalDaysForPrice < 2) {
+            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días.</p>`;
+            quotationResult.style.display = 'block';
+            return false;
+        }
+        
         const dailyPrice = getDynamicDailyPrice(selectedCar, rentalDaysForPrice);
         
         let finalTotal = dailyPrice * rentalDaysForPrice;
@@ -330,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuoteDetails.rentalDays = rentalDaysForPrice;
         currentQuoteDetails.baseTotal = finalTotal;
         currentQuoteDetails.summaryHTML = summaryHTML;
-  
+
         quotationResult.innerHTML = summaryHTML + `<hr><p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>` + `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
         quotationResult.style.display = 'block';
         
@@ -352,10 +355,38 @@ document.addEventListener('DOMContentLoaded', () => {
     flatpickr.localize(flatpickr.l10ns.es);
     const datePickerConfig = { altInput: true, altFormat: "d/m/Y", dateFormat: "Y-m-d", minDate: "today" };
     const timePickerConfig = { enableTime: true, noCalendar: true, altInput: true, altFormat: "h:i K", dateFormat: "H:i", time_24hr: false };
-    const endDatePicker = flatpickr("#end-date", { ...datePickerConfig, minDate: new Date().fp_incr(1) });
-    flatpickr("#start-date", { ...datePickerConfig, onChange: function (selectedDates) { if (selectedDates[0]) { const minEndDate = new Date(selectedDates[0]); minEndDate.setDate(minEndDate.getDate() + 1); endDatePicker.set("minDate", minEndDate); } quotationResult.style.display = 'none'; } });
-    flatpickr("#start-time", { ...timePickerConfig, onChange: function () { quotationResult.style.display = 'none'; } });
-    flatpickr("#end-time", { ...timePickerConfig, onChange: function () { quotationResult.style.display = 'none'; } });
+    
+    const endDatePicker = flatpickr("#end-date", { 
+        ...datePickerConfig, 
+        minDate: new Date().fp_incr(1),
+        onChange: function() { quotationResult.style.display = 'none'; }
+    });
+    
+    flatpickr("#start-date", { 
+        ...datePickerConfig, 
+        onChange: function (selectedDates) { 
+            if (selectedDates[0]) { 
+                const minEndDate = new Date(selectedDates[0]); 
+                minEndDate.setDate(minEndDate.getDate() + 1); 
+                endDatePicker.set("minDate", minEndDate); 
+            } 
+            quotationResult.style.display = 'none'; 
+        } 
+    });
+    
+    flatpickr("#start-time", { 
+        ...timePickerConfig, 
+        onChange: function () { 
+            quotationResult.style.display = 'none'; 
+        } 
+    });
+    
+    flatpickr("#end-time", { 
+        ...timePickerConfig, 
+        onChange: function () { 
+            quotationResult.style.display = 'none'; 
+        } 
+    });
   
     const customerFormSection = document.getElementById('customer-form-section');
     const backToQuoteBtn = document.getElementById('back-to-quote-btn');
@@ -424,8 +455,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (addon.mandatory) button.classList.add('mandatory');
   
             let displayCost = addon.dailyCost;
-            if (addon.id === 'tpp' && selectedCar && selectedCar.category === 'Sedanes') {
-                displayCost = 10;
+            if (addon.id === 'cdw' && selectedCar) {
+                const category = selectedCar.category;
+                if (category === "SUVs" || category === "Pick-ups" || category === "Microbuses") {
+                    displayCost = 20;
+                } else if (category === "Crossovers") {
+                    displayCost = 15;
+                } else if (category === "Sedanes") {
+                    displayCost = 10;
+                }
             }
   
             let buttonContent = '';
@@ -449,9 +487,17 @@ document.addEventListener('DOMContentLoaded', () => {
       insuranceAddOns.forEach(addon => {
           if (addon.selected) {
               let currentAddonDailyCost = addon.dailyCost;
-              if (addon.id === 'tpp' && selectedCar && selectedCar.category === 'Sedanes') {
-                  currentAddonDailyCost = 10;
+              if (addon.id === 'cdw' && selectedCar) {
+                  const category = selectedCar.category;
+                  if (category === "SUVs" || category === "Pick-ups" || category === "Microbuses") {
+                      currentAddonDailyCost = 20;
+                  } else if (category === "Crossovers") {
+                      currentAddonDailyCost = 15;
+                  } else if (category === "Sedanes") {
+                      currentAddonDailyCost = 10;
+                  }
               }
+  
               const addonCost = currentAddonDailyCost * currentQuoteDetails.rentalDays;
               addonsTotal += addonCost;
               addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> <br> <small>(${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(currentAddonDailyCost)})</small></p>`;
