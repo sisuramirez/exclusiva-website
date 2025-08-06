@@ -1094,26 +1094,50 @@ header {
     color: var(--primary-color);
 }
 
-#final-total-container {
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  width: 100%; 
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
-  margin-top: 20px;
+#final-total-container hr {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0;
+}
+
+#final-total-container h4 {
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0;
+  font-size: 1rem;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-top: 2px solid var(--text-color);
+  padding-top: 1rem;
+  margin-top: 1rem;
 }
 
 .total-label {
-  font-weight: normal; 
-  color: var(--text-color); 
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text-color);
 }
 
 .total-amount {
-  text-align: right; 
-  font-weight: bold; 
-  color: var(--text-color); 
-  font-size: 1.2em; 
+  font-weight: bold;
+  color: var(--text-color);
+  font-size: 1.3rem;
 }
 
 
