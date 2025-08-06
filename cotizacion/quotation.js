@@ -286,67 +286,111 @@ function initializeQuotationTool() {
         selectedCar = null;
     }
 
+    // LÓGICA DE COTIZACIÓN ACTUALIZADA
     function calculateAndDisplayQuote() {
         const startDateValue = startDateInput.value;
         const endDateValue = endDateInput.value;
         const startTimeValue = startTimeInput.value;
         const endTimeValue = endTimeInput.value;
-
+    
         if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
             quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
-
+    
         const startDate = new Date(`${startDateValue}T${startTimeValue}`);
         const endDate = new Date(`${endDateValue}T${endTimeValue}`);
-
+    
         if (endDate <= startDate) {
             quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio del alquiler.</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
-
+    
+        // Calcula la duración en milisegundos y horas
         const durationMs = endDate.getTime() - startDate.getTime();
-        const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
-        const fullDays = Math.floor(durationHours / 24);
-        const extraHours = durationHours % 24;
-        
-        let finalDays = fullDays;
-        if (extraHours > 3) {
-            finalDays += 1;
-        }
-        
-        const rentalDaysForPrice = finalDays > 0 ? finalDays : 1;
-
-        if (rentalDaysForPrice < 2) {
-            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días.</p>`;
+        const durationHours = durationMs / (1000 * 60 * 60);
+    
+        // -- INICIO DEL CAMBIO SOLICITADO --
+        // Validar el mínimo de 48 horas (2 días)
+        const MIN_RENTAL_HOURS = 48;
+        if (durationHours < MIN_RENTAL_HOURS) {
+            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días (48 horas).</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
+        // -- FIN DEL CAMBIO SOLICITADO --
+    
+        // Días completos y horas extra
+        const fullDays = Math.floor(durationHours / 24);
+        const extraHours = durationHours % 24;
         
-        const dailyPrice = getDynamicDailyPrice(selectedCar, rentalDaysForPrice);
-        
-        let finalTotal = dailyPrice * rentalDaysForPrice;
-        let summaryHTML = `<h4>Resumen de la Cotización</h4><p>${rentalDaysForPrice} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
-        
-        currentQuoteDetails.rentalDays = rentalDaysForPrice;
+        // Asegura un mínimo de 1 día si la duración es menor
+        const rentalDays = fullDays > 0 ? fullDays : 1;
+        const dailyPriceForRentalDays = getDynamicDailyPrice(selectedCar, rentalDays);
+    
+        let finalTotal = 0;
+        let summaryHTML = `<h4>Resumen de la Cotización</h4>`;
+    
+        if (extraHours > 0) {
+            let extraHourPrice = 0;
+            const category = selectedCar.category;
+            
+            // Define el precio de la hora extra según la categoría
+            if (category === "Sedanes") {
+                extraHourPrice = 10;
+            } else {
+                // Crossovers, SUVs, Pick-ups, Microbuses
+                extraHourPrice = 20;
+            }
+    
+            const extraHoursCost = Math.ceil(extraHours) * extraHourPrice;
+    
+            // Obtener el precio diario si se alquilara por un día más
+            const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
+    
+            // Compara el costo de las horas extra con el precio de un día adicional
+            if (extraHoursCost >= nextDayPrice) {
+                const finalRentalDays = rentalDays + 1;
+                const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
+                finalTotal = finalDailyPrice * finalRentalDays;
+                summaryHTML += `<p>Alquiler: ${finalRentalDays} día(s) x ${formatCurrency(finalDailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
+                summaryHTML += `<small> </small>`;
+                currentQuoteDetails.rentalDays = finalRentalDays;
+            } else {
+                finalTotal = dailyPriceForRentalDays * rentalDays + extraHoursCost;
+                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
+                summaryHTML += `<p>${Math.ceil(extraHours)} hora(s) extra x ${formatCurrency(extraHourPrice)}/hora = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
+                currentQuoteDetails.rentalDays = rentalDays;
+            }
+    
+        } else {
+            // Lógica para días completos sin horas extra
+            finalTotal = dailyPriceForRentalDays * rentalDays;
+            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
+            currentQuoteDetails.rentalDays = rentalDays;
+        }
+    
         currentQuoteDetails.baseTotal = finalTotal;
         currentQuoteDetails.summaryHTML = summaryHTML;
-
+    
         quotationResult.innerHTML = summaryHTML + `<hr><p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>` + `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
         quotationResult.style.display = 'block';
-        
+    
         const proceedBtn = document.getElementById('proceed-to-form-btn');
         if (proceedBtn) {
-          proceedBtn.addEventListener('click', () => {
-              if (calculateAndDisplayQuote()) {
-                  showCustomerForm();
-              }
-          });
+            proceedBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (calculateAndDisplayQuote()) {
+                    showCustomerForm();
+                }
+            });
         }
+    
         return true;
     }
+    
     
     displayCars();
     filterButtons.forEach(button => { button.addEventListener('click', () => { const filterValue = button.dataset.filter; filterButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); displayCars(filterValue); }); });
