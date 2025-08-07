@@ -1,6 +1,5 @@
 <?php
 
-// --- CONFIGURACIÓN DE CORS ---
 $origen_permitido = 'https://exclusivarentaautos.com';
 
 if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $origen_permitido) {
@@ -18,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require 'vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 require 'config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -25,10 +28,12 @@ use PHPMailer\PHPMailer\Exception;
 
 function formatSpanishDate($dateStr) {
     if (empty($dateStr)) return '';
-    setlocale(LC_TIME, 'es_ES.UTF-8', 'Spanish_Spain.1252');
+    $meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
     $date = new DateTime($dateStr);
-    $formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-    return $formatter->format($date);
+    $dia = $date->format('d');
+    $mes = $meses[(int)$date->format('m') - 1];
+    $anio = $date->format('Y');
+    return "$dia de $mes de $anio";
 }
 
 function formatAmPmTime($timeStr) {
@@ -44,15 +49,10 @@ try {
         throw new Exception("Error al decodificar los datos JSON.");
     }
     
-    // --- Lógica de Seguros ---
     $seguros = $input['segurosSeleccionados'] ?? [];
     $seguro_lwd_text = in_array('Cobertura Deducible por Pérdida y Daño', $seguros) ? 'Sí' : 'No';
     $seguro_pai_text = in_array('Seguro Personal de Accidente', $seguros) ? 'Sí' : 'No';
 
-    // ==========================================================
-    // == 1. ENVIAR CORREO INTERNO A LA EMPRESA CON CSV        ==
-    // ==========================================================
-    
     $mail_empresa = new PHPMailer(true);
     $mail_empresa->isSMTP();
     $mail_empresa->Host = SMTP_HOST;
@@ -108,10 +108,6 @@ try {
     $mail_empresa->addStringAttachment($csv_content, $csv_filename, 'base64', 'text/csv');
     $mail_empresa->send();
 
-    // ==========================================================
-    // == 2. ENVIAR CORREO DE CONFIRMACIÓN AL CLIENTE          ==
-    // ==========================================================
-    
     $mail_cliente = new PHPMailer(true);
     $mail_cliente->isSMTP();
     $mail_cliente->Host = SMTP_HOST;
@@ -136,8 +132,8 @@ try {
         '{lugarEntrega}'    => htmlspecialchars($input['delivery-location'] ?? ''),
         '{totalEstimado}'   => htmlspecialchars($input['TotalFinalEstimado'] ?? ''),
         '{emailEmpresa}'    => EMAIL_EMPRESA,
-        '{seguroLWD}'       => $seguro_lwd_text, // Nuevo placeholder
-        '{seguroPAI}'       => $seguro_pai_text  // Nuevo placeholder
+        '{seguroLWD}'       => $seguro_lwd_text,
+        '{seguroPAI}'       => $seguro_pai_text
     ];
     $body_cliente = str_replace(array_keys($placeholders), array_values($placeholders), $template);
 
