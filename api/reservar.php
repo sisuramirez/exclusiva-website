@@ -1,7 +1,7 @@
 <?php
 
 // --- CONFIGURACIÓN DE CORS ---
-$origen_permitido = 'https://fastidious-raindrop-ccb903.netlify.app';
+$origen_permitido = 'https://exclusivarentaautos.com';
 
 if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $origen_permitido) {
     header("Access-Control-Allow-Origin: " . $origen_permitido);
