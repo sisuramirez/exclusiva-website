@@ -172,7 +172,9 @@ function initializeQuotationTool() {
       { name: "Nissan Kicks", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/kicks.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
       { name: "Kia Sonet", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/sonet.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
       { name: "Kia Rio", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/rio.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Hyundai Verna", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/verna.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
+      { name: "Hyundai Verna", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/verna.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
+      { name: "Kia Soluto", "DE 1 A 2 DIAS": 35.12, "DE 3 A 6 DIAS": 29.17, "1 SEMANA": 23.81, "15 DIAS": 20.24, "1 MES": 17.26, category: "Sedanes", imageUrl: "./img/soluto.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
+      { name: "Hyundai Stargazer", "DE 1 A 2 DIAS": 52.38, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/stargazer.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } }
     ].map((car, index) => ({ ...car, id: index + 1 }));
 
     const insuranceAddOns = [
@@ -312,15 +314,14 @@ function initializeQuotationTool() {
         const durationMs = endDate.getTime() - startDate.getTime();
         const durationHours = durationMs / (1000 * 60 * 60);
     
-        // -- INICIO DEL CAMBIO SOLICITADO --
-        // Validar el mínimo de 48 horas (2 días)
+        
         const MIN_RENTAL_HOURS = 48;
         if (durationHours < MIN_RENTAL_HOURS) {
             quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días (48 horas).</p>`;
             quotationResult.style.display = 'block';
             return false;
         }
-        // -- FIN DEL CAMBIO SOLICITADO --
+        
     
         // Días completos y horas extra
         const fullDays = Math.floor(durationHours / 24);
