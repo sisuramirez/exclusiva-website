@@ -66,7 +66,37 @@ try {
     $vehiculo = $input['VehiculoSeleccionado'] ?? 'N/A';
     $cliente = $input['customerName'] ?? 'N/A';
     $mail_empresa->Subject = "Nueva Solicitud de Reserva: {$vehiculo} para {$cliente}";
-    $mail_empresa->Body = "<h1>Nueva Solicitud de Reserva</h1><p>Se ha recibido una nueva solicitud. Se adjunta un archivo CSV con los datos.</p>";
+
+    $body_html = "
+    <div style='font-family: Arial, sans-serif; color: #333;'>
+        <h1 style='color: #32aeb5;'>Nueva Solicitud de Reserva</h1>
+        <p>Se ha recibido una nueva solicitud con los siguientes detalles. También se adjunta un archivo CSV.</p>
+        <table style='border-collapse: collapse; width: 100%; max-width: 600px; border: 1px solid #ddd;'>
+            <tbody>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Fecha de Reserva</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(date('d/m/Y H:i:s')) . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Nombre del Cliente</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['customerName'] ?? '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Email del Cliente</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['customerEmail'] ?? '') . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Teléfono</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(($input['countryCode'] ?? '') . ' ' . ($input['customerPhone'] ?? '')) . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>No. de Documento</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['customerId'] ?? '') . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>No. de Licencia</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['customerLicense'] ?? '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>País de Licencia</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(($input['license-origin'] === 'Otros') ? ($input['licenseOriginOther'] ?? '') : ($input['license-origin'] ?? '')) . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Vehículo Solicitado</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['VehiculoSeleccionado'] ?? '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Días de Renta</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['DiasDeRenta'] ?? '') . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Fecha de Recogida</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(!empty($input['fechaRecogida']) ? (new DateTime($input['fechaRecogida']))->format('d/m/Y') : '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Hora de Recogida</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(formatAmPmTime($input['horaRecogida'] ?? '')) . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Fecha de Devolución</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(!empty($input['fechaDevolucion']) ? (new DateTime($input['fechaDevolucion']))->format('d/m/Y') : '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Hora de Devolución</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars(formatAmPmTime($input['horaDevolucion'] ?? '')) . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Lugar de Entrega</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['delivery-location'] ?? '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Total Estimado</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['TotalFinalEstimado'] ?? '') . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Seguro LWD</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($seguro_lwd_text) . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Seguro PAI</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($seguro_pai_text) . "</td></tr>" .
+                "<tr><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>Aerolínea</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['airlineName'] ?? '') . "</td></tr>" .
+                "<tr style='background-color: #f9f9f9;'><th style='padding: 8px; border: 1px solid #ddd; text-align: left; background-color: #f2f2f2;'>No. de Vuelo</th><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($input['flightNumber'] ?? '') . "</td></tr>" .
+            "</tbody>
+        </table>
+    </div>";
+    
+    $mail_empresa->Body = $body_html;
     $mail_empresa->isHTML(true);
 
     $csv_header = ['Fecha de Reserva', 'Nombre del Cliente', 'Email del Cliente', 'Teléfono', 'No. de Documento', 'No. de Licencia', 'País de Licencia', 'Vehículo Solicitado', 'Días de Renta', 'Fecha de Recogida', 'Hora de Recogida', 'Fecha de Devolución', 'Hora de Devolución', 'Lugar de Entrega', 'Total Estimado', 'Seguro LWD', 'Seguro PAI', 'Aerolínea', 'No. de Vuelo'];
@@ -80,9 +110,9 @@ try {
         ($input['license-origin'] === 'Otros') ? ($input['licenseOriginOther'] ?? '') : ($input['license-origin'] ?? ''),
         $input['VehiculoSeleccionado'] ?? '',
         $input['DiasDeRenta'] ?? '',
-        $input['fechaRecogida'] ?? '',
+        !empty($input['fechaRecogida']) ? (new DateTime($input['fechaRecogida']))->format('d/m/Y') : '',
         $input['horaRecogida'] ?? '',
-        $input['fechaDevolucion'] ?? '',
+        !empty($input['fechaDevolucion']) ? (new DateTime($input['fechaDevolucion']))->format('d/m/Y') : '',
         $input['horaDevolucion'] ?? '',
         $input['delivery-location'] ?? '',
         $input['TotalFinalEstimado'] ?? '',
