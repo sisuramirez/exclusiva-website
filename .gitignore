@@ -10,3 +10,5 @@
 # Archivos del sistema operativo que no deben subirse
 .DS_Store
 Thumbs.db
+
+/admin/aut.php
