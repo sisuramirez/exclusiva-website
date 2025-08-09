@@ -1,1 +1,12 @@
+# Archivo de configuración con secretos (contraseñas de BD)
+/api/config.php
+
+# Dependencias de Composer (se instalan con 'composer install')
+/api/vendor/
+
+# Carpeta con imágenes subidas por el administrador
+/uploads/
+
+# Archivos del sistema operativo que no deben subirse
 .DS_Store
+Thumbs.db

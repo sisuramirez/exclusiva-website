@@ -9,7 +9,7 @@
 <body class="login-body">
     <div class="login-container">
         <div class="login-box">
-            <img src="../img/logo-exclusiva-renta-autos.png" alt="Logo" class="login-logo">
+            <img src="../img/exclusiva.png" alt="Logo" class="login-logo">
             <h2>Panel de Administración</h2>
             <form action="auth.php" method="POST">
                 <div class="input-group">

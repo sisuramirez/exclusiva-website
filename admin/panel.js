@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fetchAndDisplayVehicles = async () => {
       try {
-          const response = await fetch(`${API_URL}leer_autos.php`);
+          const response = await fetch(`${API_URL}leer_autos.php?cache_bust=${new Date().getTime()}`);
           if (!response.ok) throw new Error('Error al cargar los vehículos.');
           
           const vehicles = await response.json();
@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
               const card = document.createElement('div');
               card.className = 'car-card';
               card.innerHTML = `
-                  <div class="car-card__status ${vehicle.activo ? 'active' : 'inactive'}">
-                      ${vehicle.activo ? 'Activo' : 'Inactivo'}
+                  <div class="car-card__status ${vehicle.activo == 1 ? 'active' : 'inactive'}">
+                      ${vehicle.activo == 1 ? 'Activo' : 'Inactivo'}
                   </div>
-                  <img src="${vehicle.url_imagen}" alt="${vehicle.nombre}" class="car-card__image">
+                  <img src="../${vehicle.url_imagen}" alt="${vehicle.nombre}" class="car-card__image">
                   <div class="car-card__content">
                       <div class="car-card__header">
                           <h3 class="car-card__title">${vehicle.nombre}</h3>
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const vehicle = vehicles.find(v => v.id == id);
 
           if (vehicle) {
+              vehicleForm.reset();
               document.getElementById('vehicle-id').value = vehicle.id;
               document.getElementById('nombre').value = vehicle.nombre;
               document.getElementById('categoria').value = vehicle.categoria;
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
               document.querySelector('[name="precio_semana"]').value = vehicle.precio_semana;
               document.querySelector('[name="precio_15_dias"]').value = vehicle.precio_15_dias;
               document.querySelector('[name="precio_mes"]').value = vehicle.precio_mes;
-              document.getElementById('url_imagen').value = vehicle.url_imagen;
+              document.getElementById('url_imagen_actual').value = vehicle.url_imagen;
               document.getElementById('espec_ac').value = vehicle.espec_ac;
               document.getElementById('espec_combustible').value = vehicle.espec_combustible;
               document.getElementById('espec_transmision').value = vehicle.espec_transmision;
@@ -80,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openModalForCreate = () => {
       vehicleForm.reset();
       document.getElementById('vehicle-id').value = '';
+      document.getElementById('url_imagen_actual').value = '';
       modalTitle.textContent = 'Añadir Nuevo Vehículo';
       modal.style.display = 'flex';
   };
@@ -87,16 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleFormSubmit = async (event) => {
       event.preventDefault();
       const formData = new FormData(vehicleForm);
-      const data = Object.fromEntries(formData.entries());
-      const id = data.id;
-
+      const id = formData.get('id');
       const url = id ? `${API_URL}actualizar_auto.php` : `${API_URL}crear_auto.php`;
 
       try {
           const response = await fetch(url, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data),
+              body: formData,
           });
           const result = await response.json();
 

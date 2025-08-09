@@ -1,169 +1,166 @@
-# Proyecto: Sitio Web y Cotizador - Exclusiva Renta Autos
+Panel de Administración de Flota - Exclusiva Renta Autos
+1. Descripción General
+Este proyecto es un sistema web integral para la empresa de alquiler de vehículos "Exclusiva Renta Autos". La arquitectura ha evolucionado para incluir no solo un sitio público dinámico, sino también un panel de administración de contenido (CMS) robusto para la gestión de la flota de vehículos.
 
-## 1. Descripción General
+El sistema se compone de dos partes principales:
 
-Este proyecto es un sitio web corporativo y una herramienta de cotización para la empresa de alquiler de vehículos "Exclusiva Renta Autos". El frontend está construido con HTML5, CSS3 y JavaScript (Vanilla JS), sin depender de frameworks. El backend consiste en una API de un solo endpoint desarrollada en PHP para gestionar las solicitudes de reserva.
+Sitio Público: Construido con HTML5, CSS3 y JavaScript (Vanilla JS). La sección del catálogo de vehículos ahora es completamente dinámica, cargando la información directamente desde una base de datos MySQL. El sistema de reservas original se mantiene, utilizando PHPMailer para las notificaciones por correo.
 
-La arquitectura del frontend se basa en la carga dinámica de componentes reutilizables (header y footer) mediante la API `fetch` de JavaScript. El backend utiliza la librería `PHPMailer` para el envío de correos electrónicos transaccionales.
+Panel de Administración (CRUD): Una nueva sección privada y protegida por login que permite al personal de la empresa realizar operaciones de Crear, Leer, Actualizar y Eliminar (CRUD) sobre el catálogo de vehículos, incluyendo la subida de imágenes. Los cambios se reflejan instantáneamente en el sitio público.
 
-## 2. Estructura del Proyecto
+El backend se ha expandido a una API RESTful básica en PHP que se comunica con una base de datos MySQL, utilizando sentencias preparadas para garantizar la seguridad.
 
-El proyecto se organiza en las siguientes carpetas y archivos principales:
+2. Estructura del Proyecto
+La estructura ha sido actualizada para incluir el panel de administración y la carpeta de subidas.
 
 .
-├── ABOUT/                # Contiene la página "Sobre Nosotros"
-│   ├── index.html        #
-│   ├── doc.css           #
-│   └── doc.js            #
-├── COTIZACION/           # Contiene la aplicación de cotización y reserva
-│   ├── index.html        # (Archivo principal del cotizador)
-│   ├── quotation.css      #
-│   └── quotation.js      #
-├── api/                  # Backend para procesar reservas
-│   ├── vendor/           # Dependencias de Composer (generada)
+├── admin/                  # Interfaz del Panel de Administración (NUEVO)
+│   ├── index.php           # Página de login
+│   ├── panel.php           # Dashboard principal del CRUD
+│   ├── panel.css           # Estilos para el panel
+│   ├── panel.js            # Lógica JS del panel
+│   ├── auth.php            # Script de autenticación
+│   └── logout.php          # Script de cierre de sesión
+│
+├── api/
+│   ├── admin/              # Endpoints del CRUD (NUEVO)
+│   │   ├── conexion.php
+│   │   ├── crear_auto.php
+│   │   ├── leer_autos.php
+│   │   ├── actualizar_auto.php
+│   │   ├── eliminar_auto.php
+│   │   └── sembrar_datos.php # Script para poblar la BD
+│   ├── vendor/
 │   ├── templates/
-│   │   └── email_template_cliente.html #
-│   ├── config.php        #
-│   ├── reservar.php      #
-│   └── composer.json     #
-├── css/                  # (No provisto, pero asumido para estilos comunes si existiera)
-├── img/                  # (No provisto, pero contiene todas las imágenes)
-├── js/                   # (No provisto, pero asumido para scripts comunes si existiera)
-├── .htaccess             #
-├── header.html           # 
+│   │   └── email_template_cliente.html
+│   ├── config.php
+│   ├── reservar.php
+│   └── composer.json
+│
+├── COTIZACION/
+│   ├── index.html
+│   ├── quotation.css
+│   └── quotation.js        # (Ahora es dinámico)
+│
+├── uploads/                # Carpeta para imágenes de vehículos (NUEVO)
+│
+├── ABOUT/
+├── css/
+├── img/
+├── js/
+├── .htaccess
+├── header.html
+├── footer.html
+├── header-footer.css
+├── index.html
+├── main.js
+└── style.css
+3. Dependencias
+Frontend
+flatpickr: Utilizada para los selectores de fecha/hora. Enlazada vía CDN.
 
+Backend
+PHP 7.4 o superior.
 
-├── footer.html           #
-├── header-footer.css     #
-├── index.html            # Página de inicio (Landing Page)
-├── main.js               #
-└── style.css             # (No provisto en la última carga, pero existente)
+Servidor de Base de Datos MySQL.
 
+Composer para la gestión de dependencias de PHP.
 
-## 3. Dependencias
+PHPMailer: Definida en api/composer.json para el envío de correos.
 
-### Frontend
-- No requiere un gestor de paquetes como npm o yarn.
-- Utiliza la librería `flatpickr` para los selectores de fecha y hora en el cotizador, que debe estar enlazada en el HTML correspondiente.
+4. Configuración
+Para que el proyecto funcione, es crucial configurar los siguientes archivos:
 
-### Backend
-- **PHP 7.4** o superior.
-- **Composer** para la gestión de dependencias.
-- **PHPMailer**: La única dependencia PHP, definida en `api/composer.json`.
+a) Configuración del Backend (api/config.php)
+Este archivo centraliza todas las credenciales. Debes completar:
 
-## 4. Configuración
+Credenciales SMTP: Para que el formulario de reserva envíe correos.
 
-Para que el proyecto funcione correctamente, es crucial configurar los siguientes archivos:
-
-### a) Configuración del Backend (SMTP)
-
-El archivo `api/config.php` contiene las credenciales para conectarse al servidor de correo SMTP. Es **imperativo** completar estos datos para que el sistema de reservas pueda enviar correos.
-
-**`api/config.php`**
-```php
-<?php
-
-define('SMTP_HOST', 'smtp.hostinger.com'); // Host de tu proveedor de correo
-define('SMTP_PORT', 465);                // Puerto (465 para SSL)
-define('SMTP_USER', 'reservaciones@exclusivarentaautos.com'); // Usuario SMTP
-define('SMTP_PASS', 'Exclusiv4@5');      // Contraseña de la aplicación o del usuario
-define('SMTP_SECURE', 'ssl');            // Protocolo de seguridad (ssl o tls)
-
-
-define('EMAIL_EMPRESA', 'reservaciones@exclusivarentaautos.com'); // Email que recibe las notificaciones
-
-define('NOMBRE_EMPRESA', 'Exclusiva Renta Autos'); //
-b) Configuración de Orígenes Cruzados (CORS)
-El endpoint de la API en api/reservar.php tiene un origen permitido hardcodeado para aceptar peticiones solo desde el dominio del frontend. Si el dominio cambia, esta línea debe ser actualizada.
-
-api/reservar.php
+Credenciales de Base de Datos (NUEVO): Para que la API y el panel puedan conectarse a MySQL.
 
 PHP
 
-// --- CONFIGURACIÓN DE CORS ---
-$origen_permitido = '[https://fastidious-raindrop-ccb903.netlify.app](https://fastidious-raindrop-ccb903.netlify.app)'; // <-- ACTUALIZAR ESTE DOMINIO
-c) Configuración del Endpoint en el Frontend
-El script del cotizador COTIZACION/quotation.js contiene la URL hardcodeada del endpoint de la API. Si la ubicación de la API cambia, esta URL debe ser actualizada.
+<?php
+// SMTP
+define('SMTP_HOST', 'tu_host_smtp');
+define('SMTP_USER', 'tu_usuario_smtp');
+define('SMTP_PASS', 'tu_contraseña_smtp');
+// ...etc
 
-COTIZACION/quotation.js
+// Base de Datos (NUEVO)
+define('DB_HOST', '127.0.0.1');      // Generalmente 'localhost' o 127.0.0.1
+define('DB_USER', 'tu_usuario_bd');      // ej. 'root'
+define('DB_PASS', 'tu_contraseña_bd');
+define('DB_NAME', 'renta_autos_db');
+b) Configuración de Administrador (admin/auth.php)
+Las credenciales para acceder al panel de administración están definidas directamente en este archivo. Se recomienda cambiarlas para un entorno de producción.
 
-JavaScript
+PHP
 
 // ...
-const response = await fetch('[https://exclusivarentaautos.com/api/reservar.php](https://exclusivarentaautos.com/api/reservar.php)', { // <-- ACTUALIZAR ESTA URL
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' }, 
-    body: JSON.stringify(data) 
-});
+define('ADMIN_USER', 'admin');
+define('ADMIN_PASS', 'renta2025'); // <-- CAMBIAR ESTA CONTRASEÑA
 // ...
-5. Instalación y Ejecución
-Clonar o descargar el proyecto en el directorio raíz de un servidor web (ej. Apache, Nginx).
+5. Instalación y Ejecución Local
+Clonar el Proyecto: git clone ...
 
-Asegurarse de que el servidor tiene soporte para PHP.
+Base de Datos:
 
-Navegar al directorio /api a través de la línea de comandos: cd api.
+Asegúrate de tener un servidor MySQL corriendo.
 
-Instalar las dependencias de PHP ejecutando: composer install. Esto creará la carpeta vendor/ y el autoloader.
+Crea una base de datos (ej. renta_autos_db).
 
-Configurar las credenciales SMTP en api/config.php.
+Configura las credenciales de la base de datos en api/config.php.
 
-Ajustar las URLs de CORS y del endpoint si es necesario (ver punto 4).
+Instalar Dependencias PHP:
 
-Acceder al sitio a través del dominio configurado en el servidor web.
+Navega a la carpeta api/: cd api
+
+Ejecuta composer install.
+
+Poblar la Base de Datos (Siembra):
+
+Para cargar la flota de vehículos inicial, ejecuta el script de siembra. Asegúrate de que tu servidor web PHP esté corriendo (ver paso 5) y luego visita en tu navegador la URL: http://localhost:8000/api/admin/sembrar_datos.php. Esto llenará la tabla vehiculos con los datos iniciales.
+
+Ejecutar el Servidor de Desarrollo:
+
+Este proyecto requiere un servidor que pueda procesar PHP. No funcionará abriendo los index.html directamente.
+
+Desde la raíz del proyecto, ejecuta el servidor de desarrollo integrado de PHP:
+
+Bash
+
+php -S localhost:8000
+Mantén esta terminal abierta mientras trabajas.
+
+Acceder a la Aplicación:
+
+Sitio Público: http://localhost:8000/COTIZACION/
+
+Panel de Administración: http://localhost:8000/admin/
 
 6. Flujo de la Aplicación
-Carga de Componentes
-Cada página principal (
+Sitio Público (COTIZACION/)
+Carga de Datos: Al cargar la página, quotation.js ahora hace una petición fetch al endpoint api/admin/leer_autos.php para obtener la lista de vehículos activos desde la base de datos.
 
-index.html, COTIZACION/index.html, ABOUT/index.html) tiene un script (main.js, quotation.js, doc.js) que ejecuta una función para cargar dinámicamente el contenido de header.html y footer.html.
+Renderizado Dinámico: Las tarjetas de los vehículos se generan dinámicamente a partir de los datos recibidos de la API.
 
-Esta función usa fetch() para obtener el contenido y lo inyecta en los placeholders <header id="header-placeholder"> y <footer id="footer-placeholder">.
+Flujo de Reserva: El resto del flujo (cálculo, formulario de cliente y envío al endpoint reservar.php) permanece igual.
 
-Una vez cargados, se inicializan los event listeners para los elementos de estos componentes (menú hamburguesa, modal de contacto, etc.).
+Panel de Administración (admin/)
+Autenticación: El acceso está protegido por un sistema de sesiones PHP. El usuario debe iniciar sesión con las credenciales definidas en auth.php.
 
-Lógica del Cotizador (COTIZACION/quotation.js)
-Datos de Vehículos: La lista de vehículos, seguros y sus precios está hardcodeada como un array de objetos JavaScript al inicio del script.
+Dashboard (panel.php): Una vez autenticado, el administrador ve un grid con todos los vehículos de la base de datos (obtenidos de leer_autos.php).
 
-Renderizado: La función displayCars genera dinámicamente las tarjetas de los vehículos en el grid.
+Operaciones CRUD:
 
-Cálculo: La función calculateAndDisplayQuote toma las fechas y horas para calcular el total de días y horas extra, determinando el subtotal de la renta.
+Añadir/Editar: Un formulario modal permite crear o modificar vehículos. Al enviar, panel.js utiliza la API fetch para enviar los datos (usando FormData para soportar la subida de imágenes) a crear_auto.php o actualizar_auto.php.
 
-Formulario de Cliente: Tras calcular el costo, el usuario avanza a un formulario donde introduce sus datos personales y selecciona seguros opcionales.
+Subida de Imágenes: Los archivos de imagen se suben a la carpeta /uploads del servidor, y la ruta se almacena en la base de datos.
 
-Envío a API: Al enviar el formulario, se recopilan todos los datos en un objeto JSON que se envía mediante fetch al endpoint api/reservar.php.
-
-Proceso del Backend (api/reservar.php)
-Recepción: El script recibe la petición POST con el cuerpo en formato JSON.
-
-Correo Interno:
-
-Crea una instancia de PHPMailer.
-
-Genera un archivo CSV en memoria con todos los detalles de la reserva.
-
-Envía un correo electrónico a la dirección de la empresa (EMAIL_EMPRESA) con el archivo CSV adjunto.
-
-Correo al Cliente:
-
-Crea una segunda instancia de PHPMailer.
-
-Carga la plantilla HTML de templates/email_template_cliente.html.
-
-Reemplaza los placeholders (ej. {nombreCliente}, {nombreVehiculo}) con los datos recibidos.
-
-Envía el correo de confirmación al email del cliente.
-
-Respuesta: Devuelve una respuesta JSON al frontend con un estado de success o error.
+Eliminar: Un botón en cada tarjeta envía una petición a eliminar_auto.php con el ID del vehículo para borrarlo de la base de datos.
 
 7. Notas del Contribuidor
-Datos Hardcodeados: La lista de vehículos y sus precios está definida directamente en COTIZACION/quotation.js. Para facilitar la gestión, se podría refactorizar para que estos datos se carguen desde un archivo JSON externo o una base de datos.
+Gestión de Datos: El sistema ha sido refactorizado para ser completamente dinámico. Todos los datos de la flota se gestionan ahora desde una base de datos MySQL a través del panel de administración.
 
-Seguridad de Credenciales: Las credenciales SMTP están en api/config.php. Este archivo no debe ser expuesto públicamente. En un entorno de producción más robusto, se recomienda usar variables de entorno para gestionar estos secretos.
-
-Manejo de Errores: El manejo de errores es básico. Se podría mejorar con un sistema de logging más detallado en el backend y mensajes de error más específicos para el usuario en el frontend.
-
-
-
-
-
-
+Seguridad de Credenciales: Las credenciales de la BD, SMTP y del admin están en archivos de configuración. Para un entorno de producción de alta seguridad, se recomienda gestionar estos secretos mediante variables de entorno en el servidor.

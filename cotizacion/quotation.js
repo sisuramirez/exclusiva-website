@@ -220,7 +220,7 @@ async function initializeQuotationTool() {
         carCard.dataset.category = car.categoria;
         const priceFrom = car.precio_mes;
         carCard.innerHTML = `
-            <img src="${car.url_imagen}" alt="${car.nombre}" class="car-card__image">
+            <img src="../${car.url_imagen}" alt="${car.nombre}" class="car-card__image">
             <div class="car-card__content">
                 <div class="car-card__header">
                     <h3 class="car-card__title">${car.nombre}</h3>
@@ -264,7 +264,7 @@ async function initializeQuotationTool() {
         document.querySelector('.catalog').style.display = 'none';
         quotationSection.style.display = 'block';
         selectedCarInfo.innerHTML = `
-            <img src="${selectedCar.url_imagen}" alt="${selectedCar.nombre}" class="quotation__car-image">
+            <img src="../${selectedCar.url_imagen}" alt="${selectedCar.nombre}" class="quotation__car-image">
             <div class="quotation__car-details">
                 <h3 class="quotation__car-title">${selectedCar.nombre}</h3>
                 <span class="quotation__car-category">${selectedCar.categoria}</span>
