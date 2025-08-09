@@ -155,27 +155,25 @@ function initializeEventListeners() {
     }
 }
 
-function initializeQuotationTool() {
-    const carsData = [
-      { name: "Toyota Hiace", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/hiace.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
-      { name: "Nissan Urvan", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/urvan.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
-      { name: "Hyundai H1", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "Microbuses", imageUrl: "./img/h1.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Hyundai Staria", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 40.48, category: "Microbuses", imageUrl: "./img/staria.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Toyota Fortuner", "DE 1 A 2 DIAS": 97.62, "DE 3 A 6 DIAS": 82.14, "1 SEMANA": 70.24, "15 DIAS": 58.33, "1 MES": 46.43, category: "SUVs", imageUrl: "./img/fortuner.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático" } },
-      { name: "Mitsubishi Montero", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 40.48, category: "SUVs", imageUrl: "./img/montero.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático" } },
-      { name: "Hyundai Santa Fe", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "SUVs", imageUrl: "./img/santafe.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Mitsubishi Outlander", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "SUVs", imageUrl: "./img/outlander.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Toyota Hilux", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/hilux.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Mitsubishi L200", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/l200.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual/Automático" } },
-      { name: "Nissan Frontier", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/frontier.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Hyundai Creta", "DE 1 A 2 DIAS": 58.33, "DE 3 A 6 DIAS": 46.43, "1 SEMANA": 40.48, "15 DIAS": 34.52, "1 MES": 28.57, category: "Crossovers", imageUrl: "./img/creta.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Nissan Kicks", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/kicks.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Kia Sonet", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/sonet.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Kia Rio", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/rio.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Hyundai Verna", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/verna.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
-      { name: "Kia Soluto", "DE 1 A 2 DIAS": 35.12, "DE 3 A 6 DIAS": 29.17, "1 SEMANA": 23.81, "15 DIAS": 20.24, "1 MES": 17.26, category: "Sedanes", imageUrl: "./img/soluto.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
-      { name: "Hyundai Stargazer", "DE 1 A 2 DIAS": 52.38, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/stargazer.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } }
-    ].map((car, index) => ({ ...car, id: index + 1 }));
+async function initializeQuotationTool() {
+    let carsData = [];
+
+    const API_URL = '../api/admin/leer_autos.php';
+
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        carsData = await response.json();
+    } catch (error) {
+        console.error("No se pudieron cargar los datos de los vehículos:", error);
+        const catalogGrid = document.getElementById('catalog-grid');
+        if(catalogGrid) {
+            catalogGrid.innerHTML = '<p>No se pudo cargar el catálogo de vehículos en este momento. Por favor, intente más tarde.</p>';
+        }
+        return;
+    }
 
     const insuranceAddOns = [
         { id: 'cdw', name: 'Protección a Terceros', dailyCost: 20, mandatory: true, selected: true, description: 'Cubre daños a terceros.', popupDescription: 'Esta cobertura es fundamental y obligatoria. Protege contra daños a vehículos, propiedades o personas ajenas al contrato de alquiler, brindándote seguridad completa en la carretera. Incluye responsabilidad civil por lesiones corporales y daños a la propiedad de terceros hasta los límites establecidos por la ley. Es tu primer nivel de protección para conducir con tranquilidad.' },
@@ -204,35 +202,35 @@ function initializeQuotationTool() {
 
     function getDynamicDailyPrice(vehicle, rentalDays) {
         if (rentalDays <= 2) {
-            return vehicle["DE 1 A 2 DIAS"];
+            return parseFloat(vehicle.precio_1_2_dias);
         } else if (rentalDays <= 6) {
-            return vehicle["DE 3 A 6 DIAS"];
+            return parseFloat(vehicle.precio_3_6_dias);
         } else if (rentalDays <= 14) {
-            return vehicle["1 SEMANA"];
+            return parseFloat(vehicle.precio_semana);
         } else if (rentalDays <= 29) {
-            return vehicle["15 DIAS"];
+            return parseFloat(vehicle.precio_15_dias);
         } else {
-            return vehicle["1 MES"];
+            return parseFloat(vehicle.precio_mes);
         }
     }
 
     function createCarCard(car) {
         const carCard = document.createElement('div');
         carCard.className = 'car-card';
-        carCard.dataset.category = car.category;
-        const priceFrom = car["1 MES"];
+        carCard.dataset.category = car.categoria;
+        const priceFrom = car.precio_mes;
         carCard.innerHTML = `
-            <img src="${car.imageUrl}" alt="${car.name}" class="car-card__image">
+            <img src="${car.url_imagen}" alt="${car.nombre}" class="car-card__image">
             <div class="car-card__content">
                 <div class="car-card__header">
-                    <h3 class="car-card__title">${car.name}</h3>
-                    <span class="car-card__category">${car.category}</span>
+                    <h3 class="car-card__title">${car.nombre}</h3>
+                    <span class="car-card__category">${car.categoria}</span>
                     <small class="card-disclaimer">Precio no incluye seguro</small>
                 </div>
                 <div class="car-card__specs">
-                    <div class="car-card__spec"><span class="car-card__spec-icon">❄️</span><span class="car-card__spec-text">Aire acondicionado: ${car.specs.airConditioner}</span></div>
-                    <div class="car-card__spec"><span class="car-card__spec-icon">⛽</span><span class="car-card__spec-text">Combustible: ${car.specs.fuel}</span></div>
-                    <div class="car-card__spec"><span class="car-card__spec-icon">🔄</span><span class="car-card__spec-text">Transmisión: ${car.specs.transmission}</span></div>
+                    <div class="car-card__spec"><span class="car-card__spec-icon">❄️</span><span class="car-card__spec-text">Aire acondicionado: ${car.espec_ac}</span></div>
+                    <div class="car-card__spec"><span class="car-card__spec-icon">⛽</span><span class="car-card__spec-text">Combustible: ${car.espec_combustible}</span></div>
+                    <div class="car-card__spec"><span class="car-card__spec-icon">🔄</span><span class="car-card__spec-text">Transmisión: ${car.espec_transmision}</span></div>
                 </div>
                 <div class="car-card__footer">
                     <div>
@@ -246,8 +244,9 @@ function initializeQuotationTool() {
 
     function displayCars(category = 'all') {
         catalogGrid.innerHTML = '';
-        carsData.forEach(car => {
-            if (category === 'all' || car.category === category) {
+        const activeCars = carsData.filter(car => car.activo);
+        activeCars.forEach(car => {
+            if (category === 'all' || car.categoria === category) {
                 const carCard = createCarCard(car);
                 catalogGrid.appendChild(carCard);
             }
@@ -255,7 +254,7 @@ function initializeQuotationTool() {
         document.querySelectorAll('.car-card__button').forEach(button => {
             button.addEventListener('click', () => {
                 const carId = parseInt(button.dataset.id);
-                selectedCar = carsData.find(car => car.id === carId);
+                selectedCar = carsData.find(car => car.id == carId);
                 showQuotationSection();
             });
         });
@@ -265,14 +264,14 @@ function initializeQuotationTool() {
         document.querySelector('.catalog').style.display = 'none';
         quotationSection.style.display = 'block';
         selectedCarInfo.innerHTML = `
-            <img src="${selectedCar.imageUrl}" alt="${selectedCar.name}" class="quotation__car-image">
+            <img src="${selectedCar.url_imagen}" alt="${selectedCar.nombre}" class="quotation__car-image">
             <div class="quotation__car-details">
-                <h3 class="quotation__car-title">${selectedCar.name}</h3>
-                <span class="quotation__car-category">${selectedCar.category}</span>
+                <h3 class="quotation__car-title">${selectedCar.nombre}</h3>
+                <span class="quotation__car-category">${selectedCar.categoria}</span>
                 <div class="quotation__car-specs">
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">❄️</span><span class="quotation__car-spec-text">Aire acondicionado: ${selectedCar.specs.airConditioner}</span></div>
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">⛽</span><span class="quotation__car-spec-text">Combustible: ${selectedCar.specs.fuel}</span></div>
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">🔄</span><span class="quotation__car-spec-text">Transmisión: ${selectedCar.specs.transmission}</span></div>
+                    <div class="quotation__car-spec"><span class="car-card__spec-icon">❄️</span><span class="quotation__car-spec-text">Aire acondicionado: ${selectedCar.espec_ac}</span></div>
+                    <div class="quotation__car-spec"><span class="car-card__spec-icon">⛽</span><span class="quotation__car-spec-text">Combustible: ${selectedCar.espec_combustible}</span></div>
+                    <div class="quotation__car-spec"><span class="car-card__spec-icon">🔄</span><span class="quotation__car-spec-text">Transmisión: ${selectedCar.espec_transmision}</span></div>
                 </div>
             </div>`;
         startDateInput.value = '';
@@ -288,7 +287,6 @@ function initializeQuotationTool() {
         selectedCar = null;
     }
 
-    // LÓGICA DE COTIZACIÓN ACTUALIZADA
     function calculateAndDisplayQuote() {
         const startDateValue = startDateInput.value;
         const endDateValue = endDateInput.value;
@@ -310,7 +308,6 @@ function initializeQuotationTool() {
             return false;
         }
     
-        // Calcula la duración en milisegundos y horas
         const durationMs = endDate.getTime() - startDate.getTime();
         const durationHours = durationMs / (1000 * 60 * 60);
     
@@ -322,12 +319,9 @@ function initializeQuotationTool() {
             return false;
         }
         
-    
-        // Días completos y horas extra
         const fullDays = Math.floor(durationHours / 24);
         const extraHours = durationHours % 24;
         
-        // Asegura un mínimo de 1 día si la duración es menor
         const rentalDays = fullDays > 0 ? fullDays : 1;
         const dailyPriceForRentalDays = getDynamicDailyPrice(selectedCar, rentalDays);
     
@@ -336,22 +330,18 @@ function initializeQuotationTool() {
     
         if (extraHours > 0) {
             let extraHourPrice = 0;
-            const category = selectedCar.category;
+            const category = selectedCar.categoria;
             
-            // Define el precio de la hora extra según la categoría
             if (category === "Sedanes") {
                 extraHourPrice = 10;
             } else {
-                // Crossovers, SUVs, Pick-ups, Microbuses
                 extraHourPrice = 20;
             }
     
             const extraHoursCost = Math.ceil(extraHours) * extraHourPrice;
     
-            // Obtener el precio diario si se alquilara por un día más
             const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
     
-            // Compara el costo de las horas extra con el precio de un día adicional
             if (extraHoursCost >= nextDayPrice) {
                 const finalRentalDays = rentalDays + 1;
                 const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
@@ -367,7 +357,6 @@ function initializeQuotationTool() {
             }
     
         } else {
-            // Lógica para días completos sin horas extra
             finalTotal = dailyPriceForRentalDays * rentalDays;
             summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
             currentQuoteDetails.rentalDays = rentalDays;
@@ -391,7 +380,6 @@ function initializeQuotationTool() {
     
         return true;
     }
-    
     
     displayCars();
     filterButtons.forEach(button => { button.addEventListener('click', () => { const filterValue = button.dataset.filter; filterButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); displayCars(filterValue); }); });
@@ -458,8 +446,8 @@ function initializeQuotationTool() {
         try {
             const formData = new FormData(customerForm);
             const data = Object.fromEntries(formData.entries());
-            data.VehiculoSeleccionado = selectedCar.name;
-            data.CategoriaVehiculo = selectedCar.category;
+            data.VehiculoSeleccionado = selectedCar.nombre;
+            data.CategoriaVehiculo = selectedCar.categoria;
             data.PrecioBaseDiario = getDynamicDailyPrice(selectedCar, currentQuoteDetails.rentalDays);
             data.DiasDeRenta = currentQuoteDetails.rentalDays;
             data.SubtotalCotizacion = currentQuoteDetails.baseTotal;
@@ -501,7 +489,7 @@ function initializeQuotationTool() {
   
             let displayCost = addon.dailyCost;
             if (addon.id === 'cdw' && selectedCar) {
-                const category = selectedCar.category;
+                const category = selectedCar.categoria;
                 if (category === "SUVs" || category === "Pick-ups" || category === "Microbuses") {
                     displayCost = 20;
                 } else if (category === "Crossovers") {
@@ -533,7 +521,7 @@ function initializeQuotationTool() {
           if (addon.selected) {
               let currentAddonDailyCost = addon.dailyCost;
               if (addon.id === 'cdw' && selectedCar) {
-                  const category = selectedCar.category;
+                  const category = selectedCar.categoria;
                   if (category === "SUVs" || category === "Pick-ups" || category === "Microbuses") {
                       currentAddonDailyCost = 20;
                   } else if (category === "Crossovers") {
