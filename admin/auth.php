@@ -4,8 +4,6 @@
 session_start();
 
 // --- Credenciales de Administrador ---
-// En un sistema real, estas credenciales vendrían de una base de datos y la contraseña estaría encriptada.
-// Por ahora, para nuestro aprendizaje, las definimos directamente aquí.
 define('ADMIN_USER', 'admin');
 define('ADMIN_PASS', 'renta2025'); // ¡Cambia esto por algo más seguro en producción!
 

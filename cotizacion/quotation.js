@@ -155,29 +155,46 @@ function initializeEventListeners() {
     }
 }
 
-function initializeQuotationTool() {
-    const carsData = [
-      { name: "Toyota Hiace", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/hiace.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
-      { name: "Nissan Urvan", "DE 1 A 2 DIAS": 94.05, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 41.67, category: "Microbuses", imageUrl: "./img/urvan.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual" } },
-      { name: "Hyundai H1", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "Microbuses", imageUrl: "./img/h1.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Hyundai Staria", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 40.48, category: "Microbuses", imageUrl: "./img/staria.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Toyota Fortuner", "DE 1 A 2 DIAS": 97.62, "DE 3 A 6 DIAS": 82.14, "1 SEMANA": 70.24, "15 DIAS": 58.33, "1 MES": 46.43, category: "SUVs", imageUrl: "./img/fortuner.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático" } },
-      { name: "Mitsubishi Montero", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 58.33, "15 DIAS": 52.38, "1 MES": 40.48, category: "SUVs", imageUrl: "./img/montero.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático" } },
-      { name: "Hyundai Santa Fe", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "SUVs", imageUrl: "./img/santafe.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Mitsubishi Outlander", "DE 1 A 2 DIAS": 70.24, "DE 3 A 6 DIAS": 58.33, "1 SEMANA": 52.38, "15 DIAS": 46.43, "1 MES": 34.52, category: "SUVs", imageUrl: "./img/outlander.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Toyota Hilux", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/hilux.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Mitsubishi L200", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/l200.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Manual/Automático" } },
-      { name: "Nissan Frontier", "DE 1 A 2 DIAS": 82.14, "DE 3 A 6 DIAS": 70.24, "1 SEMANA": 64.29, "15 DIAS": 58.33, "1 MES": 46.43, category: "Pick-ups", imageUrl: "./img/frontier.png?v=2", specs: { airConditioner: "Sí", fuel: "Diésel", transmission: "Automático/Manual" } },
-      { name: "Hyundai Creta", "DE 1 A 2 DIAS": 58.33, "DE 3 A 6 DIAS": 46.43, "1 SEMANA": 40.48, "15 DIAS": 34.52, "1 MES": 28.57, category: "Crossovers", imageUrl: "./img/creta.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Nissan Kicks", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/kicks.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Kia Sonet", "DE 1 A 2 DIAS": 46.43, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/sonet.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Kia Rio", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/rio.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } },
-      { name: "Hyundai Verna", "DE 1 A 2 DIAS": 40.48, "DE 3 A 6 DIAS": 34.52, "1 SEMANA": 28.57, "15 DIAS": 22.62, "1 MES": 20.24, category: "Sedanes", imageUrl: "./img/verna.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
-      { name: "Kia Soluto", "DE 1 A 2 DIAS": 35.12, "DE 3 A 6 DIAS": 29.17, "1 SEMANA": 23.81, "15 DIAS": 20.24, "1 MES": 17.26, category: "Sedanes", imageUrl: "./img/soluto.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" }},
-      { name: "Hyundai Stargazer", "DE 1 A 2 DIAS": 52.38, "DE 3 A 6 DIAS": 40.48, "1 SEMANA": 34.52, "15 DIAS": 28.57, "1 MES": 22.62, category: "Crossovers", imageUrl: "./img/stargazer.png?v=2", specs: { airConditioner: "Sí", fuel: "Gasolina", transmission: "Automático" } }
-    ].map((car, index) => ({ ...car, id: index + 1 }));
+async function initializeQuotationTool() {
+    let carsData = [];
+    let insuranceAddOns = [];
 
-    const insuranceAddOns = [
+    try {
+        const response = await fetch('../api/admin/leer_autos.php?cache_bust=' + new Date().getTime());
+        if (!response.ok) {
+            throw new Error('No se pudieron cargar los datos de los vehículos.');
+        }
+        const vehiclesFromDB = await response.json();
+
+        carsData = vehiclesFromDB
+            .filter(car => car.activo == 1)
+            .map(car => ({
+                id: parseInt(car.id),
+                name: car.nombre,
+                category: car.categoria,
+                "DE 1 A 2 DIAS": parseFloat(car.precio_1_2_dias),
+                "DE 3 A 6 DIAS": parseFloat(car.precio_3_6_dias),
+                "1 SEMANA": parseFloat(car.precio_semana),
+                "15 DIAS": parseFloat(car.precio_15_dias),
+                "1 MES": parseFloat(car.precio_mes),
+                imageUrl: `../${car.url_imagen}`,
+                specs: {
+                    airConditioner: car.espec_ac,
+                    fuel: car.espec_combustible,
+                    transmission: car.espec_transmision
+                }
+            }));
+
+    } catch (error) {
+        console.error("Error al cargar vehículos:", error);
+        const catalogGrid = document.getElementById('catalog-grid');
+        if(catalogGrid) {
+            catalogGrid.innerHTML = '<p style="text-align: center; color: red;">No se pueden mostrar los vehículos en este momento. Por favor, intente más tarde.</p>';
+        }
+        return;
+    }
+
+    insuranceAddOns = [
         { id: 'cdw', name: 'Protección a Terceros', dailyCost: 20, mandatory: true, selected: true, description: 'Cubre daños a terceros.', popupDescription: 'Esta cobertura es fundamental y obligatoria. Protege contra daños a vehículos, propiedades o personas ajenas al contrato de alquiler, brindándote seguridad completa en la carretera. Incluye responsabilidad civil por lesiones corporales y daños a la propiedad de terceros hasta los límites establecidos por la ley. Es tu primer nivel de protección para conducir con tranquilidad.' },
         { id: 'tpp', name: 'Cobertura Deducible por Pérdida y Daño', dailyCost: 10, mandatory: false, selected: false, description: '<strong>Low Damage Waiver (LWD)</strong> <br><br> Cubre deducible por pérdida y daño.', popupDescription: ' Si el arrendatario (usted) acepta, mediante sus iniciales, el deducible por PÉRDIDA/DAÑO (esto no constituye un seguro), su responsabilidad se limita a un deducible variable según el caso, más los gastos por remolque, almacenamiento, recuperación y un cargo razonable por la pérdida de uso. Al aceptar esto, el arrendatario (usted) conviene pagar una cuota adicional por día o fracción. Si el arrendatario (usted) no acepta, mediante sus iniciales, su responsabilidad no excederá el valor real de mercado del vehículo al momento de su pérdida/daño, más los gastos por remolque, almacenamiento, recuperación y un cobro razonable por la pérdida de uso a favor de la arrendante (Exclusiva Renta Autos).' },
         { id: 'pai', name: 'Seguro Personal de Accidente', dailyCost: 10, mandatory: false, selected: false, description: '<strong>Personal Accident Insurance (PAI)</strong> <br><br> Seguro médico para ocupantes.', popupDescription: ' Si el arrendatario (usted) acepta, mediante sus iniciales, conviene pagar una cuota adicional diaria (monto variable según tarifa vigente) por día de tracción. El arrendatario (usted) acepta haber leído un resumen de los términos, condiciones y límites de la póliza de la arrendante (Exclusiva Renta Autos). ' }
@@ -350,14 +367,14 @@ function initializeQuotationTool() {
                 currentQuoteDetails.rentalDays = finalRentalDays;
             } else {
                 finalTotal = dailyPriceForRentalDays * rentalDays + extraHoursCost;
-                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
+                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
                 summaryHTML += `<p>${Math.ceil(extraHours)} hora(s) extra x ${formatCurrency(extraHourPrice)}/hora = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
                 currentQuoteDetails.rentalDays = rentalDays;
             }
     
         } else {
             finalTotal = dailyPriceForRentalDays * rentalDays;
-            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
+            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
             currentQuoteDetails.rentalDays = rentalDays;
         }
     
@@ -601,4 +618,4 @@ function initializeQuotationTool() {
             } 
         }); 
     }
-  }
+}
