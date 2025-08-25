@@ -147,8 +147,6 @@ header {
   height: 24px;
 }
 
-
-/* Navigation - Mobile First */
 .nav {
   display: flex;
   justify-content: space-between;
@@ -187,7 +185,6 @@ header {
   transition: all 0.3s ease;
 }
 
-/* Mobile menu */
 .nav__menu {
   display: none;
   position: absolute;
@@ -230,7 +227,6 @@ header {
   color: var(--primary-color);
 }
 
-/* Auth buttons - hidden on mobile */
 .nav__auth {
   display: none;
 }
@@ -328,7 +324,24 @@ header {
   opacity: 0.7;
 }
 
-/* Desktop styles */
+.footer__developer {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+.footer__developer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.footer__developer a:hover {
+  opacity: 1;
+}
+
 
 @media (min-width: 1024px) {
 

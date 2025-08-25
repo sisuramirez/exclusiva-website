@@ -155,7 +155,6 @@ body {
   height: 24px;
 }
 
-/* Hero Section - Mobile */
 .hero {
   padding: 2rem 1.5rem;
   position: relative;
@@ -175,19 +174,19 @@ body {
 }
 
 .hero__image-container {
-  display: block; /* Changed from 'none' to 'block' */
+  display: block;
   width: 100%;
-  height: 250px; /* Fixed height */
+  height: 250px;
   position: relative;
-  order: 2; /* Image comes after content */
+  order: 2;
   overflow: hidden;
 }
 
 .hero__image-container img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Maintains aspect ratio */
-  object-position: center bottom; /* Positions image at the bottom center */
+  object-fit: contain;
+  object-position: center bottom;
   max-width: 500px;
   margin: 0 auto;
   display: block;
@@ -222,18 +221,16 @@ body {
   margin-bottom: 65px;
 }
 
-/* How It Works Section */
-
 .how-it-works__step:nth-child(1) {
-  order: 3; /* El elemento que estaba primero (ubicación) ahora va tercero */
+  order: 3;
 }
 
 .how-it-works__step:nth-child(2) {
-  order: 2; /* El elemento que estaba segundo (requisitos) se mantiene segundo */
+  order: 2;
 }
 
 .how-it-works__step:nth-child(3) {
-  order: 1; /* El elemento que estaba tercero (vehículos) ahora va primero */
+  order: 1;
 }
 
 .how-it-works {
@@ -273,13 +270,10 @@ body {
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.05);
   margin-top: 10px;
-  height: 500px; /* Altura fija para todas las tarjetas */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 0;
   width: 100%;
- 
+  padding: 40px 25px;
 }
 
 .how-it-works__step:hover {
@@ -325,14 +319,14 @@ body {
   object-fit: contain;
 }
 
-/* Contenido de los pasos */
 .step-content {
   width: 100%;
   position: relative;
-  padding: 0 25px 40px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  align-items: center;
+  justify-content: center
 }
 
 
@@ -352,14 +346,12 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Estilos específicos para la ubicación */
 .location-address {
   color: var(--step-description-color, #666);
   font-weight: 500;
   margin: 10px 0 20px;
 }
 
-/* Botones de mapas */
 .map-buttons {
   display: flex;
   justify-content: center;
@@ -428,8 +420,6 @@ body {
   background-color: rgba(51, 204, 255, 0.1);
 }
 
-
-/* Estilos para la lista de requisitos */
 .requisitos-list {
   list-style: none;
   padding: 0;
@@ -453,30 +443,28 @@ body {
   border-bottom: none;
 }
 
-/* Estilos para los tipos de vehículos */
 .vehicle-types {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  margin-top: 10px;
+  list-style: none;
+  padding: 0;
+  text-align: center;
+  margin: 20px 0;
+  width: 100%;
 }
 
 .vehicle-type {
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   color: var(--step-description-color, #666);
   font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
+.vehicle-types .vehicle-type:last-child {
+  border-bottom: none;
+}
 
 .catalog-link {
   display: inline-block;
-  margin-top: auto;
   color: white;
   background-color: var(--primary-color, #5a9bd5);
   padding: 12px 24px;
@@ -485,9 +473,9 @@ body {
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 90%;
+  max-width: 300px;
+  margin-top: 2rem;
 }
 
 .catalog-link:hover {
@@ -496,9 +484,8 @@ body {
 }
 
 
-/* Are You Ready Section - Fixed Position Car */
 .are-you-ready {
-  background-color: #edf2f7; /* Fondo más claro y neutro */
+  background-color: #edf2f7;
   position: relative;
   overflow: hidden;
   padding: 2.5rem 0;
@@ -574,18 +561,16 @@ body {
   z-index: 1;
   pointer-events: none;
   display: flex;
-  justify-content: center; /* Centro horizontal */
-  align-items: center; /* Centro vertical */
+  justify-content: center;
+  align-items: center;
 }
 
-/* Hilux image positioning */
 .hilux-image {
-  display: none; /* Mantenemos oculta la Hilux */
+  display: none;
 }
 
-/* Red SUV image positioning */
 .red-suv-image {
-  position: relative; /* Cambiado de absolute a relative */
+  position: relative;
   width: 90%;
   max-width: 450px;
   height: auto;
@@ -593,8 +578,6 @@ body {
   opacity: 0.95;
   margin-top: 50px;
 }
-
-/* Desktop styles */
 
 @media (min-width: 1024px) {
 
@@ -686,6 +669,10 @@ body {
     flex: 1; 
     max-width: 500px;
   }
+
+  .requisitos-list li {
+    padding: 30px 0;
+  }
   
   .are-you-ready {
     padding: 4rem 2rem;
@@ -694,7 +681,7 @@ body {
   .are-you-ready__container {
     flex-direction: row;
     align-items: center;
-    min-height: 500px; /* Altura mínima para dar espacio a la imagen */
+    min-height: 500px;
   }
   
   .are-you-ready__content {

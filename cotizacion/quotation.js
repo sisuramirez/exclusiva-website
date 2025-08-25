@@ -288,7 +288,6 @@ function initializeQuotationTool() {
         selectedCar = null;
     }
 
-    // LÓGICA DE COTIZACIÓN ACTUALIZADA
     function calculateAndDisplayQuote() {
         const startDateValue = startDateInput.value;
         const endDateValue = endDateInput.value;
@@ -310,11 +309,9 @@ function initializeQuotationTool() {
             return false;
         }
     
-        // Calcula la duración en milisegundos y horas
         const durationMs = endDate.getTime() - startDate.getTime();
         const durationHours = durationMs / (1000 * 60 * 60);
     
-        
         const MIN_RENTAL_HOURS = 48;
         if (durationHours < MIN_RENTAL_HOURS) {
             quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días (48 horas).</p>`;
@@ -322,12 +319,9 @@ function initializeQuotationTool() {
             return false;
         }
         
-    
-        // Días completos y horas extra
         const fullDays = Math.floor(durationHours / 24);
         const extraHours = durationHours % 24;
         
-        // Asegura un mínimo de 1 día si la duración es menor
         const rentalDays = fullDays > 0 ? fullDays : 1;
         const dailyPriceForRentalDays = getDynamicDailyPrice(selectedCar, rentalDays);
     
@@ -338,20 +332,15 @@ function initializeQuotationTool() {
             let extraHourPrice = 0;
             const category = selectedCar.category;
             
-            // Define el precio de la hora extra según la categoría
             if (category === "Sedanes") {
                 extraHourPrice = 10;
             } else {
-                // Crossovers, SUVs, Pick-ups, Microbuses
                 extraHourPrice = 20;
             }
     
             const extraHoursCost = Math.ceil(extraHours) * extraHourPrice;
-    
-            // Obtener el precio diario si se alquilara por un día más
             const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
     
-            // Compara el costo de las horas extra con el precio de un día adicional
             if (extraHoursCost >= nextDayPrice) {
                 const finalRentalDays = rentalDays + 1;
                 const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
@@ -367,7 +356,6 @@ function initializeQuotationTool() {
             }
     
         } else {
-            // Lógica para días completos sin horas extra
             finalTotal = dailyPriceForRentalDays * rentalDays;
             summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
             currentQuoteDetails.rentalDays = rentalDays;
@@ -392,14 +380,37 @@ function initializeQuotationTool() {
         return true;
     }
     
-    
     displayCars();
     filterButtons.forEach(button => { button.addEventListener('click', () => { const filterValue = button.dataset.filter; filterButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); displayCars(filterValue); }); });
     backBtn.addEventListener('click', backToCatalog);
     calculateBtn.addEventListener('click', (event) => { event.preventDefault(); calculateAndDisplayQuote(); });
+    
     flatpickr.localize(flatpickr.l10ns.es);
-    const datePickerConfig = { altInput: true, altFormat: "d/m/Y", dateFormat: "Y-m-d", minDate: "today" };
-    const timePickerConfig = { enableTime: true, noCalendar: true, altInput: true, altFormat: "h:i K", dateFormat: "H:i", time_24hr: false };
+    
+    const datePickerConfig = { 
+        altInput: true, 
+        altFormat: "d/m/Y", 
+        dateFormat: "Y-m-d", 
+        minDate: "today" 
+    };
+    
+    const timePickerConfig = {
+        enableTime: true,
+        noCalendar: true,
+        altInput: true,
+        altFormat: "h:i K",
+        dateFormat: "H:i",
+        time_24hr: false,
+        onReady: function(selectedDates, dateStr, instance) {
+            const doneBtn = document.createElement('button');
+            doneBtn.textContent = 'Seleccionar Hora';
+            doneBtn.className = 'flatpickr-done-btn';
+            doneBtn.addEventListener('click', () => {
+                instance.close();
+            });
+            instance.calendarContainer.appendChild(doneBtn);
+        }
+    };
     
     const endDatePicker = flatpickr("#end-date", { 
         ...datePickerConfig, 
