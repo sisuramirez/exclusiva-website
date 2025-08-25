@@ -1,0 +1,447 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --panel-bg: #f4f7fa;
+  --panel-header-bg: #ffffff;
+  --panel-primary-color: #2c3e50;
+  --panel-secondary-color: #3498db;
+  --panel-accent-color: #2980b9;
+  --panel-text-color: #333;
+  --panel-light-text: #7f8c8d;
+  --panel-card-bg: #ffffff;
+  --panel-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --panel-border-color: #e0e6ed;
+  --status-active-bg: #2ecc71;
+  --status-inactive-bg: #e74c3c;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--panel-bg);
+  color: var(--panel-text-color);
+}
+
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.login-box {
+  background: var(--panel-header-bg);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: var(--panel-shadow);
+  text-align: center;
+}
+
+.login-logo {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+.login-box h2 {
+  margin-bottom: 25px;
+  color: var(--panel-primary-color);
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--panel-light-text);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--panel-border-color);
+  border-radius: 6px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  background-color: var(--panel-secondary-color);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: var(--panel-accent-color);
+}
+
+.error-message {
+  color: var(--status-inactive-bg);
+  background-color: rgba(231, 76, 60, 0.1);
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: -10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.container {
+  width: 85%;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.panel-header {
+  background-color: var(--panel-header-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 20px 0;
+}
+
+.panel-header .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.panel-logo {
+  height: 40px;
+}
+
+.panel-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.panel-nav span {
+  font-weight: 600;
+}
+
+.logout-link {
+  background-color: var(--panel-bg);
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--panel-primary-color);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.logout-link:hover {
+  background-color: #e8eef3;
+}
+
+.panel-main {
+  padding: 20px 0;
+}
+
+.panel-title-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.panel-title-bar h1 {
+  margin: 0;
+  color: var(--panel-primary-color);
+}
+
+.panel-button-primary {
+  background-color: var(--panel-secondary-color);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.panel-button-primary:hover {
+  background-color: var(--panel-accent-color);
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.car-card {
+  background-color: var(--panel-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--panel-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.car-card__status {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  z-index: 2;
+}
+
+.car-card__status.active {
+  background-color: var(--status-active-bg);
+}
+
+.car-card__status.inactive {
+  background-color: var(--status-inactive-bg);
+}
+
+.car-card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.car-card__content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.car-card__header {
+  margin-bottom: 15px;
+}
+
+.car-card__title {
+  font-size: 1.5rem;
+  color: var(--panel-text-color);
+  margin: 0 0 8px 0;
+}
+
+.car-card__category {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--panel-bg);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--panel-light-text);
+  font-weight: 600;
+}
+
+.car-card__price-info {
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--panel-border-color);
+}
+
+.car-card__price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--panel-text-color);
+  margin-bottom: 15px;
+  display: block;
+}
+
+.car-card__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.car-card-button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #f1c40f;
+  color: #333;
+}
+.edit-btn:hover {
+  background-color: #f39c12;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#modal-title {
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input, .form-group select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--panel-border-color);
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+.price-group {
+  grid-column: 1 / -1;
+}
+
+.price-group-main-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.price-group-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.price-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-input-container label {
+  font-size: 0.85rem;
+  color: var(--panel-light-text);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.modal-actions {
+  margin-top: 30px;
+  text-align: right;
+}
+
+@media (min-width: 700px) {
+  .panel-header {
+    padding: 0;
+  }
+
+  .panel-header .container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+  
+  .panel-nav {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .panel-main {
+    padding: 40px 0;
+  }
+
+  .panel-title-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .panel-button-primary {
+    width: auto;
+  }
+
+  .panel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+  
+  .modal-content {
+    padding: 30px 40px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
