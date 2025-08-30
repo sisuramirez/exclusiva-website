@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Exclusiva Renta Autos</title>
-    <link rel="stylesheet" href="panel.css">
+    <link rel="stylesheet" href="/admin/panel.css">
 </head>
 <body class="login-body">
     <div class="login-container">

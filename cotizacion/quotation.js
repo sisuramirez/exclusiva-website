@@ -158,13 +158,26 @@ function initializeEventListeners() {
 async function initializeQuotationTool() {
     let carsData = [];
     let insuranceAddOns = [];
-
+    let siteConfig = {};
+    
     try {
-        const response = await fetch('../api/admin/leer_autos.php?cache_bust=' + new Date().getTime());
-        if (!response.ok) {
-            throw new Error('No se pudieron cargar los datos de los vehículos.');
+        const [vehiclesResponse, configResponse] = await Promise.all([
+            fetch('../api/admin/leer_autos.php?cache_bust=' + new Date().getTime()),
+            fetch('../api/admin/leer_configuracion.php?cache_bust=' + new Date().getTime())
+        ]);
+
+        if (!vehiclesResponse.ok) throw new Error('No se pudieron cargar los datos de los vehículos.');
+        if (!configResponse.ok) throw new Error('No se pudo cargar la configuración del sitio.');
+
+        const vehiclesFromDB = await vehiclesResponse.json();
+        siteConfig = await configResponse.json();
+        
+        const minimumTimeP = document.getElementById('minimum-time');
+        if (minimumTimeP && siteConfig.dias_minimos_alquiler) {
+            const minDays = siteConfig.dias_minimos_alquiler;
+            const dayText = minDays > 1 ? 'días' : 'día';
+            minimumTimeP.textContent = `*La fecha de devolución debe ser al menos ${minDays} ${dayText} posterior a la fecha de inicio.*`;
         }
-        const vehiclesFromDB = await response.json();
 
         carsData = vehiclesFromDB
             .filter(car => car.activo == 1)
@@ -186,7 +199,7 @@ async function initializeQuotationTool() {
             }));
 
     } catch (error) {
-        console.error("Error al cargar vehículos:", error);
+        console.error("Error al cargar datos:", error);
         const catalogGrid = document.getElementById('catalog-grid');
         if(catalogGrid) {
             catalogGrid.innerHTML = '<p style="text-align: center; color: red;">No se pueden mostrar los vehículos en este momento. Por favor, intente más tarde.</p>';
@@ -292,10 +305,11 @@ async function initializeQuotationTool() {
                     <div class="quotation__car-spec"><span class="car-card__spec-icon">🔄</span><span class="quotation__car-spec-text">Transmisión: ${selectedCar.specs.transmission}</span></div>
                 </div>
             </div>`;
-        startDateInput.value = '';
-        endDateInput.value = '';
-        if (startTimeInput) startTimeInput.value = '';
-        if (endTimeInput) endTimeInput.value = '';
+        
+        startDatePicker.clear();
+        endDatePicker.clear();
+        startTimePicker.clear();
+        endTimePicker.clear();
         quotationResult.style.display = 'none';
     }
 
@@ -306,6 +320,9 @@ async function initializeQuotationTool() {
     }
 
     function calculateAndDisplayQuote() {
+        quotationResult.innerHTML = '';
+        quotationResult.style.display = 'block';
+    
         const startDateValue = startDateInput.value;
         const endDateValue = endDateInput.value;
         const startTimeValue = startTimeInput.value;
@@ -313,7 +330,6 @@ async function initializeQuotationTool() {
     
         if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
             quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
-            quotationResult.style.display = 'block';
             return false;
         }
     
@@ -321,41 +337,46 @@ async function initializeQuotationTool() {
         const endDate = new Date(`${endDateValue}T${endTimeValue}`);
     
         if (endDate <= startDate) {
-            quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio del alquiler.</p>`;
-            quotationResult.style.display = 'block';
+            quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio.</p>`;
             return false;
         }
     
-        const durationMs = endDate.getTime() - startDate.getTime();
-        const durationHours = durationMs / (1000 * 60 * 60);
-    
-        const MIN_RENTAL_HOURS = 48;
-        if (durationHours < MIN_RENTAL_HOURS) {
-            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de 2 días (48 horas).</p>`;
-            quotationResult.style.display = 'block';
+        const minRentalDays = parseInt(siteConfig.dias_minimos_alquiler, 10) || 2;
+        if ((endDate.getTime() - startDate.getTime()) < (minRentalDays * 24 * 60 * 60 * 1000 - 1)) {
+            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de ${minRentalDays} días.</p>`;
             return false;
         }
-        
-        const fullDays = Math.floor(durationHours / 24);
-        const extraHours = durationHours % 24;
-        
-        const rentalDays = fullDays > 0 ? fullDays : 1;
-        const dailyPriceForRentalDays = getDynamicDailyPrice(selectedCar, rentalDays);
+    
+        const startDay = new Date(startDate);
+        startDay.setHours(0, 0, 0, 0);
+        const endDay = new Date(endDate);
+        endDay.setHours(0, 0, 0, 0);
+    
+        let rentalDays = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+        if (rentalDays === 0) rentalDays = 1;
+    
+        const startTimeInMinutes = startDate.getHours() * 60 + startDate.getMinutes();
+        const endTimeInMinutes = endDate.getHours() * 60 + endDate.getMinutes();
+    
+        let extraHours = 0;
+        if (endTimeInMinutes > startTimeInMinutes) {
+            const diffMs = endDate.getTime() - startDate.getTime();
+            const totalHours = diffMs / (1000 * 60 * 60);
+            extraHours = Math.ceil(totalHours - (rentalDays * 24));
+            if(extraHours <= 0) extraHours = Math.ceil((endTimeInMinutes - startTimeInMinutes) / 60);
+        } else {
+             const diffMs = endDate.getTime() - startDate.getTime();
+             const totalDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+             rentalDays = totalDays;
+        }
     
         let finalTotal = 0;
         let summaryHTML = `<h4>Resumen de la Cotización</h4>`;
     
         if (extraHours > 0) {
-            let extraHourPrice = 0;
-            const category = selectedCar.category;
-            
-            if (category === "Sedanes") {
-                extraHourPrice = 10;
-            } else {
-                extraHourPrice = 20;
-            }
-    
-            const extraHoursCost = Math.ceil(extraHours) * extraHourPrice;
+            const basePriceForDays = getDynamicDailyPrice(selectedCar, rentalDays) * rentalDays;
+            let extraHourPrice = selectedCar.category === "Sedanes" ? 10 : 20;
+            const extraHoursCost = extraHours * extraHourPrice;
             const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
     
             if (extraHoursCost >= nextDayPrice) {
@@ -363,18 +384,23 @@ async function initializeQuotationTool() {
                 const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
                 finalTotal = finalDailyPrice * finalRentalDays;
                 summaryHTML += `<p>Alquiler: ${finalRentalDays} día(s) x ${formatCurrency(finalDailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
-                summaryHTML += `<small> </small>`;
+                summaryHTML += `<small class="date-change-notice">Nota: Se agregó un día completo en lugar de ${extraHours} horas extra, ya que resulta más económico para ti.</small>`;
                 currentQuoteDetails.rentalDays = finalRentalDays;
+                
+                const newEndDate = new Date(endDate);
+                newEndDate.setDate(newEndDate.getDate() + 1);
+                endDatePicker.setDate(newEndDate, false);
+    
             } else {
-                finalTotal = dailyPriceForRentalDays * rentalDays + extraHoursCost;
-                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
-                summaryHTML += `<p>${Math.ceil(extraHours)} hora(s) extra x ${formatCurrency(extraHourPrice)}/hora = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
+                finalTotal = basePriceForDays + extraHoursCost;
+                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) = <strong>${formatCurrency(basePriceForDays)}</strong></p>`;
+                summaryHTML += `<p>${extraHours} hora(s) extra = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
                 currentQuoteDetails.rentalDays = rentalDays;
             }
-    
         } else {
-            finalTotal = dailyPriceForRentalDays * rentalDays;
-            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPriceForRentalDays * rentalDays)}</strong></p>`;
+            const dailyPrice = getDynamicDailyPrice(selectedCar, rentalDays);
+            finalTotal = dailyPrice * rentalDays;
+            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
             currentQuoteDetails.rentalDays = rentalDays;
         }
     
@@ -382,7 +408,6 @@ async function initializeQuotationTool() {
         currentQuoteDetails.summaryHTML = summaryHTML;
     
         quotationResult.innerHTML = summaryHTML + `<hr><p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>` + `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
-        quotationResult.style.display = 'block';
     
         const proceedBtn = document.getElementById('proceed-to-form-btn');
         if (proceedBtn) {
@@ -393,10 +418,9 @@ async function initializeQuotationTool() {
                 }
             });
         }
-    
         return true;
     }
-    
+
     displayCars();
     filterButtons.forEach(button => { button.addEventListener('click', () => { const filterValue = button.dataset.filter; filterButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); displayCars(filterValue); }); });
     backBtn.addEventListener('click', backToCatalog);
@@ -435,7 +459,7 @@ async function initializeQuotationTool() {
         onChange: function() { quotationResult.style.display = 'none'; }
     });
     
-    flatpickr("#start-date", { 
+    const startDatePicker = flatpickr("#start-date", { 
         ...datePickerConfig, 
         onChange: function (selectedDates) { 
             if (selectedDates[0]) { 
@@ -447,14 +471,14 @@ async function initializeQuotationTool() {
         } 
     });
     
-    flatpickr("#start-time", { 
+    const startTimePicker = flatpickr("#start-time", { 
         ...timePickerConfig, 
         onChange: function () { 
             quotationResult.style.display = 'none'; 
         } 
     });
     
-    flatpickr("#end-time", { 
+    const endTimePicker = flatpickr("#end-time", { 
         ...timePickerConfig, 
         onChange: function () { 
             quotationResult.style.display = 'none'; 

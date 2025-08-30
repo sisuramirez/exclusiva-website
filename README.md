@@ -8,38 +8,59 @@ La arquitectura del frontend se basa en la carga dinámica de componentes reutil
 El proyecto se organiza en las siguientes carpetas y archivos principales:
 
 .
-├── ABOUT/                # Contiene la página "Sobre Nosotros"
-│   ├── index.html        #
-│   ├── doc.css           #
-│   └── doc.js            #
-├── COTIZACION/           # Contiene la aplicación de cotización y reserva
-│   ├── index.html        # (Archivo principal del cotizador)
-│   ├── quotation.css      #
-│   └── quotation.js      #
-├── api/                  # Backend para procesar reservas
-│   ├── vendor/           # Dependencias de Composer (generada)
+├── .htaccess             # Reglas del servidor Apache.
+├── .gitignore            # Archivos y carpetas ignorados por Git (muy importante).
+├── README.md             # Documentación actualizada del proyecto.
+├── header.html           # Componente de cabecera reutilizable.
+├── footer.html           # Componente de pie de página reutilizable.
+├── header-footer.css     # Estilos para la cabecera y pie de página.
+├── index.html            # Página de inicio (Landing Page).
+├── main.js               # Lógica principal de la página de inicio.
+└── style.css             # Estilos principales de la página de inicio.
+|
+├── ABOUT/                # Carpeta para la página "Sobre Nosotros".
+│   ├── index.html
+│   ├── doc.css
+│   └── doc.js
+|
+├── admin/                # [NUEVO] Panel de administración del CRUD (Frontend).
+│   ├── index.php         # Página de login para administradores.
+│   ├── auth.php          # Lógica para verificar el login contra la base de datos.
+│   ├── panel.php         # Panel principal para ver, crear, editar y eliminar vehículos.
+│   ├── panel.js          # Lógica JavaScript para las operaciones del panel.
+│   ├── panel.css         # Estilos para el panel de administración.
+│   └── logout.php        # Script para cerrar la sesión del administrador.
+|
+├── api/                  # Carpeta para toda la lógica del backend.
+│   ├── composer.json     # Define las dependencias de PHP (PHPMailer).
+│   ├── config.php        # [MODIFICADO] Configuración de SMTP y Base de Datos.
+│   ├── reservar.php      # API original para procesar las reservas de los clientes.
+│   │
+│   ├── admin/            # [NUEVO] API para las funciones del CRUD.
+│   │   ├── conexion.php
+│   │   ├── crear_auto.php
+│   │   ├── leer_autos.php
+│   │   ├── actualizar_auto.php
+│   │   └── eliminar_auto.php
+│   │
 │   ├── templates/
-│   │   └── email_template_cliente.html #
-│   ├── config.php        #
-│   ├── reservar.php      #
-│   └── composer.json     #
-├── css/                  # (No provisto, pero asumido para estilos comunes si existiera)
-├── img/                  # (No provisto, pero contiene todas las imágenes)
-├── js/                   # (No provisto, pero asumido para scripts comunes si existiera)
-├── .htaccess             #
-├── header.html           # 
-├── footer.html           #
-├── header-footer.css     #
-├── index.html            # Página de inicio (Landing Page)
-├── main.js               #
-└── style.css             # (No provisto en la última carga, pero existente)
+│   │   └── email_template_cliente.html
+│   │
+│   └── vendor/           # Carpeta generada por Composer con las librerías (ej. PHPMailer).
+|
+├── COTIZACION/           # Aplicación de cotización para clientes.
+│   ├── index.html
+│   ├── quotation.css
+│   └── quotation.js      # [MODIFICADO] Ahora carga los vehículos desde la API.
+|
+└── uploads/              # [NUEVO] Carpeta donde se guardan las imágenes de los vehículos subidas desde el panel.
 3. Dependencias
 Frontend
 No requiere un gestor de paquetes como npm o yarn.
-
 Utiliza la librería flatpickr para los selectores de fecha y hora en el cotizador, que debe estar enlazada en el HTML correspondiente.
 
 Backend
+
 PHP 7.4 o superior.
 
 Composer para la gestión de dependencias.
@@ -49,108 +70,79 @@ PHPMailer: La única dependencia PHP, definida en api/composer.json.
 4. Configuración
 Para que el proyecto funcione correctamente, es crucial configurar los siguientes archivos:
 
-a) Configuración del Backend (SMTP)
-El archivo api/config.php contiene las credenciales para conectarse al servidor de correo SMTP. Es imperativo completar estos datos para que el sistema de reservas pueda enviar correos.
+a) Configuración del Backend (SMTP y Base de Datos)
+El archivo api/config.php ahora contiene las credenciales tanto para el servidor de correo SMTP como para la conexión a la base de datos MySQL. Es imperativo completar estos datos.
 
-api/config.php
-
-PHP
-
-<?php
-
-define('SMTP_HOST', 'tu_servidor_smtp.com'); // Host de tu proveedor de correo
-define('SMTP_PORT', 465);                    // Puerto (465 para SSL)
-define('SMTP_USER', 'tu_usuario@tudominio.com'); // Usuario SMTP
-define('SMTP_PASS', 'tu_contraseña_smtp');       // Contraseña de la aplicación o del usuario
-define('SMTP_SECURE', 'ssl');                // Protocolo de seguridad (ssl o tls)
-
-define('EMAIL_EMPRESA', 'notificaciones@tudominio.com'); // Email que recibe las notificaciones
-define('NOMBRE_EMPRESA', 'Exclusiva Renta Autos');
 b) Configuración de Orígenes Cruzados (CORS)
 El endpoint de la API en api/reservar.php tiene un origen permitido hardcodeado para aceptar peticiones solo desde el dominio del frontend. Si el dominio cambia, esta línea debe ser actualizada.
 
-api/reservar.php
-
-PHP
-
-// --- CONFIGURACIÓN DE CORS ---
-$origen_permitido = 'https://tu-dominio-frontend.com'; // <-- ACTUALIZAR ESTE DOMINIO
 c) Configuración del Endpoint en el Frontend
 El script del cotizador COTIZACION/quotation.js contiene la URL hardcodeada del endpoint de la API. Si la ubicación de la API cambia, esta URL debe ser actualizada.
 
-COTIZACION/quotation.js
-
-JavaScript
-
-// ...
-const response = await fetch('https://tu-dominio.com/api/reservar.php', { // <-- ACTUALIZAR ESTA URL
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' }, 
-    body: JSON.stringify(data) 
-});
-// ...
-5. Instalación y Ejecución
-Clonar o descargar el proyecto en el directorio raíz de un servidor web (ej. Apache, Nginx).
-
-Asegurarse de que el servidor tiene soporte para PHP.
-
-Navegar al directorio /api a través de la línea de comandos: cd api.
-
-Instalar las dependencias de PHP ejecutando: composer install. Esto creará la carpeta vendor/ y el autoloader.
-
-Configurar las credenciales SMTP en api/config.php.
-
-Ajustar las URLs de CORS y del endpoint si es necesario (ver punto 4).
-
-Acceder al sitio a través del dominio configurado en el servidor web.
-
-6. Flujo de la Aplicación
+5. Flujo de la Aplicación
 Carga de Componentes
 Cada página principal (index.html, COTIZACION/index.html, ABOUT/index.html) tiene un script (main.js, quotation.js, doc.js) que ejecuta una función para cargar dinámicamente el contenido de header.html y footer.html.
 
-Esta función usa fetch() para obtener el contenido y lo inyecta en los placeholders <header id="header-placeholder"> y <footer id="footer-placeholder">.
-
-Una vez cargados, se inicializan los event listeners para los elementos de estos componentes (menú hamburguesa, modal de contacto, etc.).
-
 Lógica del Cotizador (COTIZACION/quotation.js)
-Datos de Vehículos: La lista de vehículos, seguros y sus precios está hardcodeada como un array de objetos JavaScript al inicio del script.
 
-Renderizado: La función displayCars genera dinámicamente las tarjetas de los vehículos en el grid.
+Datos de Vehículos: La lista de vehículos ahora se carga dinámicamente mediante una llamada fetch al endpoint /api/admin/leer_autos.php.
 
-Cálculo: La función calculateAndDisplayQuote toma las fechas y horas para calcular el total de días y horas extra, determinando el subtotal de la renta.
+Renderizado: La función displayCars genera las tarjetas de los vehículos en el grid a partir de los datos recibidos de la API.
 
-Formulario de Cliente: Tras calcular el costo, el usuario avanza a un formulario donde introduce sus datos personales y selecciona seguros opcionales.
-
-Envío a API: Al enviar el formulario, se recopilan todos los datos en un objeto JSON que se envía mediante fetch al endpoint api/reservar.php.
+Resto del flujo: El cálculo de la cotización y el envío del formulario de reserva al endpoint api/reservar.php continúan sin cambios.
 
 Proceso del Backend (api/reservar.php)
-Recepción: El script recibe la petición POST con el cuerpo en formato JSON.
+El flujo de este archivo para procesar una reserva y enviar correos no ha cambiado.
 
-Correo Interno:
+8. Actualización: Implementación de CRUD y Mantenimiento
+Esta sección detalla las mejoras implementadas para convertir la lista de vehículos de un dato estático a un sistema dinámico gestionado por un panel de administración (CRUD).
 
-Crea una instancia de PHPMailer.
+Resumen de Cambios
+Base de Datos MySQL: Se ha migrado toda la información de los vehículos a una base de datos MySQL. Esto permite una gestión centralizada y escalable del inventario.
 
-Genera un archivo CSV en memoria con todos los detalles de la reserva.
+Panel de Administración (CRUD): Se ha creado un panel de control protegido por contraseña en la ruta /admin. Este panel permite:
 
-Envía un correo electrónico a la dirección de la empresa (EMAIL_EMPRESA) con el archivo CSV adjunto.
+Crear nuevos vehículos.
 
-Correo al Cliente:
+Leer (visualizar) todos los vehículos existentes.
 
-Crea una segunda instancia de PHPMailer.
+Actualizar la información y precios de cualquier vehículo.
 
-Carga la plantilla HTML de templates/email_template_cliente.html.
+Eliminar vehículos del inventario.
 
-Reemplaza los placeholders (ej. {nombreCliente}, {nombreVehiculo}) con los datos recibidos.
+Cotizador Dinámico: El cotizador público en la sección COTIZACION/ ya no usa una lista manual en JavaScript. Ahora carga la información de los vehículos directamente desde la base de datos a través de una API, mostrando únicamente los vehículos marcados como "activos".
 
-Envía el correo de confirmación al email del cliente.
+Seguridad Mejorada: El acceso al panel de administración se realiza a través de una tabla usuarios en la base de datos, con contraseñas almacenadas de forma segura mediante hashing.
 
-Respuesta: Devuelve una respuesta JSON al frontend con un estado de success o error.
+Cómo Mantener el Inventario de Vehículos
+Toda la gestión de tu flota de vehículos se realiza ahora a través del panel de administración.
 
-7. Notas del Contribuidor
-Datos Hardcodeados: La lista de vehículos y sus precios está definida directamente en COTIZACION/quotation.js. Para facilitar la gestión, se podría refactorizar para que estos datos se carguen desde un archivo JSON externo o una base de datos.
+Acceso: Ingresa a https://tudominio.com/admin.
 
-Seguridad de Credenciales: Las credenciales SMTP están en api/config.php. Este archivo no debe ser expuesto públicamente. En un entorno de producción más robusto, se recomienda usar variables de entorno para gestionar estos secretos.
+Login: Utiliza el usuario y la contraseña que creaste en la tabla usuarios.
 
-Manejo de Errores: El manejo de errores es básico. Se podría mejorar con un sistema de logging más detallado en el backend y mensajes de error más específicos para el usuario en el frontend.
+Gestión:
 
+Para añadir un auto, usa el botón "Añadir Auto".
 
+Para editar o eliminar un auto, utiliza los botones correspondientes en la tarjeta de cada vehículo.
+
+Los cambios que guardes se reflejarán inmediatamente en la página pública del cotizador.
+
+Instalación y Configuración (Versión con CRUD)
+El proceso de configuración ahora incluye la base de datos:
+
+Base de Datos: Crea una base de datos MySQL y ejecuta los scripts SQL para crear las tablas vehiculos y usuarios.
+
+Crear Admin: Inserta al menos un usuario en la tabla usuarios, asegurándote de usar password_hash() para generar una contraseña segura.
+
+Archivo api/config.php: Este archivo ahora es más importante que nunca. Debes rellenar tanto las credenciales SMTP como las credenciales de la base de datos: DB_HOST, DB_NAME, DB_USER, DB_PASS.
+
+Control de Versiones: Es fundamental añadir api/config.php y la carpeta /uploads/ al archivo .gitignore para no subir información sensible a repositorios como GitHub.
+
+Mejoras de Seguridad Implementadas
+Autenticación Basada en Base de Datos: Las credenciales de acceso al panel ya no están en el código.
+
+Hashing de Contraseñas: Se utiliza password_hash() y password_verify() de PHP, el estándar actual para el manejo seguro de contraseñas.
+
+Prevención de Inyección SQL: Las consultas a la base de datos en la API del CRUD utilizan sentencias preparadas para evitar ataques de inyección SQL.

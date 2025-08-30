@@ -402,6 +402,19 @@ body {
   text-align: right;
 }
 
+.config-form-container {
+  background-color: var(--panel-card-bg);
+  box-shadow: var(--panel-shadow);
+  padding: 25px 20px;
+  border-radius: 12px;
+  margin-top: -15px; 
+  margin-bottom: 40px; 
+
+  display: flex;
+  flex-direction: column; 
+  gap: 20px; 
+}
+
 @media (min-width: 700px) {
   .panel-header {
     padding: 0;
@@ -443,5 +456,27 @@ body {
   
   .form-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .config-form-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+  }
+
+  .config-form-container .form-group {
+    flex-direction: row; 
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .config-form-container .form-group label {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .config-form-container #dias-minimos-input {
+    width: 100px;
   }
 }

@@ -34,7 +34,20 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <div id="vehicle-grid" class="panel-grid">
             </div>
         </div>
-    </main>
+
+        <div class="container">
+            <div class="panel-title-bar">
+                <h1>Configuración General</h1>
+            </div>
+            <div class="config-form-container">
+                <div class="form-group">
+                    <label for="dias-minimos-input">Días mínimos de alquiler:</label>
+                    <input type="number" id="dias-minimos-input" min="1">
+                </div>
+                <button id="guardar-config-btn" class="panel-button-primary">Guardar Configuración</button>
+            </div>
+        </div>
+        </main>
 
     <div id="vehicle-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
@@ -89,7 +102,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <input type="file" id="imagen_archivo" name="imagen_archivo" accept="image/jpeg, image/png, image/webp">
                     </div>
                     <div class="form-group">
-                        <label for="espec_ac">Aire Acondicionado</label>
+                        <label for="espec_ac">Aire Aconidicionado</label>
                         <select id="espec_ac" name="espec_ac" required>
                             <option value="Sí">Sí</option>
                             <option value="No">No</option>
