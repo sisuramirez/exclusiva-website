@@ -10,18 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'] ?? '';
     $categoria = $_POST['categoria'] ?? '';
     $precio_1_2_dias = $_POST['precio_1_2_dias'] ?? 0;
-    // ... Obtener todos los demás campos de $_POST ...
+    $precio_3_4_dias = $_POST['precio_3_4_dias'] ?? 0;
+    $precio_5_6_dias = $_POST['precio_5_6_dias'] ?? 0;
+    $precio_semana = $_POST['precio_semana'] ?? 0;
+    $precio_15_dias = $_POST['precio_15_dias'] ?? 0;
+    $precio_mes = $_POST['precio_mes'] ?? 0;
+    $espec_ac = $_POST['espec_ac'] ?? '';
+    $espec_combustible = $_POST['espec_combustible'] ?? '';
+    $espec_transmision = $_POST['espec_transmision'] ?? '';
     
-    $image_path = ''; // Inicializamos la ruta de la imagen
+    $image_path = '';
 
-    // Verificamos si se subió un archivo
     if (isset($_FILES['imagen_archivo']) && $_FILES['imagen_archivo']['error'] == 0) {
-        $upload_dir = '../../uploads/'; // La ruta a nuestra carpeta de subidas (sube dos niveles desde api/admin/)
+        $upload_dir = '../../uploads/';
         $file_name = uniqid() . '-' . basename($_FILES['imagen_archivo']['name']);
         $target_file = $upload_dir . $file_name;
-        $db_path = 'uploads/' . $file_name; // Esta es la ruta que guardaremos en la BD
+        $db_path = 'uploads/' . $file_name;
 
-        // Mover el archivo subido a nuestro directorio de uploads
         if (move_uploaded_file($_FILES['imagen_archivo']['tmp_name'], $target_file)) {
             $image_path = $db_path;
         } else {
@@ -30,28 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        // Si no se subió imagen, podemos asignar una por defecto o simplemente dejarlo vacío
-        $image_path = 'path/to/default/image.jpg'; // Opcional: cambia esto a una imagen por defecto
+        $image_path = 'path/to/default/image.jpg';
     }
 
-    // Ahora insertamos en la base de datos, usando la variable $image_path
-    $sql = "INSERT INTO vehiculos (nombre, categoria, precio_1_2_dias, precio_3_6_dias, precio_semana, precio_15_dias, precio_mes, url_imagen, espec_ac, espec_combustible, espec_transmision) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO vehiculos (nombre, categoria, precio_1_2_dias, precio_3_4_dias, precio_5_6_dias, precio_semana, precio_15_dias, precio_mes, url_imagen, espec_ac, espec_combustible, espec_transmision) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conexion->prepare($sql);
     
     $stmt->bind_param(
-        "ssddddsssss", 
-        $_POST['nombre'],
-        $_POST['categoria'],
-        $_POST['precio_1_2_dias'],
-        $_POST['precio_3_6_dias'],
-        $_POST['precio_semana'],
-        $_POST['precio_15_dias'],
-        $_POST['precio_mes'],
-        $image_path, // Usamos la ruta del archivo que procesamos
-        $_POST['espec_ac'],
-        $_POST['espec_combustible'],
-        $_POST['espec_transmision']
+        "ssddddddssss", 
+        $nombre,
+        $categoria,
+        $precio_1_2_dias,
+        $precio_3_4_dias,
+        $precio_5_6_dias,
+        $precio_semana,
+        $precio_15_dias,
+        $precio_mes,
+        $image_path,
+        $espec_ac,
+        $espec_combustible,
+        $espec_transmision
     );
     
     if ($stmt->execute()) {

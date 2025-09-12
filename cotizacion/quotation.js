@@ -186,7 +186,8 @@ async function initializeQuotationTool() {
                 name: car.nombre,
                 category: car.categoria,
                 "DE 1 A 2 DIAS": parseFloat(car.precio_1_2_dias),
-                "DE 3 A 6 DIAS": parseFloat(car.precio_3_6_dias),
+                "DE 3 A 4 DIAS": parseFloat(car.precio_3_4_dias),
+                "DE 5 A 6 DIAS": parseFloat(car.precio_5_6_dias),
                 "1 SEMANA": parseFloat(car.precio_semana),
                 "15 DIAS": parseFloat(car.precio_15_dias),
                 "1 MES": parseFloat(car.precio_mes),
@@ -235,11 +236,13 @@ async function initializeQuotationTool() {
     function getDynamicDailyPrice(vehicle, rentalDays) {
         if (rentalDays <= 2) {
             return vehicle["DE 1 A 2 DIAS"];
-        } else if (rentalDays <= 6) {
-            return vehicle["DE 3 A 6 DIAS"];
-        } else if (rentalDays <= 14) {
+        } else if (rentalDays >= 3 && rentalDays <= 4) {
+            return vehicle["DE 3 A 4 DIAS"];
+        } else if (rentalDays >= 5 && rentalDays <= 6) {
+            return vehicle["DE 5 A 6 DIAS"];
+        } else if (rentalDays >= 7 && rentalDays <= 14) {
             return vehicle["1 SEMANA"];
-        } else if (rentalDays <= 29) {
+        } else if (rentalDays >= 15 && rentalDays <= 29) {
             return vehicle["15 DIAS"];
         } else {
             return vehicle["1 MES"];

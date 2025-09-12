@@ -80,19 +80,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                                 <input type="number" id="precio_1_2_dias" step="0.01" name="precio_1_2_dias" required>
                             </div>
                             <div class="price-input-container">
-                                <label for="precio_3_6_dias">Precio 3 - 6 días</label>
-                                <input type="number" id="precio_3_6_dias" step="0.01" name="precio_3_6_dias" required>
+                                <label for="precio_3_4_dias">Precio 3 - 4 días</label>
+                                <input type="number" id="precio_3_4_dias" step="0.01" name="precio_3_4_dias" required>
                             </div>
                             <div class="price-input-container">
-                                <label for="precio_semana">Precio 7 días</label>
+                                <label for="precio_5_6_dias">Precio 5 - 6 días</label>
+                                <input type="number" id="precio_5_6_dias" step="0.01" name="precio_5_6_dias" required>
+                            </div>
+                            <div class="price-input-container">
+                                <label for="precio_semana">Precio 7 - 14 días</label>
                                 <input type="number" id="precio_semana" step="0.01" name="precio_semana" required>
                             </div>
                             <div class="price-input-container">
-                                <label for="precio_15_dias">Precio 15 días</label>
+                                <label for="precio_15_dias">Precio 15 - 29 días</label>
                                 <input type="number" id="precio_15_dias" step="0.01" name="precio_15_dias" required>
                             </div>
                             <div class="price-input-container">
-                                <label for="precio_mes">Precio 30 días</label>
+                                <label for="precio_mes">Precio 30+ días</label>
                                 <input type="number" id="precio_mes" step="0.01" name="precio_mes" required>
                             </div>
                         </div>

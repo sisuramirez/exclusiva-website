@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('nombre').value = vehicle.nombre;
                 document.getElementById('categoria').value = vehicle.categoria;
                 document.querySelector('[name="precio_1_2_dias"]').value = vehicle.precio_1_2_dias;
-                document.querySelector('[name="precio_3_6_dias"]').value = vehicle.precio_3_6_dias;
+                document.querySelector('[name="precio_3_4_dias"]').value = vehicle.precio_3_4_dias;
+                document.querySelector('[name="precio_5_6_dias"]').value = vehicle.precio_5_6_dias;
                 document.querySelector('[name="precio_semana"]').value = vehicle.precio_semana;
                 document.querySelector('[name="precio_15_dias"]').value = vehicle.precio_15_dias;
                 document.querySelector('[name="precio_mes"]').value = vehicle.precio_mes;
@@ -91,6 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(vehicleForm);
         const id = formData.get('id');
         const url = id ? `${API_URL}actualizar_auto.php` : `${API_URL}crear_auto.php`;
+        
+        // Validación de campos numéricos
+        const priceFields = ['precio_1_2_dias', 'precio_3_4_dias', 'precio_5_6_dias', 'precio_semana', 'precio_15_dias', 'precio_mes'];
+        for (const field of priceFields) {
+            const value = formData.get(field);
+            if (isNaN(parseFloat(value)) || parseFloat(value) < 0) {
+                alert(`Por favor, introduce un valor numérico válido y positivo para ${field}.`);
+                return;
+            }
+        }
   
         try {
             const response = await fetch(url, {
