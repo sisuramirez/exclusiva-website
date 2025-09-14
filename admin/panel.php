@@ -135,6 +135,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         </div>
     </div>
 
-    <script src="panel.js"></script>
+    <script src="panel.js?v=<?php echo filemtime('panel.js'); ?>"></script>
 </body>
 </html>
