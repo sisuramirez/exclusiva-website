@@ -457,7 +457,7 @@ async function initializeQuotationTool() {
         altFormat: "d/m/Y",
         dateFormat: "Y-m-d",
         minDate: "today",
-        disableMobile: true
+        disableMobile: false
     };
 
     const timePickerConfig = {
@@ -467,7 +467,7 @@ async function initializeQuotationTool() {
         altFormat: "h:i K",
         dateFormat: "H:i",
         time_24hr: false,
-        disableMobile: true,
+        disableMobile: false,
         onReady: function(selectedDates, dateStr, instance) {
             if (instance.calendarContainer) {
                 const doneBtn = document.createElement('button');
