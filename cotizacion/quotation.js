@@ -297,22 +297,26 @@ async function initializeQuotationTool() {
     function showQuotationSection() {
         document.querySelector('.catalog').style.display = 'none';
         quotationSection.style.display = 'block';
-        selectedCarInfo.innerHTML = `
-            <img src="${selectedCar.imageUrl}" alt="${selectedCar.name}" class="quotation__car-image">
-            <div class="quotation__car-details">
-                <h3 class="quotation__car-title">${selectedCar.name}</h3>
-                <span class="quotation__car-category">${selectedCar.category}</span>
-                <div class="quotation__car-specs">
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">❄️</span><span class="quotation__car-spec-text">Aire acondicionado: ${selectedCar.specs.airConditioner}</span></div>
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">⛽</span><span class="quotation__car-spec-text">Combustible: ${selectedCar.specs.fuel}</span></div>
-                    <div class="quotation__car-spec"><span class="car-card__spec-icon">🔄</span><span class="quotation__car-spec-text">Transmisión: ${selectedCar.specs.transmission}</span></div>
-                </div>
-            </div>`;
-        
+
+        if (selectedCar) {
+            selectedCarInfo.innerHTML = `
+                <img src="${selectedCar.imageUrl}" alt="${selectedCar.name}" class="quotation__car-image">
+                <div class="quotation__car-details">
+                    <h3 class="quotation__car-title">${selectedCar.name}</h3>
+                    <span class="quotation__car-category">${selectedCar.category}</span>
+                    <div class="quotation__car-specs">
+                        <div class="quotation__car-spec"><span class="car-card__spec-icon">❄️</span><span class="quotation__car-spec-text">Aire acondicionado: ${selectedCar.specs.airConditioner}</span></div>
+                        <div class="quotation__car-spec"><span class="car-card__spec-icon">⛽</span><span class="quotation__car-spec-text">Combustible: ${selectedCar.specs.fuel}</span></div>
+                        <div class="car-card__spec"><span class="car-card__spec-icon">🔄</span><span class="quotation__car-spec-text">Transmisión: ${selectedCar.specs.transmission}</span></div>
+                    </div>
+                </div>`;
+        }
+
         startDatePicker.clear();
         endDatePicker.clear();
-        startTimePicker.clear();
-        endTimePicker.clear();
+        startTimePicker.setDate('', false);
+        endTimePicker.setDate('', false);
+
         quotationResult.style.display = 'none';
     }
 
@@ -393,6 +397,24 @@ async function initializeQuotationTool() {
                 const newEndDate = new Date(endDate);
                 newEndDate.setDate(newEndDate.getDate() + 1);
                 endDatePicker.setDate(newEndDate, false);
+                endTimeInput.value = startTimeInput.value;
+                endTimePicker.setDate(startTimeInput.value, false);
+                const endDateParent = document.querySelector('#end-date').parentElement;
+                const endTimeParent = document.querySelector('#end-time').parentElement;
+                if (endDateParent) {
+                  endDateParent.classList.add('lightning-bolt');
+                }
+                if (endTimeParent) {
+                  endTimeParent.classList.add('lightning-bolt');
+                }
+                setTimeout(() => {
+                  if (endDateParent) {
+                    endDateParent.classList.remove('lightning-bolt');
+                  }
+                  if (endTimeParent) {
+                    endTimeParent.classList.remove('lightning-bolt');
+                  }
+                }, 2000);
     
             } else {
                 finalTotal = basePriceForDays + extraHoursCost;
@@ -411,16 +433,15 @@ async function initializeQuotationTool() {
         currentQuoteDetails.summaryHTML = summaryHTML;
     
         quotationResult.innerHTML = summaryHTML + `<hr><p class="quotation__total">Subtotal Estimado: <strong>${formatCurrency(finalTotal)}</strong></p>` + `<button id="proceed-to-form-btn" class="btn">Continuar y Reservar</button>`;
-    
+
         const proceedBtn = document.getElementById('proceed-to-form-btn');
         if (proceedBtn) {
             proceedBtn.addEventListener('click', (event) => {
                 event.preventDefault();
-                if (calculateAndDisplayQuote()) {
-                    showCustomerForm();
-                }
+                showCustomerForm();
             });
         }
+
         return true;
     }
 
@@ -430,14 +451,15 @@ async function initializeQuotationTool() {
     calculateBtn.addEventListener('click', (event) => { event.preventDefault(); calculateAndDisplayQuote(); });
     
     flatpickr.localize(flatpickr.l10ns.es);
-    
-    const datePickerConfig = { 
-        altInput: true, 
-        altFormat: "d/m/Y", 
-        dateFormat: "Y-m-d", 
-        minDate: "today" 
+
+    const datePickerConfig = {
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        disableMobile: true
     };
-    
+
     const timePickerConfig = {
         enableTime: true,
         noCalendar: true,
@@ -445,49 +467,52 @@ async function initializeQuotationTool() {
         altFormat: "h:i K",
         dateFormat: "H:i",
         time_24hr: false,
+        disableMobile: true,
         onReady: function(selectedDates, dateStr, instance) {
-            const doneBtn = document.createElement('button');
-            doneBtn.textContent = 'Seleccionar Hora';
-            doneBtn.className = 'flatpickr-done-btn';
-            doneBtn.addEventListener('click', () => {
-                instance.close();
-            });
-            instance.calendarContainer.appendChild(doneBtn);
+            if (instance.calendarContainer) {
+                const doneBtn = document.createElement('button');
+                doneBtn.textContent = 'Seleccionar Hora';
+                doneBtn.className = 'flatpickr-done-btn';
+                doneBtn.addEventListener('click', () => {
+                    instance.close();
+                });
+                instance.calendarContainer.appendChild(doneBtn);
+            }
         }
     };
-    
-    const endDatePicker = flatpickr("#end-date", { 
-        ...datePickerConfig, 
+
+    const endDatePicker = flatpickr("#end-date", {
+        ...datePickerConfig,
         minDate: new Date().fp_incr(1),
         onChange: function() { quotationResult.style.display = 'none'; }
     });
-    
-    const startDatePicker = flatpickr("#start-date", { 
-        ...datePickerConfig, 
-        onChange: function (selectedDates) { 
-            if (selectedDates[0]) { 
-                const minEndDate = new Date(selectedDates[0]); 
-                minEndDate.setDate(minEndDate.getDate() + 1); 
-                endDatePicker.set("minDate", minEndDate); 
-            } 
-            quotationResult.style.display = 'none'; 
-        } 
+
+    const startDatePicker = flatpickr("#start-date", {
+        ...datePickerConfig,
+        onChange: function (selectedDates) {
+            if (selectedDates[0]) {
+                const minEndDate = new Date(selectedDates[0]);
+                minEndDate.setDate(minEndDate.getDate() + 1);
+                endDatePicker.set("minDate", minEndDate);
+            }
+            quotationResult.style.display = 'none';
+        }
     });
-    
-    const startTimePicker = flatpickr("#start-time", { 
-        ...timePickerConfig, 
-        onChange: function () { 
-            quotationResult.style.display = 'none'; 
-        } 
+
+    const startTimePicker = flatpickr("#start-time", {
+        ...timePickerConfig,
+        onChange: function () {
+            quotationResult.style.display = 'none';
+        }
     });
-    
-    const endTimePicker = flatpickr("#end-time", { 
-        ...timePickerConfig, 
-        onChange: function () { 
-            quotationResult.style.display = 'none'; 
-        } 
+
+    const endTimePicker = flatpickr("#end-time", {
+        ...timePickerConfig,
+        onChange: function () {
+            quotationResult.style.display = 'none';
+        }
     });
-  
+   
     const customerFormSection = document.getElementById('customer-form-section');
     const backToQuoteBtn = document.getElementById('back-to-quote-btn');
     const customerForm = document.getElementById('customer-form');
@@ -501,7 +526,12 @@ async function initializeQuotationTool() {
     const addonsContainer = document.getElementById('addons-container');
     const finalTotalContainer = document.getElementById('final-total-container');
     const countryCodes = [{ name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" }, { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" }, { name: "Mexico", code: "+52" }, { name: "Spain", code: "+34" }];
-  
+   
+    let timerInterval;
+    const totalTimeInSeconds = 30 * 60;
+    const testIntervalSpeed = 1000;
+    let timeRemaining = totalTimeInSeconds;
+
     function populateCountryCodes() { if (!countryCodeSelect) return; countryCodes.forEach(country => { const option = document.createElement('option'); option.value = country.code; option.textContent = `${country.name} (${country.code})`; if (country.code === '+502') { option.selected = true; } countryCodeSelect.appendChild(option); }); }
     function handleLicenseOriginChange() { const otherRadio = document.querySelector('input[name="license-origin"][value="Otros"]'); licenseOriginOtherInput.style.display = otherRadio.checked ? 'block' : 'none'; licenseOriginOtherInput.required = otherRadio.checked; if (!otherRadio.checked) licenseOriginOtherInput.value = ''; }
     function handleDeliveryLocationChange() { const airportRadio = document.querySelector('input[name="delivery-location"][value="Aeropuerto"]'); flightDetailsFieldset.style.display = airportRadio.checked ? 'block' : 'none'; document.getElementById('airline-name').required = airportRadio.checked; document.getElementById('flight-number').required = airportRadio.checked; if (!airportRadio.checked) { document.getElementById('airline-name').value = ''; document.getElementById('flight-number').value = ''; } }
@@ -553,7 +583,7 @@ async function initializeQuotationTool() {
             button.dataset.id = addon.id;
             if (addon.selected) button.classList.add('selected');
             if (addon.mandatory) button.classList.add('mandatory');
-  
+   
             let displayCost = addon.dailyCost;
             if (addon.id === 'cdw' && selectedCar) {
                 const category = selectedCar.category;
@@ -565,7 +595,7 @@ async function initializeQuotationTool() {
                     displayCost = 10;
                 }
             }
-  
+   
             let buttonContent = '';
             if (addon.id === 'cdw') {
                 buttonContent += '<p class="basic-insurance-inline-label">Seguro Básico</p>';
@@ -581,7 +611,7 @@ async function initializeQuotationTool() {
     }
     function updateQuoteSummaryAndTotal() {
       if (!summaryQuoteInfo || !finalTotalContainer || !currentQuoteDetails.baseTotal) return;
-  
+
       let addonsTotal = 0;
       let addonsHTML = '<h4>Seguros y Extras</h4>';
       insuranceAddOns.forEach(addon => {
@@ -597,19 +627,19 @@ async function initializeQuotationTool() {
                       currentAddonDailyCost = 10;
                   }
               }
-  
+
               const addonCost = currentAddonDailyCost * currentQuoteDetails.rentalDays;
               addonsTotal += addonCost;
               addonsHTML += `<p>${addon.name}: <strong>${formatCurrency(addonCost)}</strong> <br> <small>(${currentQuoteDetails.rentalDays} día(s) x ${formatCurrency(currentAddonDailyCost)})</small></p>`;
           }
       });
-  
+
       const subTotal = currentQuoteDetails.baseTotal + addonsTotal;
       const taxes = subTotal * 0.12;
       const finalTotal = subTotal + taxes;
-  
+
       summaryQuoteInfo.innerHTML = currentQuoteDetails.summaryHTML + '<hr>' + addonsHTML;
-      
+
       finalTotalContainer.innerHTML = `
           <hr>
           <div class="summary-line">
@@ -627,22 +657,105 @@ async function initializeQuotationTool() {
               <strong class="total-amount">${formatCurrency(finalTotal)}</strong>
           </div>`;
     }
-    function showCustomerForm() { quotationSection.style.display = 'none'; customerFormSection.style.display = 'block'; summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML; renderInsuranceAddOns(); updateQuoteSummaryAndTotal(); window.scrollTo(0, 0); }
+
+    function showCustomerForm() {
+        quotationSection.style.display = 'none';
+        customerFormSection.style.display = 'block';
+        summaryCarInfo.innerHTML = document.getElementById('selected-car-info').innerHTML;
+        renderInsuranceAddOns();
+        updateQuoteSummaryAndTotal();
+        document.querySelector('.hero').style.display = 'none';
+        window.scrollTo(0, 0);
+        startTimer();
+    }
+    
+    function startTimer() {
+        const timerContainer = document.querySelector('.timer-container');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerBar = document.getElementById('timer-bar');
+
+        const tempMessage = document.createElement('div');
+        tempMessage.className = 'temp-message-container';
+        tempMessage.innerHTML = `<p>Este auto está reservado para ti durante los próximos 30 minutos. Completa tu reserva para asegurarlo.</p>`;
+        const customerFormHeader = document.querySelector('.customer-form-header');
+        customerFormHeader.parentNode.insertBefore(tempMessage, customerFormHeader.nextSibling);
+
+        tempMessage.style.cssText = 'background-color: #32aeb5; color: white; padding: 15px; border-radius: 8px; text-align: center; font-size: 1.1rem; font-weight: bold; margin: 20px 0; opacity: 0; transition: opacity 0.5s ease-in-out;';
+        tempMessage.style.display = 'block';
+        setTimeout(() => {
+            tempMessage.style.opacity = '1';
+        }, 10);
+        setTimeout(() => {
+            tempMessage.style.opacity = '0';
+            setTimeout(() => {
+                tempMessage.style.display = 'none';
+            }, 500);
+        }, 15000);
+        
+        customerFormHeader.parentNode.insertBefore(timerContainer, tempMessage.nextSibling);
+
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+        
+        const totalTimeInSeconds = 30 * 60;
+        const testIntervalSpeed = 1000;
+        let timeRemaining = totalTimeInSeconds;
+
+        timerContainer.style.display = 'flex';
+        timerContainer.classList.remove('expired');
+
+        const updateTimerVisuals = () => {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(seconds).padStart(2, '0');
+            timerDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
+            const percentage = (timeRemaining / totalTimeInSeconds) * 100;
+            timerBar.style.width = `${percentage}%`;
+
+            if (percentage <= 25) {
+                timerBar.style.backgroundColor = '#f44336';
+            } else if (percentage <= 50) {
+                timerBar.style.backgroundColor = '#ffc107';
+            } else {
+                timerBar.style.backgroundColor = '#ff9800';
+            }
+        };
+
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerVisuals();
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                timerContainer.classList.add('expired');
+                alert('¡El tiempo para tu reserva ha expirado! Por favor, cotiza de nuevo.');
+                backToQuoteBtn.click();
+            }
+        }, testIntervalSpeed);
+    }
+    
+    function stopAndHideTimer() {
+        clearInterval(timerInterval);
+        const timerContainer = document.querySelector('.timer-container');
+        if (timerContainer) {
+             timerContainer.style.display = 'none';
+        }
+    }
+    
     populateCountryCodes();
-    if (backToQuoteBtn) { backToQuoteBtn.addEventListener('click', () => { customerFormSection.style.display = 'none'; document.getElementById('quotation-section').style.display = 'block'; window.scrollTo(0, 0); }); }
+    if (backToQuoteBtn) {
+        backToQuoteBtn.addEventListener('click', () => {
+            customerFormSection.style.display = 'none';
+            quotationSection.style.display = 'block';
+            document.querySelector('.hero').style.display = 'block';
+            window.scrollTo(0, 0);
+            stopAndHideTimer();
+        });
+    }
     if (licenseOriginRadios) { licenseOriginRadios.forEach(radio => radio.addEventListener('change', handleLicenseOriginChange)); }
     if (deliveryLocationRadios) { deliveryLocationRadios.forEach(radio => radio.addEventListener('change', handleDeliveryLocationChange)); }
     if (customerForm) { customerForm.addEventListener('submit', handleFormSubmit); }
     if (addonsContainer) { addonsContainer.addEventListener('click', (event) => { const addonButton = event.target.closest('.addon-button'); const infoButton = event.target.closest('.addon-info-button'); if (infoButton) { event.stopPropagation(); showAddonInfoPopup(infoButton.dataset.description); } else if (addonButton) { const addonId = addonButton.dataset.id; const addon = insuranceAddOns.find(a => a.id === addonId); if (addon && !addon.mandatory) { addon.selected = !addon.selected; addonButton.classList.toggle('selected'); updateQuoteSummaryAndTotal(); } } }); }
-    
-    const quotationResultContainer = document.querySelector('#quotation-result'); 
-    if (quotationResultContainer) { 
-        quotationResultContainer.addEventListener('click', function (event) { 
-            if (event.target && event.target.id === 'proceed-to-form-btn') { 
-                if (calculateAndDisplayQuote()) { 
-                    showCustomerForm(); 
-                } 
-            } 
-        }); 
-    }
 }

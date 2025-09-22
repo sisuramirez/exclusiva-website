@@ -8,13 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
     <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../header-footer.css?v=3.0">
-    <link rel="stylesheet" href="quotation.css?v=3.0">
-    <script src="quotation.js?v=3.3" defer></script>
+    <link rel="stylesheet" href="../header-footer.css?v=4.0">
+    <link rel="stylesheet" href="quotation.css?v=4.0">
+    <script src="quotation.js?v=4.0" defer></script>
 </head>
 <body>
     <header id="header-placeholder"></header>
-    
+
+
     <main>
         <section class="hero">
             <div class="container">
@@ -187,6 +188,14 @@
                             <div id="final-total-container" class="quotation__total">
                             </div>
                         </div>
+
+                        <div class="timer-container" style="display: none;">
+                            <span class="timer-icon">⏳</span>
+                            <div class="timer-bar-container">
+                              <div class="timer-bar" id="timer-bar"></div>
+                            </div>
+                            <p class="timer-text" id="timer-display"></p>
+                          </div>
 
                         <button type="submit" form="customer-form" class="btn" id="submit-form">Finalizar Reserva</button>
                         <button type="button" id="back-to-quote-btn" class="btn btn--secondary">← Regresar a Cotización</button>

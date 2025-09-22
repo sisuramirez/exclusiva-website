@@ -56,7 +56,9 @@ El proyecto se organiza en las siguientes carpetas y archivos principales:
 └── uploads/              # [NUEVO] Carpeta donde se guardan las imágenes de los vehículos subidas desde el panel.
 3. Dependencias
 Frontend
+
 No requiere un gestor de paquetes como npm o yarn.
+
 Utiliza la librería flatpickr para los selectores de fecha y hora en el cotizador, que debe estar enlazada en el HTML correspondiente.
 
 Backend
@@ -98,6 +100,7 @@ El flujo de este archivo para procesar una reserva y enviar correos no ha cambia
 Esta sección detalla las mejoras implementadas para convertir la lista de vehículos de un dato estático a un sistema dinámico gestionado por un panel de administración (CRUD).
 
 Resumen de Cambios
+
 Base de Datos MySQL: Se ha migrado toda la información de los vehículos a una base de datos MySQL. Esto permite una gestión centralizada y escalable del inventario.
 
 Panel de Administración (CRUD): Se ha creado un panel de control protegido por contraseña en la ruta /admin. Este panel permite:
@@ -141,6 +144,7 @@ Archivo api/config.php: Este archivo ahora es más importante que nunca. Debes r
 Control de Versiones: Es fundamental añadir api/config.php y la carpeta /uploads/ al archivo .gitignore para no subir información sensible a repositorios como GitHub.
 
 Mejoras de Seguridad Implementadas
+
 Autenticación Basada en Base de Datos: Las credenciales de acceso al panel ya no están en el código.
 
 Hashing de Contraseñas: Se utiliza password_hash() y password_verify() de PHP, el estándar actual para el manejo seguro de contraseñas.

@@ -1,0 +1,87 @@
+-- MySQL dump 10.13  Distrib 5.7.24, for osx11.1 (x86_64)
+--
+-- Host: localhost    Database: renta_autos_db
+-- ------------------------------------------------------
+-- Server version	9.4.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `configuracion`
+--
+
+DROP TABLE IF EXISTS `configuracion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `configuracion` (
+  `clave` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`clave`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `configuracion`
+--
+
+LOCK TABLES `configuracion` WRITE;
+/*!40000 ALTER TABLE `configuracion` DISABLE KEYS */;
+INSERT INTO `configuracion` VALUES ('dias_minimos_alquiler','5');
+/*!40000 ALTER TABLE `configuracion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vehiculos`
+--
+
+DROP TABLE IF EXISTS `vehiculos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vehiculos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `categoria` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `precio_semana` decimal(10,2) NOT NULL,
+  `precio_15_dias` decimal(10,2) NOT NULL,
+  `precio_mes` decimal(10,2) NOT NULL,
+  `url_imagen` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `espec_ac` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `espec_combustible` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `espec_transmision` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `precio_1_2_dias` decimal(10,2) NOT NULL,
+  `precio_3_4_dias` decimal(10,2) NOT NULL,
+  `precio_5_6_dias` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vehiculos`
+--
+
+LOCK TABLES `vehiculos` WRITE;
+/*!40000 ALTER TABLE `vehiculos` DISABLE KEYS */;
+INSERT INTO `vehiculos` VALUES (1,'Toyota Hiace','Microbuses',49.00,45.00,35.00,'uploads/hiace.png','Sí','Diésel','Manual',1,75.00,59.00,59.00),(2,'Nissan Urvan','Microbuses',49.00,45.00,35.00,'uploads/urvan.png','Sí','Diésel','Manual',1,75.00,59.00,59.00),(4,'Hyundai Staria','Microbuses',49.00,45.00,35.00,'uploads/staria.png','Sí','Diésel','Automático/Manual',1,75.00,59.00,59.00),(5,'Toyota Fortuner','SUVs',60.00,55.00,45.00,'uploads/fortuner.png','Sí','Diésel','Automático',1,90.00,75.00,75.00),(6,'Mitsubishi Montero','SUVs',49.00,45.00,40.00,'uploads/montero.png','Sí','Diésel','Automático',1,70.00,59.00,59.00),(7,'Hyundai Santa Fe','SUVs',45.00,40.00,29.00,'uploads/santafe.png','Sí','Gasolina','Automático',1,60.00,50.00,50.00),(8,'Mitsubishi Outlander','SUVs',45.00,40.00,29.00,'uploads/outlander.png','Sí','Gasolina','Automático',1,60.00,50.00,50.00),(9,'Toyota Hilux','Pick-ups',45.00,40.00,35.00,'uploads/hilux.png','Sí','Diésel','Automático/Manual',1,70.00,50.00,50.00),(10,'Mitsubishi L200','Pick-ups',45.00,40.00,35.00,'uploads/l200.png','Sí','Diésel','Manual/Automático',1,70.00,50.00,50.00),(11,'Nissan Frontier','Pick-ups',45.00,40.00,35.00,'uploads/frontier.png','Sí','Diésel','Automático/Manual',1,70.00,50.00,50.00),(12,'Hyundai Creta','Crossovers',35.00,30.00,25.00,'uploads/creta.png','Sí','Gasolina','Automático',1,55.00,40.00,40.00),(13,'Nissan Kicks','Crossovers',25.00,20.00,18.00,'uploads/kicks.png','Sí','Gasolina','Automático',1,35.00,30.00,30.00),(14,'Kia Sonet','Crossovers',25.00,20.00,18.00,'uploads/sonet.png','Sí','Gasolina','Automático',1,35.00,30.00,30.00),(15,'Kia Rio','Sedanes',23.00,22.00,16.00,'uploads/rio.png','Sí','Gasolina','Automático',1,35.00,24.00,24.00),(16,'Hyundai Verna','Sedanes',23.00,22.00,16.00,'uploads/verna.png','Sí','Gasolina','Automático',1,35.00,24.00,24.00),(17,'Kia Soluto','Sedanes',23.00,22.00,16.00,'uploads/soluto.png','Sí','Gasolina','Automático',1,35.00,24.00,24.00),(18,'Hyundai Stargazer','Crossovers',35.00,30.00,25.00,'uploads/stargazer.png','Sí','Gasolina','Automático',1,55.00,40.00,40.00);
+/*!40000 ALTER TABLE `vehiculos` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-09-12 16:59:02
