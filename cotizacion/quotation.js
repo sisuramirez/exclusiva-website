@@ -528,7 +528,7 @@ async function initializeQuotationTool() {
     const countryCodes = [{ name: "Guatemala", code: "+502" }, { name: "USA", code: "+1" }, { name: "El Salvador", code: "+503" }, { name: "Honduras", code: "+504" }, { name: "Mexico", code: "+52" }, { name: "Spain", code: "+34" }];
    
     let timerInterval;
-    const totalTimeInSeconds = 30 * 60;
+    const totalTimeInSeconds = 15 * 60;
     const testIntervalSpeed = 1000;
     let timeRemaining = totalTimeInSeconds;
 
@@ -676,7 +676,7 @@ async function initializeQuotationTool() {
 
         const tempMessage = document.createElement('div');
         tempMessage.className = 'temp-message-container';
-        tempMessage.innerHTML = `<p>Este auto está reservado para ti durante los próximos 30 minutos. Completa tu reserva para asegurarlo.</p>`;
+        tempMessage.innerHTML = `<p>Este auto está reservado para ti durante los próximos 15 minutos. Completa tu reserva para asegurarlo.</p>`;
         const customerFormHeader = document.querySelector('.customer-form-header');
         customerFormHeader.parentNode.insertBefore(tempMessage, customerFormHeader.nextSibling);
 
@@ -698,7 +698,7 @@ async function initializeQuotationTool() {
             clearInterval(timerInterval);
         }
         
-        const totalTimeInSeconds = 30 * 60;
+        const totalTimeInSeconds = 15 * 60;
         const testIntervalSpeed = 1000;
         let timeRemaining = totalTimeInSeconds;
 

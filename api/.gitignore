@@ -1,4 +1,6 @@
 # Ignorar dependencias de Composer
 vendor/
 
+.env
+
 config.php
