@@ -337,7 +337,7 @@ async function initializeQuotationTool() {
     
         if (!startDateValue || !endDateValue || !startTimeValue || !endTimeValue) {
             quotationResult.innerHTML = `<p class="error">Por favor, completa todos los campos de fecha y hora para calcular tu cotización.</p>`;
-            return false;
+            return;
         }
     
         const startDate = new Date(`${startDateValue}T${startTimeValue}`);
@@ -345,88 +345,80 @@ async function initializeQuotationTool() {
     
         if (endDate <= startDate) {
             quotationResult.innerHTML = `<p class="error">La fecha y hora de devolución deben ser posteriores a la de inicio.</p>`;
-            return false;
+            return;
         }
-    
+
+        const totalMilliseconds = endDate.getTime() - startDate.getTime();
+        const totalHours = totalMilliseconds / (1000 * 60 * 60);
+        let rentalDays = Math.floor(totalHours / 24);
+        let extraHours = Math.ceil(totalHours % 24);
+
+        if (extraHours === 24) {
+            rentalDays += 1;
+            extraHours = 0;
+        }
+        
+        if (rentalDays === 0 && extraHours > 0) {
+            rentalDays = 1;
+            extraHours = 0;
+        }
+
         const minRentalDays = parseInt(siteConfig.dias_minimos_alquiler, 10) || 2;
-        if ((endDate.getTime() - startDate.getTime()) < (minRentalDays * 24 * 60 * 60 * 1000 - 1)) {
-            quotationResult.innerHTML = `<p class="error">El período mínimo de alquiler es de ${minRentalDays} días.</p>`;
-            return false;
-        }
-    
-        const startDay = new Date(startDate);
-        startDay.setHours(0, 0, 0, 0);
-        const endDay = new Date(endDate);
-        endDay.setHours(0, 0, 0, 0);
-    
-        let rentalDays = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
-        if (rentalDays === 0) rentalDays = 1;
-    
-        const startTimeInMinutes = startDate.getHours() * 60 + startDate.getMinutes();
-        const endTimeInMinutes = endDate.getHours() * 60 + endDate.getMinutes();
-    
-        let extraHours = 0;
-        if (endTimeInMinutes > startTimeInMinutes) {
-            const diffMs = endDate.getTime() - startDate.getTime();
-            const totalHours = diffMs / (1000 * 60 * 60);
-            extraHours = Math.ceil(totalHours - (rentalDays * 24));
-            if(extraHours <= 0) extraHours = Math.ceil((endTimeInMinutes - startTimeInMinutes) / 60);
-        } else {
-             const diffMs = endDate.getTime() - startDate.getTime();
-             const totalDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-             rentalDays = totalDays;
+        const minMilliseconds = (minRentalDays * 24 * 60 * 60 * 1000);
+        const extraHourPrice = selectedCar.category === "Sedanes" ? 10 : 20;
+        const extraHoursCost = extraHours * extraHourPrice;
+        const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
+        const isAutomaticUpgradeBeneficial = (extraHours > 0 && extraHoursCost >= nextDayPrice);
+
+        const isPeriodTooShort = totalMilliseconds < minMilliseconds;
+        const canAutoUpgradeFixMinimum = isAutomaticUpgradeBeneficial && (rentalDays + 1) >= minRentalDays;
+
+        if (isPeriodTooShort && !canAutoUpgradeFixMinimum) {
+            const dayText = minRentalDays > 1 ? 'días' : 'día';
+            quotationResult.innerHTML = `
+                <p class="info">El período mínimo de alquiler es de ${minRentalDays} ${dayText}. ¿Deseas extender tu selección para cumplir con el mínimo?</p>
+                <div class="confirmation-buttons">
+                    <button id="confirm-adjust-btn" class="btn">Sí, ajustar al mínimo</button>
+                    <button id="reject-adjust-btn" class="btn btn--secondary">No, lo haré yo mismo</button>
+                </div>
+            `;
+            document.getElementById('confirm-adjust-btn').addEventListener('click', () => {
+                const newEndDate = new Date(startDate);
+                newEndDate.setDate(newEndDate.getDate() + minRentalDays);
+                endDatePicker.setDate(newEndDate, true);
+                endTimePicker.setDate(startTimeInput.value, true);
+                calculateAndDisplayQuote();
+            });
+            document.getElementById('reject-adjust-btn').addEventListener('click', () => {
+                quotationResult.innerHTML = `<p class="info">De acuerdo. Por favor, ajusta las fechas para cumplir con el mínimo de ${minRentalDays} ${dayText} de alquiler.</p>`;
+            });
+            calculateBtn.disabled = true;
+            return;
         }
     
         let finalTotal = 0;
         let summaryHTML = `<h4>Resumen de la Cotización</h4>`;
     
-        if (extraHours > 0) {
-            const basePriceForDays = getDynamicDailyPrice(selectedCar, rentalDays) * rentalDays;
-            let extraHourPrice = selectedCar.category === "Sedanes" ? 10 : 20;
-            const extraHoursCost = extraHours * extraHourPrice;
-            const nextDayPrice = getDynamicDailyPrice(selectedCar, rentalDays + 1);
-    
-            if (extraHoursCost >= nextDayPrice) {
-                const finalRentalDays = rentalDays + 1;
-                const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
-                finalTotal = finalDailyPrice * finalRentalDays;
-                summaryHTML += `<p>Alquiler: ${finalRentalDays} día(s) x ${formatCurrency(finalDailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
-                summaryHTML += `<small class="date-change-notice">Nota: Se agregó un día completo en lugar de ${extraHours} horas extra, ya que resulta más económico para ti.</small>`;
-                currentQuoteDetails.rentalDays = finalRentalDays;
-                
-                const newEndDate = new Date(endDate);
-                newEndDate.setDate(newEndDate.getDate() + 1);
-                endDatePicker.setDate(newEndDate, false);
-                endTimeInput.value = startTimeInput.value;
-                endTimePicker.setDate(startTimeInput.value, false);
-                const endDateParent = document.querySelector('#end-date').parentElement;
-                const endTimeParent = document.querySelector('#end-time').parentElement;
-                if (endDateParent) {
-                  endDateParent.classList.add('lightning-bolt');
-                }
-                if (endTimeParent) {
-                  endTimeParent.classList.add('lightning-bolt');
-                }
-                setTimeout(() => {
-                  if (endDateParent) {
-                    endDateParent.classList.remove('lightning-bolt');
-                  }
-                  if (endTimeParent) {
-                    endTimeParent.classList.remove('lightning-bolt');
-                  }
-                }, 2000);
-    
+        if (isAutomaticUpgradeBeneficial) {
+            const finalRentalDays = rentalDays + 1;
+            const finalDailyPrice = getDynamicDailyPrice(selectedCar, finalRentalDays);
+            finalTotal = finalDailyPrice * finalRentalDays;
+            summaryHTML += `<p>Alquiler: ${finalRentalDays} día(s) x ${formatCurrency(finalDailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
+            // summaryHTML += `<small class="date-change-notice">Nota: Se agregó un día completo en lugar de ${extraHours} horas extra, ya que resulta más económico para ti.</small>`;
+            currentQuoteDetails.rentalDays = finalRentalDays;
+        } else {
+            if (extraHours > 0) {
+                 const basePriceForDays = getDynamicDailyPrice(selectedCar, rentalDays) * rentalDays;
+                 finalTotal = basePriceForDays + extraHoursCost;
+                 summaryHTML += `<p>Alquiler: ${rentalDays} día(s) = <strong>${formatCurrency(basePriceForDays)}</strong></p>`;
+                 summaryHTML += `<p>${extraHours} hora(s) extra = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
+                 currentQuoteDetails.rentalDays = rentalDays;
             } else {
-                finalTotal = basePriceForDays + extraHoursCost;
-                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) = <strong>${formatCurrency(basePriceForDays)}</strong></p>`;
-                summaryHTML += `<p>${extraHours} hora(s) extra = <strong>${formatCurrency(extraHoursCost)}</strong></p>`;
+                const dailyPrice = getDynamicDailyPrice(selectedCar, rentalDays);
+                finalTotal = dailyPrice * rentalDays;
+                summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
                 currentQuoteDetails.rentalDays = rentalDays;
             }
-        } else {
-            const dailyPrice = getDynamicDailyPrice(selectedCar, rentalDays);
-            finalTotal = dailyPrice * rentalDays;
-            summaryHTML += `<p>Alquiler: ${rentalDays} día(s) x ${formatCurrency(dailyPrice)}/día = <strong>${formatCurrency(finalTotal)}</strong></p>`;
-            currentQuoteDetails.rentalDays = rentalDays;
         }
     
         currentQuoteDetails.baseTotal = finalTotal;
@@ -441,8 +433,8 @@ async function initializeQuotationTool() {
                 showCustomerForm();
             });
         }
-
-        return true;
+        
+        calculateBtn.disabled = true;
     }
 
     displayCars();
@@ -484,7 +476,10 @@ async function initializeQuotationTool() {
     const endDatePicker = flatpickr("#end-date", {
         ...datePickerConfig,
         minDate: new Date().fp_incr(1),
-        onChange: function() { quotationResult.style.display = 'none'; }
+        onChange: function() { 
+            quotationResult.style.display = 'none';
+            calculateBtn.disabled = false;
+        }
     });
 
     const startDatePicker = flatpickr("#start-date", {
@@ -496,6 +491,7 @@ async function initializeQuotationTool() {
                 endDatePicker.set("minDate", minEndDate);
             }
             quotationResult.style.display = 'none';
+            calculateBtn.disabled = false;
         }
     });
 
@@ -503,6 +499,7 @@ async function initializeQuotationTool() {
         ...timePickerConfig,
         onChange: function () {
             quotationResult.style.display = 'none';
+            calculateBtn.disabled = false;
         }
     });
 
@@ -510,6 +507,7 @@ async function initializeQuotationTool() {
         ...timePickerConfig,
         onChange: function () {
             quotationResult.style.display = 'none';
+            calculateBtn.disabled = false;
         }
     });
    

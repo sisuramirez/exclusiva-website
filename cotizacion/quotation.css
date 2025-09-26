@@ -10,6 +10,8 @@
   --step-hover-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   --step-title-color: #333;
   --step-description-color: #666;
+  --success-color: #28a745; 
+  --danger-color: #dc3545;
 }
 * {
   margin: 0;
@@ -505,6 +507,44 @@ header {
   height: 1px;
   background-color: #ddd;
   margin: 10px 0;
+}
+.quotation-result .info {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.confirmation-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.confirmation-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.confirmation-buttons button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+#confirm-adjust-btn {
+  background-color: var(--success-color);
+}
+
+#reject-adjust-btn {
+  background-color: var(--danger-color);
 }
 #proceed-to-form-btn {
   padding: 12px 20px;
@@ -1120,6 +1160,10 @@ input.flatpickr-input.date-input-highlight {
   }
   .quotation__title {
     font-size: 2.2rem;
+  }
+  .confirmation-buttons {
+    flex-direction: row;
+    justify-content: center;
   }
   .customer-form-section {
     padding: 3rem 0;
